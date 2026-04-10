@@ -1,14 +1,15 @@
 <?php
 
-class LoteModel
+class CambioEtapaModel
 {
     private $id;
-    private $planta_id;
-    private $codigo_lote;
-    private $unidad_medida;
-    private $cantidad;
-    private $etapa_id;
-    private $ubicacion_id;
+    private $lote_id;
+    private $etapa_origen_id;
+    private $ubi_origen_id;
+    private $etapa_destino_id;
+    private $ubi_destino_id;
+    private $cantidad_a_mover;
+    private $cantidad_que_sobrevive;
     private $observaciones;
 
     // Variables de busqueda y paginación
@@ -23,29 +24,33 @@ class LoteModel
         $this->id = $id;
     }
 
-    public function setPlantaId($planta_id)
+    public function setLoteId($lote_id)
     {
-        $this->planta_id = $planta_id;
+        $this->lote_id = $lote_id;
     }
-    public function setCodigoLote($codigo_lote)
+    public function setEtapaOrigenId($etapa_origen_id)
     {
-        $this->codigo_lote = $codigo_lote;
+        $this->etapa_origen_id = $etapa_origen_id;
     }
-    public function setUnidadMedida($unidad_medida)
+    public function setUbiOrigenId($ubi_origen_id)
     {
-        $this->unidad_medida = $unidad_medida;
+        $this->ubi_origen_id = $ubi_origen_id;
     }
-    public function setCantidad($cantidad)
+    public function setEtapaDestinoId($etapa_destino_id)
     {
-        $this->cantidad = $cantidad;
+        $this->etapa_destino_id = $etapa_destino_id;
     }
-    public function setEtapaId($etapa_id)
+    public function setUbiDestinoId($ubi_destino_id)
     {
-        $this->etapa_id = $etapa_id;
+        $this->ubi_destino_id = $ubi_destino_id;
     }
-    public function setUbicacionId($ubicacion_id)
+    public function setCantidadAMover($cantidad_a_mover)
     {
-        $this->ubicacion_id = $ubicacion_id;
+        $this->cantidad_a_mover = $cantidad_a_mover;
+    }
+    public function setCantidadQueSobrevive($cantidad_que_sobrevive)
+    {
+        $this->cantidad_que_sobrevive = $cantidad_que_sobrevive;
     }
     public function setObservaciones($observaciones)
     {
@@ -71,34 +76,39 @@ class LoteModel
         return $this->id;
     }
 
-    public function getPlantaId()
+    public function getLoteId()
     {
-        return $this->planta_id;
+        return $this->lote_id;
     }
 
-    public function getCodigoLote()
+    public function getEtapaOrigenId()
     {
-        return $this->codigo_lote;
+        return $this->etapa_origen_id;
     }
 
-    public function getUnidadMedida()
+    public function getUbiOrigenId()
     {
-        return $this->unidad_medida;
+        return $this->ubi_origen_id;
     }
 
-    public function getCantidad()
+    public function getEtapaDestinoId()
     {
-        return $this->cantidad;
+        return $this->etapa_destino_id;
     }
 
-    public function getEtapaId()
+    public function getUbiDestinoId()
     {
-        return $this->etapa_id;
+        return $this->ubi_destino_id;
     }
 
-    public function getUbicacionId()
+    public function getCantidadAMover()
     {
-        return $this->ubicacion_id;
+        return $this->cantidad_a_mover;
+    }
+
+    public function getCantidadQueSobrevive()
+    {
+        return $this->cantidad_que_sobrevive;
     }
 
     public function getObservaciones()
@@ -161,21 +171,24 @@ class LoteModel
 
     public function crear()
     {
-        $stmt = $this->conn->prepare("CALL sp_registrar_nuevo_lote(:planta_id, :codigo_lote, :unidad_medida, :cantidad, :etapa_id, :ubicacion_id, :usuario_id, :observaciones)");
-        $planta_id = $this->getPlantaId();
-        $codigo_lote = $this->getCodigoLote();
-        $unidad_medida = $this->getUnidadMedida();
-        $cantidad = $this->getCantidad();
-        $etapa_id = $this->getEtapaId();
-        $ubicacion_id = $this->getUbicacionId();
+        $stmt = $this->conn->prepare("CALL sp_cambiar_etapa_lote(:lote_id, :etapa_origen_id, :ubi_origen_id, :etapa_destino_id, :ubi_destino_id, :cantidad_a_mover, :cantidad_que_sobrevive, :usuario_id, :observaciones)");
+        $lote_id = $this->getLoteId();
+        $etapa_origen_id = $this->getEtapaOrigenId();
+        $ubi_origen_id = $this->getUbiOrigenId();
+        $etapa_destino_id = $this->getEtapaDestinoId();
+        $ubi_destino_id = $this->getUbiDestinoId();
+        $cantidad_a_mover = $this->getCantidadAMover();
+        $cantidad_que_sobrevive = $this->getCantidadQueSobrevive();
         $usuario_id = $_SESSION['usuario']['id'];
         $observaciones = $this->getObservaciones();
-        $stmt->bindParam(":planta_id", $planta_id);
-        $stmt->bindParam(":codigo_lote", $codigo_lote);
-        $stmt->bindParam(":unidad_medida", $unidad_medida);
-        $stmt->bindParam(":cantidad", $cantidad);
-        $stmt->bindParam(":etapa_id", $etapa_id);
-        $stmt->bindParam(":ubicacion_id", $ubicacion_id);
+
+        $stmt->bindParam(":lote_id", $lote_id);
+        $stmt->bindParam(":etapa_origen_id", $etapa_origen_id);
+        $stmt->bindParam(":ubi_origen_id", $ubi_origen_id);
+        $stmt->bindParam(":etapa_destino_id", $etapa_destino_id);
+        $stmt->bindParam(":ubi_destino_id", $ubi_destino_id);
+        $stmt->bindParam(":cantidad_a_mover", $cantidad_a_mover);
+        $stmt->bindParam(":cantidad_que_sobrevive", $cantidad_que_sobrevive);
         $stmt->bindParam(":usuario_id", $usuario_id);
         $stmt->bindParam(":observaciones", $observaciones);
         return $stmt->execute();

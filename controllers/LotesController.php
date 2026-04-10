@@ -1,6 +1,12 @@
 <?php
 include __DIR__ . "/../models/LoteModel.php";
+include __DIR__ . "/../models/PlantaModel.php";
+include __DIR__ . "/../models/EtapasModel.php";
+include __DIR__ . "/../models/UbicacionesModel.php";
 $lote = new LoteModel();
+$planta = new PlantaModel();
+$etapa = new EtapasModel();
+$ubicacion = new UbicacionesModel();
 
 $method = $_SERVER['REQUEST_METHOD'];
 $params = $_GET;
@@ -78,7 +84,7 @@ if ($delete_id) {
 
 // Parametros de busqueda y paginación
 $busqueda = $_GET['busqueda'] ?? null;
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
 $lote->setBusqueda($busqueda);
 $totalRegistros = $lote->getCount()['total'];
@@ -86,8 +92,22 @@ $totalRegistros = $lote->getCount()['total'];
 $limit = 20;
 $offset = ($page - 1) * $limit;
 
-$totalPaginas =  ceil($totalRegistros / $limit);
+$totalPaginas = ceil($totalRegistros / $limit);
 
 $lote->setLimit($limit);
 $lote->setOffset($offset);
 $allLotes = $lote->getAll();
+
+$planta->setLimit(1000);
+$planta->setOffset(0);
+$allPlantas = $planta->getAll();
+
+$allEtapas = $etapa->getAll();
+
+$allUbicaciones = $ubicacion->getAll();
+
+$unidades_medida = [
+    "unidades",
+    "gramos",
+    "kilogramos"
+];
