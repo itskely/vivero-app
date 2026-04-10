@@ -64,7 +64,17 @@ class UbicacionesModel
         return $usuario;
     }
 
-
+    public function getUbicacionesInIds($ids)
+    {
+        $placeholders = implode(",", array_fill(0, count($ids), "?"));
+        $stmt = $this->conn->prepare("SELECT * FROM ubicaciones WHERE id IN ($placeholders)");
+        foreach ($ids as $i => $id)
+        {
+            $stmt->bindValue($i + 1, $id, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function crear()
     {
@@ -99,7 +109,8 @@ class UbicacionesModel
         $id = $this->getId();
         $stmt->bindParam(":id", $id);
         $stmt->execute();
-        if ($stmt->rowCount() > 0) {
+        if ($stmt->rowCount() > 0)
+        {
             return true;
         }
         return false;

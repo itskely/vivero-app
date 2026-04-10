@@ -140,7 +140,7 @@ class LoteModel
         $busqueda = $this->getBusqueda();
         $limit = $this->getLimit();
         $offset = $this->getOffset();
-        $stmt = $this->conn->prepare("SELECT * FROM lotes WHERE codigo_lote LIKE :busqueda OR observaciones LIKE :busqueda LIMIT :lim OFFSET :offs");
+        $stmt = $this->conn->prepare("SELECT l.* FROM lotes l LEFT JOIN plantas p ON l.planta_id = p.id WHERE l.codigo_lote LIKE :busqueda OR l.observaciones LIKE :busqueda OR p.nombre_comun LIKE :busqueda OR p.nombre_cientifico LIKE :busqueda OR p.descripcion LIKE :busqueda ORDER BY l.id DESC LIMIT :lim OFFSET :offs");
         $param = "%$busqueda%";
         $stmt->bindParam(":busqueda", $param);
         $stmt->bindParam(":lim", $limit, PDO::PARAM_INT);

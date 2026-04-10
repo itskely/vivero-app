@@ -8,8 +8,8 @@ class CambioEtapaModel
     private $ubi_origen_id;
     private $etapa_destino_id;
     private $ubi_destino_id;
-    private $cantidad_a_mover;
-    private $cantidad_que_sobrevive;
+    private $cantidad_salida;
+    private $cantidad_entrada;
     private $observaciones;
 
     // Variables de busqueda y paginación
@@ -44,13 +44,13 @@ class CambioEtapaModel
     {
         $this->ubi_destino_id = $ubi_destino_id;
     }
-    public function setCantidadAMover($cantidad_a_mover)
+    public function setCantidadSalida($cantidad_salida)
     {
-        $this->cantidad_a_mover = $cantidad_a_mover;
+        $this->cantidad_salida = $cantidad_salida;
     }
-    public function setCantidadQueSobrevive($cantidad_que_sobrevive)
+    public function setCantidadEntrada($cantidad_entrada)
     {
-        $this->cantidad_que_sobrevive = $cantidad_que_sobrevive;
+        $this->cantidad_entrada = $cantidad_entrada;
     }
     public function setObservaciones($observaciones)
     {
@@ -101,14 +101,14 @@ class CambioEtapaModel
         return $this->ubi_destino_id;
     }
 
-    public function getCantidadAMover()
+    public function getCantidadSalida()
     {
-        return $this->cantidad_a_mover;
+        return $this->cantidad_salida;
     }
 
-    public function getCantidadQueSobrevive()
+    public function getCantidadEntrada()
     {
-        return $this->cantidad_que_sobrevive;
+        return $this->cantidad_entrada;
     }
 
     public function getObservaciones()
@@ -171,14 +171,14 @@ class CambioEtapaModel
 
     public function crear()
     {
-        $stmt = $this->conn->prepare("CALL sp_cambiar_etapa_lote(:lote_id, :etapa_origen_id, :ubi_origen_id, :etapa_destino_id, :ubi_destino_id, :cantidad_a_mover, :cantidad_que_sobrevive, :usuario_id, :observaciones)");
+        $stmt = $this->conn->prepare("CALL sp_cambiar_etapa_lote(:lote_id, :etapa_origen_id, :ubi_origen_id, :etapa_destino_id, :ubi_destino_id, :cantidad_salida, :cantidad_entrada, :usuario_id, :observaciones)");
         $lote_id = $this->getLoteId();
         $etapa_origen_id = $this->getEtapaOrigenId();
         $ubi_origen_id = $this->getUbiOrigenId();
         $etapa_destino_id = $this->getEtapaDestinoId();
         $ubi_destino_id = $this->getUbiDestinoId();
-        $cantidad_a_mover = $this->getCantidadAMover();
-        $cantidad_que_sobrevive = $this->getCantidadQueSobrevive();
+        $cantidad_salida = $this->getCantidadSalida();
+        $cantidad_entrada = $this->getCantidadEntrada();
         $usuario_id = $_SESSION['usuario']['id'];
         $observaciones = $this->getObservaciones();
 
@@ -187,8 +187,8 @@ class CambioEtapaModel
         $stmt->bindParam(":ubi_origen_id", $ubi_origen_id);
         $stmt->bindParam(":etapa_destino_id", $etapa_destino_id);
         $stmt->bindParam(":ubi_destino_id", $ubi_destino_id);
-        $stmt->bindParam(":cantidad_a_mover", $cantidad_a_mover);
-        $stmt->bindParam(":cantidad_que_sobrevive", $cantidad_que_sobrevive);
+        $stmt->bindParam(":cantidad_salida", $cantidad_salida);
+        $stmt->bindParam(":cantidad_entrada", $cantidad_entrada);
         $stmt->bindParam(":usuario_id", $usuario_id);
         $stmt->bindParam(":observaciones", $observaciones);
         return $stmt->execute();

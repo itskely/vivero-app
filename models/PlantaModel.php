@@ -128,6 +128,17 @@ class PlantaModel
         return $page;
     }
 
+    public function getPlantasInIds($ids)
+    {
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $stmt = $this->conn->prepare("SELECT * FROM plantas WHERE id IN ($placeholders)");
+        foreach ($ids as $index => $id) {
+            $stmt->bindValue($index + 1, $id, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function crear()
     {
         $stmt = $this->conn->prepare("INSERT INTO plantas(nombre_cientifico, nombre_comun, imagen, descripcion) VALUES (:nombre_cientifico,:nombre_comun,:imagen,:descripcion)");

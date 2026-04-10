@@ -1,55 +1,60 @@
 <?php
+session_start();
+include __DIR__ . "/../config/database.php";
+include __DIR__ . "/../models/LoteModel.php";
+include __DIR__ . "/../models/PlantaModel.php";
+$lote = new LoteModel();
+$planta = new PlantaModel();
 
 # Prueba de devuelta json
-
 header('Content-Type: application/json');
-echo json_encode([
+
+if (!isset($_SESSION['usuario']))
+{
+    die(json_encode(
+        [
+            "error" => "No autenticado"
+        ]
+    ));
+}
+
+// Parametros de busqueda y paginación
+$busqueda = $_GET['busqueda'] ?? null;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+
+$lote->setBusqueda($busqueda);
+$totalRegistros = $lote->getCount()['total'];
+
+$limit = 20;
+$offset = ($page - 1) * $limit;
+
+$totalPaginas = ceil($totalRegistros / $limit);
+
+$lote->setLimit($limit);
+$lote->setOffset($offset);
+$allLotes = $lote->getAll();
+$plantaIds = array_unique(array_column($allLotes, 'planta_id'));
+$allPlantas = count($plantaIds) > 0 ? $planta->getPlantasInIds($plantaIds) : [];
+
+$plantasMap = [];
+foreach ($allPlantas as $p)
+{
+    $plantasMap[$p['id']] = $p;
+}
+
+foreach ($allLotes as &$lote)
+{
+    $lote['planta'] = $plantasMap[$lote['planta_id']] ?? null;
+}
+
+echo json_encode(
     [
-        "id" => 1,
-        "lote" => "AGU-2024-001",
-        "especie" => "Aguacate Hass",
-        "cantidad" => 430,
-        "unidad_medida" => "unidades",
-        "etapa" => "Listo para Venta"
-    ],
-    [
-        "id" => 2,
-        "lote" => "AGU-2024-002",
-        "especie" => "Aguacate Hass",
-        "cantidad" => 450,
-        "unidad_medida" => "unidades",
-        "etapa" => "Germinación"
-    ],
-    [
-        "id" => 3,
-        "lote" => "AGU-2024-003",
-        "especie" => "Aguacate Hass",
-        "cantidad" => 450,
-        "unidad_medida" => "unidades",
-        "etapa" => "Germinación",
-    ],
-    [
-        "id" => 4,
-        "lote" => "AGU-2024-004",
-        "especie" => "Aguacate Hass",
-        "cantidad" => 450,
-        "unidad_medida" => "unidades",
-        "etapa" => "Germinación"
-    ],
-    [
-        "id" => 5,
-        "lote" => "AGU-2024-005",
-        "especie" => "Aguacate Hass",
-        "cantidad" => 450,
-        "unidad_medida" => "unidades",
-        "etapa" => "Germinación"
-    ],
-    [
-        "id" => 6,
-        "lote" => "AGU-2024-006",
-        "especie" => "Aguacate Hass",
-        "cantidad" => 450,
-        "unidad_medida" => "unidades",
-        "etapa" => "Germinación"
-    ],
-]);
+        "data" => $allLotes,
+        "pagination" => [
+            "total" => $totalRegistros,
+            "current_page" => $page,
+            "per_page" => $limit,
+            "total_pages" => $totalPaginas
+        ]
+    ]
+);

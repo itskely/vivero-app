@@ -15,8 +15,10 @@ $imagen = $_FILES["imagen"] ?? null;
 function uploadFile($file)
 {
     $path = __DIR__ . "/../assets/uploads/";
-    if (!is_dir($path)) {
-        if (!mkdir($path, 0777, true)) {
+    if (!is_dir($path))
+    {
+        if (!mkdir($path, 0777, true))
+        {
             echo "No se pudo crear el directorio";
             return null;
         }
@@ -25,8 +27,10 @@ function uploadFile($file)
     return move_uploaded_file($file["tmp_name"], $filePath) ? $file["name"] : null;
 }
 
-if ($method === "POST") {
-    if ($nombre_cientifico && $nombre_comun  && $descripcion && $imagen) {
+if ($method === "POST")
+{
+    if ($nombre_cientifico && $nombre_comun && $descripcion && $imagen)
+    {
         $imageName = uploadFile($imagen);
 
         $planta->setId($id);
@@ -35,19 +39,24 @@ if ($method === "POST") {
         $planta->setImagen($imageName);
         $planta->setDescripcion($descripcion);
 
-        if (empty($id)) {
+        if (empty($id))
+        {
             $fueCreado = $planta->crear();
-            if ($fueCreado) {
+            if ($fueCreado)
+            {
                 $_SESSION["success"] = "Planta creada con éxito";
-            } else {
+            } else
+            {
                 $_SESSION["error"] = "Error al crear la planta";
             }
-        } else {
+        } else
+        {
             $editingPlanta = $planta->getOne();
             $planta->setImagen($imageName ?? $editingPlanta['imagen']);
 
             $fueEditado = $planta->update();
-            if ($fueEditado) {
+            if ($fueEditado)
+            {
                 unset($params['id']);
 
                 // 3. Reconstruir la URL
@@ -55,25 +64,30 @@ if ($method === "POST") {
                 $newUrl = $_SERVER['PHP_SELF'] . '?' . $newQuery;
                 $_SESSION["success"] = "Planta actualizada con éxito";
                 header("Location: $newUrl");
-            } else {
+            } else
+            {
                 $_SESSION["error"] = "Error al actualizar la planta";
             }
         }
-    } else {
+    } else
+    {
         $_SESSION["error"] = "Todos los campos son requeridos";
     }
 }
 
 $onePlanta = null;
-if ($id) {
+if ($id)
+{
     $planta->setId($id);
     $onePlanta = $planta->getOne();
 }
 
-if ($delete_id) {
+if ($delete_id)
+{
     $planta->setId($delete_id);
     $fueEliminado = $planta->delete();
-    if ($fueEliminado) {
+    if ($fueEliminado)
+    {
         unset($params['delete_id']);
 
         // 3. Reconstruir la URL
@@ -81,7 +95,8 @@ if ($delete_id) {
         $newUrl = $_SERVER['PHP_SELF'] . '?' . $newQuery;
         $_SESSION["success"] = "Planta eliminada con éxito";
         header("Location: $newUrl");
-    } else {
+    } else
+    {
         $_SESSION["error"] = "Error al eliminar la planta";
     }
 }
@@ -89,7 +104,7 @@ if ($delete_id) {
 
 // Parametros de busqueda y paginación
 $busqueda = $_GET['busqueda'] ?? null;
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
 $planta->setBusqueda($busqueda);
 $totalRegistros = $planta->getCount()['total'];
@@ -97,7 +112,7 @@ $totalRegistros = $planta->getCount()['total'];
 $limit = 20;
 $offset = ($page - 1) * $limit;
 
-$totalPaginas =  ceil($totalRegistros / $limit);
+$totalPaginas = ceil($totalRegistros / $limit);
 
 $planta->setLimit($limit);
 $planta->setOffset($offset);

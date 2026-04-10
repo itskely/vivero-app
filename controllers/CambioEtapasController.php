@@ -2,39 +2,46 @@
 include __DIR__ . "/../models/CambioEtapaModel.php";
 include __DIR__ . "/../models/EtapasModel.php";
 include __DIR__ . "/../models/UbicacionesModel.php";
+include __DIR__ . "/../models/InventarioModel.php";
 $cambioEtapa = new CambioEtapaModel();
 $etapa = new EtapasModel();
 $ubicacion = new UbicacionesModel();
+$inventario = new InventarioModel();
 
 $method = $_SERVER['REQUEST_METHOD'];
 $params = $_GET;
 $id = $_GET['id'] ?? null;
 $delete_id = $_GET['delete_id'] ?? null;
 $lote_id = $_POST['lote_id'] ?? null;
-$etapa_origen_id = $_POST['etapa_origen_id'] ?? null;
-$ubi_origen_id = $_POST['ubi_origen_id'] ?? null;
+$inventario_id = $_POST['inventario_id'] ?? null;
 $etapa_destino_id = $_POST['etapa_destino_id'] ?? null;
 $ubi_destino_id = $_POST['ubi_destino_id'] ?? null;
-$cantidad_a_mover = $_POST['cantidad_a_mover'] ?? null;
-$cantidad_que_sobrevive = $_POST['cantidad_que_sobrevive'] ?? null;
+$cantidad_salida = $_POST['cantidad_salida'] ?? null;
+$cantidad_entrada = $_POST['cantidad_entrada'] ?? null;
 $observaciones = $_POST['observaciones'] ?? null;
 
 if ($method === "POST")
 {
-    if ($lote_id && $etapa_origen_id && $ubi_origen_id && $etapa_destino_id && $ubi_destino_id && $cantidad_a_mover && $cantidad_que_sobrevive)
+    if ($lote_id && $inventario_id && $etapa_destino_id && $ubi_destino_id && $cantidad_salida && $cantidad_entrada)
     {
-        $cambioEtapa->setId($id);
-        $cambioEtapa->setLoteId($lote_id);
-        $cambioEtapa->setEtapaOrigenId($etapa_origen_id);
-        $cambioEtapa->setUbiOrigenId($ubi_origen_id);
-        $cambioEtapa->setEtapaDestinoId($etapa_destino_id);
-        $cambioEtapa->setUbiDestinoId($ubi_destino_id);
-        $cambioEtapa->setCantidadAMover($cantidad_a_mover);
-        $cambioEtapa->setCantidadQueSobrevive($cantidad_que_sobrevive);
-        $cambioEtapa->setObservaciones($observaciones);
+        $inventario->setId($inventario_id);
+        $invLote = $inventario->getOne();
 
-        if (empty($id))
+        if (!$invLote)
         {
+            $_SESSION["error"] = "Inventario no encontrado";
+        } else
+        {
+            $cambioEtapa->setId($id);
+            $cambioEtapa->setLoteId($lote_id);
+            $cambioEtapa->setEtapaOrigenId($invLote['etapa_id']);
+            $cambioEtapa->setUbiOrigenId($invLote['ubicacion_id']);
+            $cambioEtapa->setEtapaDestinoId($etapa_destino_id);
+            $cambioEtapa->setUbiDestinoId($ubi_destino_id);
+            $cambioEtapa->setCantidadSalida($cantidad_salida);
+            $cambioEtapa->setCantidadEntrada($cantidad_entrada);
+            $cambioEtapa->setObservaciones($observaciones);
+
             $fueCreado = $cambioEtapa->crear();
             if ($fueCreado)
             {
@@ -43,28 +50,11 @@ if ($method === "POST")
             {
                 $_SESSION["error"] = "Error al crear el movimiento";
             }
-        } else
-        {
-            $editingCambioEtapa = $cambioEtapa->getOne();
-
-            $fueEditado = $cambioEtapa->update();
-            if ($fueEditado)
-            {
-                unset($params['id']);
-
-                // 3. Reconstruir la URL
-                $newQuery = http_build_query($params);
-                $newUrl = $_SERVER['PHP_SELF'] . '?' . $newQuery;
-                $_SESSION["success"] = "Lote actualizado con éxito";
-                header("Location: $newUrl");
-            } else
-            {
-                $_SESSION["error"] = "Error al actualizar el lote";
-            }
         }
     } else
     {
         $_SESSION["error"] = "Todos los campos son requeridos";
+        die(json_encode($_POST));
     }
 }
 
