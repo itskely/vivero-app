@@ -63,7 +63,7 @@ include "./helpers/Forms.php";
                     ?>
                     <li>
                         <a href="/home.php?page_id=<?= $pg['id'] ?>"
-                            class="flex text-muted-foreground items-center px-2 py-1.5 hover:bg-sidebar-accent rounded-base hover:text-sidebar-accent-foreground group">
+                            class="<?= $pg['id'] == $page_accessed_id ? "bg-sidebar-accent text-sidebar-accent-foreground" : "" ?> flex text-muted-foreground items-center px-2 py-1.5 hover:bg-sidebar-accent rounded-base hover:text-sidebar-accent-foreground group">
                             <i class="<?= $pg['icon'] ?>"></i>
                             <span class="ms-3"><?= $pg['name'] ?></span>
                         </a>

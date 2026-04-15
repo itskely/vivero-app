@@ -32,29 +32,34 @@ if ($method === "POST")
             $_SESSION["error"] = "Inventario no encontrado";
         } else
         {
-            $cambioEtapa->setId($id);
-            $cambioEtapa->setLoteId($lote_id);
-            $cambioEtapa->setEtapaOrigenId($invLote['etapa_id']);
-            $cambioEtapa->setUbiOrigenId($invLote['ubicacion_id']);
-            $cambioEtapa->setEtapaDestinoId($etapa_destino_id);
-            $cambioEtapa->setUbiDestinoId($ubi_destino_id);
-            $cambioEtapa->setCantidadSalida($cantidad_salida);
-            $cambioEtapa->setCantidadEntrada($cantidad_entrada);
-            $cambioEtapa->setObservaciones($observaciones);
-
-            $fueCreado = $cambioEtapa->crear();
-            if ($fueCreado)
+            if ($cantidad_salida > $invLote['cantidad_actual'] || $invLote['cantidad_actual'] === 0)
             {
-                $_SESSION["success"] = "Movimiento creado con éxito";
+                $_SESSION["error"] = "Cantidad de salida mayor a la cantidad en inventario";
             } else
             {
-                $_SESSION["error"] = "Error al crear el movimiento";
+                $cambioEtapa->setId($id);
+                $cambioEtapa->setLoteId($lote_id);
+                $cambioEtapa->setEtapaOrigenId($invLote['etapa_id']);
+                $cambioEtapa->setUbiOrigenId($invLote['ubicacion_id']);
+                $cambioEtapa->setEtapaDestinoId($etapa_destino_id);
+                $cambioEtapa->setUbiDestinoId($ubi_destino_id);
+                $cambioEtapa->setCantidadSalida($cantidad_salida);
+                $cambioEtapa->setCantidadEntrada($cantidad_entrada);
+                $cambioEtapa->setObservaciones($observaciones);
+
+                $fueCreado = $cambioEtapa->crear();
+                if ($fueCreado)
+                {
+                    $_SESSION["success"] = "Movimiento creado con éxito";
+                } else
+                {
+                    $_SESSION["error"] = "Error al crear el movimiento";
+                }
             }
         }
     } else
     {
         $_SESSION["error"] = "Todos los campos son requeridos";
-        die(json_encode($_POST));
     }
 }
 

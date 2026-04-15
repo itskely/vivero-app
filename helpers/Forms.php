@@ -19,6 +19,7 @@ class Form
                     {$required}
                     value='{$value}' 
                     placeholder='{$placeholder}'
+                    onwheel='this.blur()'
                 />
             </div>
         ";

@@ -1,3 +1,6 @@
+<?php
+include __DIR__ . "/../controllers/AuditoriaController.php";
+?>
 <div>
     <!-- SUCCESS -->
 
@@ -137,35 +140,6 @@
                     </div>
                 </div>
 
-                <!-- <div class="grid gap-4">
-                    <div class="p-4 border rounded-xl bg-green-50 dark:bg-green-600/20 space-y-3 mt-2">
-                        <p class="text-green-600 font-medium"> Destino (Entra)</p>
-                        <div>
-                            <label class="block mb-2 text-sm">Etapa destino</label>
-                            <select name="etapa_destino_id" class="input-component" id="etapa_destino_id" required>
-                                <option disabled selected>Seleccionar...</option>
-                                <?php foreach ($allEtapas as $e): ?>
-                                    <option value="<?= $e['id'] ?>">
-                                        <?= $e['nombre'] ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block mb-2 text-sm">Ubicacion destino</label>
-                            <select name="ubi_destino_id" class="input-component" id="ubi_destino_id" required>
-                                <option disabled selected>Seleccionar...</option>
-                                <?php foreach ($allUbicaciones as $e): ?>
-                                    <option value="<?= $e['id'] ?>">
-                                        <?= $e['nombre'] ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-                </div> -->
-
-
                 <div class="grid gap-4">
 
                     <div class="space-y-2">
@@ -176,120 +150,44 @@
 
                 </div>
 
-                <div id="alert-success"
-                    class="hidden p-4 rounded-lg border bg-emerald-50 border-emerald-200 dark:bg-emerald-600/20 dark:border-emerald-600">
-                    <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-circle-check h-5 w-5 text-emerald-600 shrink-0 mt-0.5"
-                            aria-hidden="true">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="m9 12 2 2 4-4"></path>
-                        </svg>
-                        <div class="flex-1">
-                            <h4 class="font-medium text-sm text-emerald-700">Sin Merma</h4>
-                            <div class="mt-2 space-y-1">
-                                <div class="flex justify-between text-sm"><span class="text-muted-foreground">Cantidad
-                                        que
-                                        sale:</span><span class="font-medium tabular-nums" data-stock-out></span>
-                                </div>
-                                <div class="flex justify-between text-sm"><span class="text-muted-foreground">Cantidad
-                                        que
-                                        entra:</span><span class="font-medium tabular-nums" data-stock-in></span>
-                                </div>
-                                <div class="border-t border-dashed mt-2 pt-2">
-                                    <div class="flex justify-between text-sm"><span
-                                            class="font-medium text-emerald-700">Merma:</span><span
-                                            class="font-bold tabular-nums text-emerald-700">0 Unidades
-                                            (0.0%)</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="alert-audit" class="p-4 hidden rounded-lg border">
+                    <div class="flex items-start gap-3">
+                        <div data-icon>
 
-                <div id="alert-merma"
-                    class="hidden p-4 rounded-lg border bg-amber-50 border-amber-200 dark:bg-amber-600/20 dark:border-amber-600">
-                    <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-trending-down h-5 w-5 text-amber-600 shrink-0 mt-0.5"
-                            aria-hidden="true">
-                            <path d="M16 17h6v-6"></path>
-                            <path d="m22 17-8.5-8.5-5 5L2 7"></path>
-                        </svg>
+                        </div>
                         <div class="flex-1">
-                            <h4 class="font-medium text-sm text-amber-700">Merma Detectada</h4>
-                            <div class="mt-2 space-y-1">
-                                <div class="flex justify-between text-sm"><span class="text-muted-foreground">Cantidad
-                                        que
-                                        sale:</span><span class="font-medium tabular-nums" data-stock-out></span>
+                            <h4 class="font-medium text-sm" data-title>Stock Real Menor - Diferencia
+                                Significativa
+                            </h4>
+                            <div class="mt-3 space-y-2">
+                                <div class="flex justify-between text-sm"><span class="text-muted-foreground">Stock en
+                                        Sistema:</span><span class="font-medium tabular-nums" data-stock-sistema></span>
                                 </div>
-                                <div class="flex justify-between text-sm"><span class="text-muted-foreground">Cantidad
-                                        que
-                                        entra:</span><span class="font-medium tabular-nums" data-stock-in></span>
+                                <div class="flex justify-between text-sm"><span class="text-muted-foreground">Stock Real
+                                        (Conteo):</span><span class="font-medium tabular-nums" data-stock-real></span>
                                 </div>
-                                <div class="border-t border-dashed mt-2 pt-2">
+                                <div class="border-t border-dashed pt-2">
                                     <div class="flex justify-between text-sm"><span
-                                            class="font-medium text-amber-700">Merma:</span><span
-                                            class="font-bold tabular-nums text-amber-700" data-stock-merma></span>
+                                            class="font-medium text-foreground">Diferencia:</span><span
+                                            class="font-bold tabular-nums" data-diferencia></span>
                                     </div>
                                 </div>
-                                <div class="h-2 bg-amber-400 rounded-full mt-2" data-stock-merma-porcentaje
-                                    style="width: 0%;"></div>
+                                <p class="text-xs mt-2 p-2 rounded" data-message>Se
+                                    registrará una SALIDA de 50 Unidades para ajustar el inventario.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="alert-error"
-                    class="hidden p-4 rounded-lg border bg-red-50 border-red-200 dark:bg-red-600/20 dark:border-red-600">
-                    <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-triangle-alert h-5 w-5 text-red-600 shrink-0 mt-0.5"
-                            aria-hidden="true">
-                            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3">
-                            </path>
-                            <path d="M12 9v4"></path>
-                            <path d="M12 17h.01"></path>
-                        </svg>
-                        <div class="flex-1">
-                            <h4 class="font-medium text-sm text-red-700">Valores Inválidos</h4>
-                            <p class="text-sm text-red-600 mt-1">La cantidad que entra no puede ser mayor a la que
-                                sale ni negativa.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="alert-stock-error"
-                    class="group/alert hidden relative gap-2 w-full rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[&gt;svg]:grid-cols-[auto_1fr] has-[&gt;svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg:not([class*='size-'])]:size-4 bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-circle-alert h-4 w-4" aria-hidden="true">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" x2="12" y1="8" y2="12"></line>
-                        <line x1="12" x2="12.01" y1="16" y2="16"></line>
-                    </svg>
-                    <div data-slot="alert-description"
-                        class="text-sm text-balance text-muted-foreground md:text-pretty [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_a]:hover:text-foreground [&amp;_p:not(:last-child)]:mb-4">
-                        La cantidad a mover (<span data-stock-out-error></span>) excede el stock disponible (<span
-                            data-stock-available-error></span>).</div>
-                </div>
-
-
                 <div class="space-y-2">
-                    <?= Form::textarea("observaciones", "observaciones", "", "Observaciones", "", false) ?>
+                    <?= Form::textarea("observaciones", "observaciones", "", "Observaciones de auditoría", "Describe la razón del ajuste, hallazgos durante la auditoría, etc...", false) ?>
                     <p class="text-muted-foreground text-sm">Obligatorio para auditoría. Documenta la razón de la
                         diferencia.</p>
                 </div>
 
                 <div class="flex justify-end gap-2 mt-3">
-                    <button type="button" @click="open = false" class="btn btn-outline btn-size-default">
-                        limpíar
-                    </button>
-
-                    <button id="submit-form" type="submit" class="btn btn-default btn-size-default">Crear</button>
+                    <button id="submit-form" type="submit" class="btn btn-default btn-size-default">Registrar
+                        ajuste</button>
                 </div>
 
             </form>
@@ -298,28 +196,8 @@
     </div>
 
 
-    <div class="relative overflow-x-auto shadow-xs rounded-base border">
-        <table class="w-full text-sm text-left rtl:text-right text-body">
-            <thead class="text-sm bg-accent border-b rounded-base border-default">
-                <tr>
-                    <th class="px-6 py-3">Lote</th>
-                    <th class="px-6 py-3">Etapa</th>
-                    <th class="px-6 py-3">Ubicación</th>
-                    <th class="px-6 py-3">Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($movimientos ?? [] as $m): ?>
-                    <tr class="border-b">
-                        <td class="px-6 py-4"><?= $m['lote'] ?></td>
-                        <td class="px-6 py-4"><?= $m['etapa'] ?></td>
-                        <td class="px-6 py-4"><?= $m['ubicacion'] ?></td>
-                        <td class="px-6 py-4"><?= $m['fecha'] ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+
 </div>
 
 <script src="/assets/scripts/auditoria.js"></script>
+<script src="/assets/scripts/ejercicio.js"></script>
