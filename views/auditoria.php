@@ -5,31 +5,29 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
     <!-- SUCCESS -->
 
     <?php
-    if (isset($_SESSION["success"]))
-    {
-        ?>
+    if (isset($_SESSION["success"])) {
+    ?>
         <script>
             toast({
                 message: "<?= $_SESSION["success"] ?>",
                 position: "top-right"
             });
         </script>
-        <?php
+    <?php
         unset($_SESSION["success"]);
     }
     ?>
 
     <?php
-    if (isset($_SESSION["error"]))
-    {
-        ?>
+    if (isset($_SESSION["error"])) {
+    ?>
         <script>
             toast({
                 message: "<?= $_SESSION["error"] ?>",
                 position: "top-right"
             });
         </script>
-        <?php
+    <?php
         unset($_SESSION["error"]);
     }
     ?>
@@ -200,4 +198,3 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
 </div>
 
 <script src="/assets/scripts/auditoria.js"></script>
-<script src="/assets/scripts/ejercicio.js"></script>

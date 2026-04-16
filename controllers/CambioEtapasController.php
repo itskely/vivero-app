@@ -11,7 +11,6 @@ $inventario = new InventarioModel();
 $method = $_SERVER['REQUEST_METHOD'];
 $params = $_GET;
 $id = $_GET['id'] ?? null;
-$delete_id = $_GET['delete_id'] ?? null;
 $lote_id = $_POST['lote_id'] ?? null;
 $inventario_id = $_POST['inventario_id'] ?? null;
 $etapa_destino_id = $_POST['etapa_destino_id'] ?? null;
@@ -20,23 +19,17 @@ $cantidad_salida = $_POST['cantidad_salida'] ?? null;
 $cantidad_entrada = $_POST['cantidad_entrada'] ?? null;
 $observaciones = $_POST['observaciones'] ?? null;
 
-if ($method === "POST")
-{
-    if ($lote_id && $inventario_id && $etapa_destino_id && $ubi_destino_id && $cantidad_salida && $cantidad_entrada)
-    {
+if ($method === "POST") {
+    if ($lote_id && $inventario_id && $etapa_destino_id && $ubi_destino_id && $cantidad_salida && $cantidad_entrada) {
         $inventario->setId($inventario_id);
         $invLote = $inventario->getOne();
 
-        if (!$invLote)
-        {
+        if (!$invLote) {
             $_SESSION["error"] = "Inventario no encontrado";
-        } else
-        {
-            if ($cantidad_salida > $invLote['cantidad_actual'] || $invLote['cantidad_actual'] === 0)
-            {
+        } else {
+            if ($cantidad_salida > $invLote['cantidad_actual'] || $invLote['cantidad_actual'] === 0) {
                 $_SESSION["error"] = "Cantidad de salida mayor a la cantidad en inventario";
-            } else
-            {
+            } else {
                 $cambioEtapa->setId($id);
                 $cambioEtapa->setLoteId($lote_id);
                 $cambioEtapa->setEtapaOrigenId($invLote['etapa_id']);
@@ -48,44 +41,15 @@ if ($method === "POST")
                 $cambioEtapa->setObservaciones($observaciones);
 
                 $fueCreado = $cambioEtapa->crear();
-                if ($fueCreado)
-                {
+                if ($fueCreado) {
                     $_SESSION["success"] = "Movimiento creado con éxito";
-                } else
-                {
+                } else {
                     $_SESSION["error"] = "Error al crear el movimiento";
                 }
             }
         }
-    } else
-    {
+    } else {
         $_SESSION["error"] = "Todos los campos son requeridos";
-    }
-}
-
-$oneCambioEtapa = null;
-if ($id)
-{
-    $cambioEtapa->setId($id);
-    $oneCambioEtapa = $cambioEtapa->getOne();
-}
-
-if ($delete_id)
-{
-    $cambioEtapa->setId($delete_id);
-    $fueEliminado = $cambioEtapa->delete();
-    if ($fueEliminado)
-    {
-        unset($params['delete_id']);
-
-        // 3. Reconstruir la URL
-        $newQuery = http_build_query($params);
-        $newUrl = $_SERVER['PHP_SELF'] . '?' . $newQuery;
-        $_SESSION["success"] = "Lote eliminado con éxito";
-        header("Location: $newUrl");
-    } else
-    {
-        $_SESSION["error"] = "Error al eliminar el lote";
     }
 }
 

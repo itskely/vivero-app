@@ -121,7 +121,13 @@ class MovimientoInventarioModel
         $busqueda = $this->getBusqueda();
         $limit = $this->getLimit();
         $offset = $this->getOffset();
-        $stmt = $this->conn->prepare("SELECT * FROM movimientos_inventario WHERE lote_id LIKE :busqueda OR etapa_id LIKE :busqueda OR ubicacion_id LIKE :busqueda OR cantidad LIKE :busqueda OR motivo LIKE :busqueda LIMIT :lim OFFSET :offs");
+        $stmt = $this->conn->prepare("SELECT mi.id, l.codigo_lote, l.unidad_medida, p.nombre_comun, mi.tipo_movimiento, mi.cantidad, e.nombre AS nombre_etapa, u.nombre AS nombre_ubicacion, mi.motivo, mi.fecha, mi.estado FROM movimientos_inventario AS mi 
+        INNER JOIN lotes AS l ON mi.lote_id = l.id 
+        INNER JOIN plantas AS p ON l.planta_id = p.id 
+        INNER JOIN etapas AS e ON mi.etapa_id = e.id 
+        INNER JOIN ubicaciones AS u ON mi.ubicacion_id = u.id 
+        INNER JOIN usuarios AS us ON mi.usuario_id = us.id 
+        WHERE l.codigo_lote LIKE :busqueda OR p.nombre_comun LIKE :busqueda OR mi.tipo_movimiento LIKE :busqueda OR e.nombre LIKE :busqueda OR u.nombre LIKE :busqueda OR mi.estado LIKE :busqueda LIMIT :lim OFFSET :offs;");
         $param = "%$busqueda%";
         $stmt->bindParam(":busqueda", $param);
         $stmt->bindParam(":lim", $limit, PDO::PARAM_INT);

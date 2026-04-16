@@ -18,8 +18,6 @@ $observaciones = $_POST['observaciones'] ?? null;
 
 if ($method === "POST")
 {
-    var_dump($_POST);
-    die();
     if ($lote_id && $inventario_id && $cantidad_real && $observaciones)
     {
         $inventario->setId($inventario_id);

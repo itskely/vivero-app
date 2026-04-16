@@ -149,6 +149,7 @@ function getLotes(busqueda = '') {
 
                                 $nuevoItem.click(function () {
                                     selectedStock = stock;
+                                    inventario_id.val(stock.id);
                                     cantidad_real.val(stock.cantidad_actual);
 
                                     stockContainer
