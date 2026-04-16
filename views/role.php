@@ -133,7 +133,7 @@ include __DIR__ . "/../controllers/RolesController.php";
                                                             value="<?= $pg['id'] ?>"
                                                             class="sr-only peer"
                                                             <?= in_array($pg['id'], array_column($rolePages, 'page_id')) ? "checked" : "" ?>>
-                                                        <div class="relative w-9 h-5 bg-neutral-quaternary peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-soft dark:peer-focus:ring-brand-soft rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                                                        <div class="relative w-9 h-5 bg-neutral-quaternary peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-soft dark:peer-focus:ring-brand-soft rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:inset-s-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
                                                         <span class="select-none ms-3 text-sm font-medium text-heading"><?= $pg['name'] ?></span>
                                                     </label>
                                                 <?php
