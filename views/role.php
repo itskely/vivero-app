@@ -133,7 +133,7 @@ include __DIR__ . "/../controllers/RolesController.php";
                                                             value="<?= $pg['id'] ?>"
                                                             class="sr-only peer"
                                                             <?= in_array($pg['id'], array_column($rolePages, 'page_id')) ? "checked" : "" ?>>
-                                                        <div class="relative w-9 h-5 bg-neutral-quaternary peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-soft dark:peer-focus:ring-brand-soft rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand"></div>
+                                                        <div class="relative w-9 h-5 bg-neutral-quaternary peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-soft dark:peer-focus:ring-brand-soft rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
                                                         <span class="select-none ms-3 text-sm font-medium text-heading"><?= $pg['name'] ?></span>
                                                     </label>
                                                 <?php
@@ -142,8 +142,8 @@ include __DIR__ . "/../controllers/RolesController.php";
                                             </div>
                                             <!-- Modal footer -->
                                             <div class="flex items-center border-t border-default space-x-4 pt-4 md:pt-5">
-                                                <button type="submit" class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">Guardar</button>
-                                                <button data-modal-hide="default-modal-<?= $rl['id'] ?>" type="button" class="text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">Cancelar</button>
+                                                <button type="submit" class="btn btn-default btn-size-default">Guardar</button>
+                                                <button data-modal-hide="default-modal-<?= $rl['id'] ?>" type="button" class="btn btn-outline btn-size-default">Cancelar</button>
                                             </div>
                                         </div>
                                     </div>
