@@ -3,10 +3,12 @@ include __DIR__ . "/../models/LoteModel.php";
 include __DIR__ . "/../models/PlantaModel.php";
 include __DIR__ . "/../models/EtapasModel.php";
 include __DIR__ . "/../models/UbicacionesModel.php";
+include __DIR__ . "/../models/OrigenModel.php";
 $lote = new LoteModel();
 $planta = new PlantaModel();
 $etapa = new EtapasModel();
 $ubicacion = new UbicacionesModel();
+$origenModel = new OrigenModel();
 
 $method = $_SERVER['REQUEST_METHOD'];
 $params = $_GET;
@@ -18,10 +20,13 @@ $unidad_medida = $_POST['unidad_medida'] ?? null;
 $cantidad = $_POST['cantidad'] ?? null;
 $etapa_id = $_POST['etapa_id'] ?? null;
 $ubicacion_id = $_POST['ubicacion_id'] ?? null;
+$origen = $_POST['origen_id'] ?? null;
 $observaciones = $_POST['observaciones'] ?? null;
 
-if ($method === "POST") {
-    if ($planta_id && $codigo_lote && $unidad_medida && $cantidad && $etapa_id && $ubicacion_id) {
+if ($method === "POST")
+{
+    if ($planta_id && $codigo_lote && $unidad_medida && $cantidad && $etapa_id && $ubicacion_id && $origen && $observaciones)
+    {
         $lote->setId($id);
         $lote->setPlantaId($planta_id);
         $lote->setCodigoLote($codigo_lote);
@@ -29,20 +34,26 @@ if ($method === "POST") {
         $lote->setCantidad($cantidad);
         $lote->setEtapaId($etapa_id);
         $lote->setUbicacionId($ubicacion_id);
+        $lote->setOrigen($origen);
         $lote->setObservaciones($observaciones);
 
-        if (empty($id)) {
+        if (empty($id))
+        {
             $fueCreado = $lote->crear();
-            if ($fueCreado) {
+            if ($fueCreado)
+            {
                 $_SESSION["success"] = "Lote creado con éxito";
-            } else {
+            } else
+            {
                 $_SESSION["error"] = "Error al crear el lote";
             }
-        } else {
+        } else
+        {
             $editingLote = $lote->getOne();
 
             $fueEditado = $lote->update();
-            if ($fueEditado) {
+            if ($fueEditado)
+            {
                 unset($params['id']);
 
                 // 3. Reconstruir la URL
@@ -50,25 +61,30 @@ if ($method === "POST") {
                 $newUrl = $_SERVER['PHP_SELF'] . '?' . $newQuery;
                 $_SESSION["success"] = "Lote actualizado con éxito";
                 header("Location: $newUrl");
-            } else {
+            } else
+            {
                 $_SESSION["error"] = "Error al actualizar el lote";
             }
         }
-    } else {
+    } else
+    {
         $_SESSION["error"] = "Todos los campos son requeridos";
     }
 }
 
 $oneLote = null;
-if ($id) {
+if ($id)
+{
     $lote->setId($id);
     $oneLote = $lote->getOne();
 }
 
-if ($delete_id) {
+if ($delete_id)
+{
     $lote->setId($delete_id);
     $fueEliminado = $lote->delete();
-    if ($fueEliminado) {
+    if ($fueEliminado)
+    {
         unset($params['delete_id']);
 
         // 3. Reconstruir la URL
@@ -76,7 +92,8 @@ if ($delete_id) {
         $newUrl = $_SERVER['PHP_SELF'] . '?' . $newQuery;
         $_SESSION["success"] = "Lote eliminado con éxito";
         header("Location: $newUrl");
-    } else {
+    } else
+    {
         $_SESSION["error"] = "Error al eliminar el lote";
     }
 }
@@ -105,6 +122,9 @@ $allPlantas = $planta->getAll();
 $allEtapas = $etapa->getAll();
 
 $allUbicaciones = $ubicacion->getAll();
+
+$allUbicacion = $etapa->getAll();
+$allOrigen = $origenModel->getAll();
 
 $unidades_medida = [
     "unidades",

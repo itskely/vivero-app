@@ -5,6 +5,7 @@ class OrigenModel
     private $id;
     private $nombre;
     private $descripcion;
+    private $tipo;
     private $conn = null;
 
     // Setters
@@ -23,6 +24,10 @@ class OrigenModel
         $this->descripcion = $descripcion;
     }
 
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+    }
 
     // Getters
     public function getId()
@@ -40,6 +45,10 @@ class OrigenModel
         return $this->descripcion;
     }
 
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
 
     public function __construct()
     {
@@ -78,27 +87,31 @@ class OrigenModel
 
     public function crear()
     {
-        $stmt = $this->conn->prepare("INSERT INTO origen(nombre_origen, descripcion) VALUES (:nombre,:descripcion)");
+        $stmt = $this->conn->prepare("INSERT INTO origen(nombre_origen, descripcion,tipo) VALUES (:nombre,:descripcion,:tipo)");
         $nombre = $this->getNombre();
         $descripcion = $this->getdescripcion();
+        $tipo = $this->getTipo();
 
         $stmt->bindParam(":nombre", $nombre);
         $stmt->bindParam(":descripcion", $descripcion);
+        $stmt->bindParam(":tipo", $tipo);
 
         return $stmt->execute();
     }
 
     public function update()
     {
-        $stmt = $this->conn->prepare("UPDATE origen SET nombre_origen=:nombre, descripcion=:descripcion WHERE id = :id");
+        $stmt = $this->conn->prepare("UPDATE origen SET nombre_origen=:nombre, descripcion=:descripcion,tipo=:tipo WHERE id = :id");
         $id = $this->getId();
         $nombre = $this->getNombre();
         $descripcion = $this->getdescripcion();
+        $tipo = $this->getTipo();
 
 
         $stmt->bindParam(":id", $id);
         $stmt->bindParam(":nombre", $nombre);
         $stmt->bindParam(":descripcion", $descripcion);
+        $stmt->bindParam(":tipo", $tipo);
 
         return $stmt->execute();
     }

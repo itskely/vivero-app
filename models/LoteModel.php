@@ -4,11 +4,13 @@ class LoteModel
 {
     private $id;
     private $planta_id;
+
     private $codigo_lote;
     private $unidad_medida;
     private $cantidad;
     private $etapa_id;
     private $ubicacion_id;
+    private $origen;
     private $observaciones;
 
     // Variables de busqueda y paginación
@@ -46,6 +48,10 @@ class LoteModel
     public function setUbicacionId($ubicacion_id)
     {
         $this->ubicacion_id = $ubicacion_id;
+    }
+    public function setOrigen($origen)
+    {
+        $this->origen = $origen;
     }
     public function setObservaciones($observaciones)
     {
@@ -105,7 +111,10 @@ class LoteModel
     {
         return $this->observaciones;
     }
-
+    public function getOrigen()
+    {
+        return $this->origen;
+    }
     public function getBusqueda()
     {
         return $this->busqueda;
@@ -161,13 +170,14 @@ class LoteModel
 
     public function crear()
     {
-        $stmt = $this->conn->prepare("CALL sp_registrar_nuevo_lote(:planta_id, :codigo_lote, :unidad_medida, :cantidad, :etapa_id, :ubicacion_id, :usuario_id, :observaciones)");
+        $stmt = $this->conn->prepare("CALL sp_registrar_nuevo_lote(:planta_id, :codigo_lote, :unidad_medida, :cantidad, :etapa_id, :ubicacion_id, :usuario_id, :observaciones, :origen)");
         $planta_id = $this->getPlantaId();
         $codigo_lote = $this->getCodigoLote();
         $unidad_medida = $this->getUnidadMedida();
         $cantidad = $this->getCantidad();
         $etapa_id = $this->getEtapaId();
         $ubicacion_id = $this->getUbicacionId();
+        $origen = $this->getOrigen();
         $usuario_id = $_SESSION['usuario']['id'];
         $observaciones = $this->getObservaciones();
         $stmt->bindParam(":planta_id", $planta_id);
@@ -176,6 +186,7 @@ class LoteModel
         $stmt->bindParam(":cantidad", $cantidad);
         $stmt->bindParam(":etapa_id", $etapa_id);
         $stmt->bindParam(":ubicacion_id", $ubicacion_id);
+        $stmt->bindParam(":origen", $origen);
         $stmt->bindParam(":usuario_id", $usuario_id);
         $stmt->bindParam(":observaciones", $observaciones);
         return $stmt->execute();

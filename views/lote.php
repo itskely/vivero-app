@@ -74,35 +74,49 @@ include __DIR__ . "/../controllers/LotesController.php";
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <div>
+                        <label for="origen_id" class="block mb-2.5 text-sm font-medium">Origen</label>
+                        <select id="origen_id" name="origen_id" class="input-component" required>
+                            <option value="" selected disabled>Seleccionar origen</option>
+
+                            <?php foreach ($allOrigen as $o): ?>
+                                <option value="<?= $o['id'] ?>" <?= $oneLote && $oneLote['origen_id'] == $o['id'] ? 'selected' : '' ?>>
+                                    <?= $o['nombre_origen'] ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
                     <div class="col-span-2">
                         <?= Form::textarea("observaciones", "observaciones", $oneLote ? $oneLote['observaciones'] : "", "Observaciones", "Notas adicionales sobre el lote...") ?>
                     </div>
 
                     <?php
-                    if (isset($_SESSION["success"])) {
-                    ?>
+                    if (isset($_SESSION["success"]))
+                    {
+                        ?>
                         <script>
                             toast({
                                 message: "<?= $_SESSION["success"] ?>",
                                 position: "top-right"
                             });
                         </script>
-                    <?php
+                        <?php
                         unset($_SESSION["success"]);
                     }
                     ?>
 
                     <?php
-                    if (isset($_SESSION["error"])) {
-                    ?>
+                    if (isset($_SESSION["error"]))
+                    {
+                        ?>
                         <script>
                             toast({
                                 message: "<?= $_SESSION["error"] ?>",
                                 position: "top-right"
                             });
                         </script>
-                    <?php
+                        <?php
                         unset($_SESSION["error"]);
                     }
                     ?>
@@ -140,12 +154,16 @@ include __DIR__ . "/../controllers/LotesController.php";
                         Ubicación
                     </th>
                     <th scope="col" class="px-6 py-3 font-medium">
+                        Origen
+                    </th>
+                    <th scope="col" class="px-6 py-3 font-medium">
                         Observaciones
                     </th>
                     <th scope="col" class="px-6 py-3 font-medium">
                         Acciones
                     </th>
                 </tr>
+
             </thead>
 
         </table>
