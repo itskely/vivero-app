@@ -229,4 +229,22 @@
     .btn-size-icon {
         @apply size-8;
     }
+    .quick-card {
+        @apply bg-card text-card-foreground rounded-2xl border border-border shadow-sm 
+           p-6 flex flex-col items-center justify-center text-center gap-2
+           transition-all duration-200 cursor-pointer
+           max-w-[140px] w-full mx-auto;
+    }
+
+    .quick-card:hover {
+        @apply bg-accent text-accent-foreground -translate-y-1 shadow-md;
+    }
+
+    .quick-card-icon {
+        @apply text-primary text-2xl;
+    }
+
+    .quick-card-title {
+        @apply font-semibold text-sm;
+    }
 }

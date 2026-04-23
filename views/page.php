@@ -146,7 +146,7 @@ include __DIR__ . "/../controllers/PagesController.php";
                         Acciones
                     </th>
                 </tr>
-            </thead>
+            </thead>    
             <tbody>
                 <?php
                 foreach ($allPages as $pg) {

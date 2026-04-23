@@ -131,42 +131,6 @@ include __DIR__ . "/../controllers/LotesController.php";
         </div>
     </div>
 
-    <div class="relative overflow-x-auto shadow-xs rounded-base border">
-        <table class="w-full text-sm text-left rtl:text-right text-body">
-            <thead class="text-sm bg-accent border-b rounded-base border-default">
-                <tr>
-                    <th scope="col" class="px-6 py-3 font-medium">
-                        Planta
-                    </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
-                        Código de lote
-                    </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
-                        Unidad de Medida
-                    </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
-                        Cantidad Inicial
-                    </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
-                        Etapa Inicial
-                    </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
-                        Ubicación
-                    </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
-                        Origen
-                    </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
-                        Observaciones
-                    </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
-                        Acciones
-                    </th>
-                </tr>
 
-            </thead>
-
-        </table>
-    </div>
 
 </div>
