@@ -151,7 +151,7 @@ include __DIR__ . "/../controllers/PagesController.php";
                 <?php
                 foreach ($allPages as $pg) {
                 ?>
-                    <tr class="bg-neutral-primary border-b border-default">
+                    <tr class="rounded-xl bg-card border ">
                         <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                             <?= $pg['name'] ?>
                         </th>

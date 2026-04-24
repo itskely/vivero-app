@@ -133,7 +133,7 @@ include __DIR__ . "/../controllers/PlantaController.php";
                 {
 
                     ?>
-                    <tr class="bg-neutral-primary border-b border-default">
+                    <tr class="rounded-xl bg-card border">
                         <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                             <?= $pg['id'] ?>
                         </th>

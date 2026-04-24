@@ -165,4 +165,15 @@ class MovimientoInventarioModel
         $stmt->bindParam(":motivo", $observaciones);
         return $stmt->execute();
     }
+
+    public function anular()
+    {
+        $stmt = $this->conn->prepare("CALL sp_anular_movimiento(:movimiento_id, :usuario_id)");
+        $id = $this->getId();
+        $usuario_id = $_SESSION['usuario']['id'];
+
+        $stmt->bindParam(":movimiento_id", $id);
+        $stmt->bindParam(":usuario_id", $usuario_id);
+        return $stmt->execute();
+    }
 }

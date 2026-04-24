@@ -11,14 +11,37 @@ $inventario = new InventarioModel();
 $method = $_SERVER['REQUEST_METHOD'];
 $params = $_GET;
 $id = $_GET['id'] ?? null;
+$anulacion_id = $_POST['anulacion_id'] ?? null;
 $lote_id = $_POST['lote_id'] ?? null;
 $inventario_id = $_POST['inventario_id'] ?? null;
 $cantidad_real = $_POST['cantidad_real'] ?? null;
 $observaciones = $_POST['observaciones'] ?? null;
 
+
 if ($method === "POST")
 {
-    if ($lote_id && $inventario_id && $cantidad_real && $observaciones)
+    if ($anulacion_id)
+    {
+        try
+        {
+            $movimientoInventario->setId($anulacion_id);
+            $movimiento = $movimientoInventario->getOne();
+            if ($movimiento && $movimiento["estado"] === "anulado")
+            {
+                $_SESSION["error"] = "El movimiento ya se encuentra anulado";
+            } else
+            {
+                $fueAnulado = $movimientoInventario->anular();
+                if ($fueAnulado)
+                {
+                    $_SESSION["success"] = "Movimiento anulado con éxito";
+                }
+            }
+        } catch (Exception $e)
+        {
+            $_SESSION["error"] = $e->getMessage();
+        }
+    } elseif ($lote_id && $inventario_id && $cantidad_real && $observaciones)
     {
         $inventario->setId($inventario_id);
         $invLote = $inventario->getOne();

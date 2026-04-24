@@ -8,50 +8,53 @@ include __DIR__ . "/../controllers/EtapasController.php";
 
         <form method="POST" class="max-w-sm mx-auto space-y-4">
             <?=
-            Form::input(
-                "text",
-                "nombre",
-                "nombre",
-                $oneEtapa ? $oneEtapa['nombre'] : "",
-                "Nombre de la etapa"
-            );
+                Form::input(
+                    "text",
+                    "nombre",
+                    "nombre",
+                    $oneEtapa ? $oneEtapa['nombre'] : "",
+                    "Nombre de la etapa"
+                );
             ?>
             <?=
-            Form::textarea(
-                "descripcion",
-                "descripcion",
-                $oneEtapa ? $oneEtapa['descripcion'] : "",
-                "Descripción"
-            );
+                Form::textarea(
+                    "descripcion",
+                    "descripcion",
+                    $oneEtapa ? $oneEtapa['descripcion'] : "",
+                    "Descripción"
+                );
             ?>
 
 
             <button type="submit" class="btn btn-default btn-size-default">Crear</button>
             <?php
             if ($oneEtapa):
-            ?>
-                <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>" class="text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">Cancelar</a>
-            <?php
+                ?>
+                <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>"
+                    class="text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">Cancelar</a>
+                <?php
             endif;
             ?>
             <?php
-            if (isset($_SESSION["success"])) {
-            ?>
+            if (isset($_SESSION["success"]))
+            {
+                ?>
                 <div class="p-4 mb-4 text-sm text-fg-success-strong rounded-base bg-success-soft" role="alert">
                     <?= $_SESSION["success"] ?>
                 </div>
-            <?php
+                <?php
                 unset($_SESSION["success"]);
             }
             ?>
 
             <?php
-            if (isset($_SESSION["error"])) {
-            ?>
+            if (isset($_SESSION["error"]))
+            {
+                ?>
                 <div class="p-4 mb-4 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
                     <?= $_SESSION["error"] ?>
                 </div>
-            <?php
+                <?php
                 unset($_SESSION["error"]);
             }
             ?>
@@ -82,9 +85,10 @@ include __DIR__ . "/../controllers/EtapasController.php";
             </thead>
             <tbody>
                 <?php
-                foreach ($allEtapas as $et) {
-                ?>
-                    <tr class="bg-neutral-primary border-b border-default">
+                foreach ($allEtapas as $et)
+                {
+                    ?>
+                    <tr class="rounded-xl bg-card border">
                         <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                             <?= $et['id'] ?>
                         </th>
@@ -96,21 +100,21 @@ include __DIR__ . "/../controllers/EtapasController.php";
                         </td>
 
                         <td class="px-6 py-4">
-                            <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&id=<?= $et['id'] ?>" class="font-medium text-blue-600 hover:underline"><i class="fa-regular fa-pen-to-square"></i>Editar</a>
-                            <button
-                                onclick="function eliminar() {
+                            <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&id=<?= $et['id'] ?>"
+                                class="font-medium text-blue-600 hover:underline"><i
+                                    class="fa-regular fa-pen-to-square"></i>Editar</a>
+                            <button onclick="function eliminar() {
                                     if (confirm('¿Estás seguro de que deseas eliminar esta etapa?')) {
                                         window.location.href = '/home.php?page_id=<?= $pageAccessed['id'] ?>&delete_id=<?= $et['id'] ?>';
                                     }
                                 }
-                                eliminar()"
-                                class="font-medium text-red-600 hover:underline ms-4 cursor-pointer">
+                                eliminar()" class="font-medium text-red-600 hover:underline ms-4 cursor-pointer">
                                 <i class="fa-regular fa-trash-can"></i>
                                 Eliminar
                             </button>
                         </td>
                     </tr>
-                <?php
+                    <?php
                 }
                 ?>
             </tbody>

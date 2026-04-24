@@ -88,7 +88,7 @@ include __DIR__ . "/../controllers/DestinoController.php";
                 foreach ($allDestinos as $ds)
                 {
                     ?>
-                    <tr class="bg-neutral-primary border-b border-default">
+                    <tr class="rounded-xl bg-card border">
                         <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                             <?= $ds['id'] ?>
                         </th>

@@ -17,91 +17,40 @@ include __DIR__ . "/../controllers/PlantaController.php";
 
     </div>
 </section>
-<section class="py-12 px-6">
-    <h2 class=" text-2xl font-semibold text-center mb-8">
-        Acciones rápidas
-
-    </h2>
+<section class="py-12 px-3 ">
 
 
-    <div class="grid grid-cols-2 sm:grid-cols-3  md:grid-cols-2 lg:grid-cols-8 gap-1">
-        <a href="/home.php?page_id=2" class="quick-card">
-            <i class="fa-regular fa-file quick-card-icon"></i>
-            <span class="quick-card-title">Páginas</span>
-        </a>
-        <a href="/home.php?page_id=4" class="quick-card">
-            <i class="fa-solid fa-shield-halved quick-card-icon"></i>
-            <span class="quick-card-title">roles</span>
-
-        </a>
-        <a href="/home.php?page_id=4" class="quick-card">
-            <i class="fa-regular fa-user quick-card-icon"></i>
-            <span class="quick-card-title">Usuario</span>
-        </a>
-        <a href="/home.php?page_id=5" class="quick-card">
-            <i class="fa-solid fa-map quick-card-icon"></i>
-            <span class="quick-card-title">Ubicaciones</span>
-        </a>
-        <a href="/home.php?page_id=8" class="quick-card">
-            <i class="fa-solid fa-layer-group quick-card-icon"></i>
-            <span class="quick-card-title">Etapas</span>
-        </a>
-        <a href="/home.php?page_id=9" class="quick-card">
-            <i class="fa-brands fa-pagelines quick-card-icon"></i>
-            <span class="quick-card-title">Plantas</span>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 justify-items-center">
+        <a href="/home.php?page_id=3" class="quick-card">
+            <i class="fa-solid fa-boxes-stacked quick-card-icon"></i>
+            <span class="quick-card-title">Inventario</span>
         </a>
 
-
-        <a href="/home.php?page_id=6" class="quick-card">
-            <i class="fa-solid fa-location-dot quick-card-icon"></i>
-            <span class="quick-card-title">Destinos</span>
-        </a>
-        <a href="/home.php?page_id=6" class="quick-card">
-            <i class="fa-solid fa-location-dot quick-card-icon"></i>
-            <span class="quick-card-title">Origen</span>
-        </a>
-
-    </div>
-</section>
-<section class="py-12 px-6">
-    <h2 class="text-2xl font-semibold text-center mb-8 ">
-        movimientos
-    </h2>
-
-    <div class="grid grid-cols-2 sm:grid-cols-3  md:grid-cols-4 lg:grid-cols-4 gap-1">
-        <a href="/home.php?page_id=2" class="quick-card">
-            <i class="fa-regular fa-file quick-card-icon"></i>
+        <a href="/home.php?page_id=17" class="quick-card">
+            <i class="fa-solid fa-dolly quick-card-icon"></i>
             <span class="quick-card-title">lotes</span>
         </a>
-        <a href="/home.php?page_id=4" class="quick-card">
-            <i class="fa-solid fa-shield-halved quick-card-icon"></i>
+        <a href="/home.php?page_id=26" class="quick-card">
+            <i class="fa-solid fa-share quick-card-icon"></i>
             <span class="quick-card-title">salidas</span>
 
         </a>
-        <a href="/home.php?page_id=4" class="quick-card">
-            <i class="fa-regular fa-user quick-card-icon"></i>
-            <span class="quick-card-title">cambio de etapa</span>
+        <a href="/home.php?page_id=22" class="quick-card">
+            <i class="fa-solid fa-right-left quick-card-icon"></i>
+            <span class="quick-card-title">cambiar etapa</span>
         </a>
-        <a href="/home.php?page_id=4" class="quick-card">
-            <i class="fa-regular fa-user quick-card-icon"></i>
-            <span class="quick-card-title">Auditoria</span>
-        </a>
-
     </div>
 </section>
 
-
-
-
 <div class="mt-10 mb-4 text-center">
-    <h2 class="text-3xl font-bold text-green-800">
+    <h2 class="text-primary text-2xl mb-2">
         Catálogo de plantas – Vivero Ecoparque Sabana
     </h2>
     <p class="text-green-600 text-sm mt-2">
         Listado de especies registradas en el sistema del vivero
     </p>
 </div>
-<div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+<div class="relative overflow-x-auto rounded-xl bg-card border shadow  ">
 
     <div>
         <form action="/home.php" method="get" class="p-4 max-w-sm">
@@ -128,7 +77,7 @@ include __DIR__ . "/../controllers/PlantaController.php";
         {
 
             ?>
-            <div class="bg-neutral-primary-soft block max-w-sm border border-default rounded-base shadow-xs">
+            <div class="rounded-xl bg-card border shadow block max-w-sm ">
                 <div class="max-h-40 h-full relative flex overflow-hidden">
                     <img class="rounded-t-base object-cover object-center w-full h-full"
                         src="<?= $pg['imagen'] ? "/assets/uploads/$pg[imagen]" : "https://placehold.co/600x400" ?>"
@@ -136,7 +85,7 @@ include __DIR__ . "/../controllers/PlantaController.php";
                 </div>
                 <div class="p-6 text-left">
                     <span
-                        class="inline-flex items-center bg-brand-softer border border-brand-subtle text-green-800 text-xs font-medium px-1.5 py-0.5 rounded-sm">
+                        class="inline-flex items-center bg-card border rounded-xl text-primary text-xs font-medium px-1.5 py-0.5 ">
                         <svg class="w-3 h-3 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                             height="24" fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
