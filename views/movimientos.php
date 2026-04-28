@@ -85,6 +85,7 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
                             <th class="p-4 text-left font-medium text-muted-foreground">Etapa</th>
                             <th class="p-4 text-left font-medium text-muted-foreground">Ubicación</th>
                             <th class="p-4 text-left font-medium text-muted-foreground">Origen</th>
+                            <th class="p-4 text-left font-medium text-muted-foreground">Destino</th>
                             <th class="p-4 text-left font-medium text-muted-foreground">Motivo</th>
                             <th class="p-4 text-left font-medium text-muted-foreground">Fecha</th>
                             <th class="p-4 text-left font-medium text-muted-foreground">Estado</th>
@@ -166,7 +167,12 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
                                 <td class="p-4"><span class="text-sm"><?= $m['nombre_ubicacion'] ?></span></td>
                                 <td class="p-4"><span class="text-sm">
                                         <?= $m['nombre_origen'] ?>
-                                    </span></td>
+                                    </span>
+                                </td>
+                                <td class="p-4"><span class="text-sm">
+                                        <?= $m['nombre_destino'] ?? "<span class='italic text-muted-foreground text-xs'>N/A</span>" ?>
+                                    </span>
+                                </td>
                                 <td class="p-4"><span class="text-sm text-muted-foreground"><?= $m['motivo'] ?></span>
                                 </td>
                                 <td class="p-4"><span class="text-sm text-muted-foreground"><?= $m['fecha'] ?></span>

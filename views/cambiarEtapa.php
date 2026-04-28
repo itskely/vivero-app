@@ -34,7 +34,7 @@ include __DIR__ . "/../controllers/CambioEtapasController.php";
         unset($_SESSION["error"]);
     }
     ?>
-    <div class="p-4 space-y-4">
+    <div class="p-4 space-y-4" x-data="{ open: false }">
         <?php include("./views/layouts/header.php"); ?>
 
         <div class="max-w-4xl w-full p-6 rounded-xl bg-card border space-y-6">
@@ -290,6 +290,21 @@ include __DIR__ . "/../controllers/CambioEtapasController.php";
 
                 <?= Form::textarea("observaciones", "observaciones", "", "Observaciones", "", false) ?>
 
+                <div class="space-y-2 border-l pl-4 ">
+                    <button type="button" class="btn btn-ghost btn-size-default" x-on:click="open = ! open"
+                        x-text="open ? 'Ocultar' : 'Agregar unidad de medida para la nueva etapa'">
+                    </button>
+                    <!-- Select con unidades de mnedidas (kilogramos, gramos y unidades) -->
+                    <div x-show="open" class="space-y-2">
+                        <label for="unidad_medida">Unidad de medida</label>
+                        <select name="unidad_medida" id="unidad_medida" class="input-component">
+                            <option value="" selected disabled>Seleccione una unidad de medida</option>
+                            <option value="kilogramos">Kilogramos</option>
+                            <option value="gramos">Gramos</option>
+                            <option value="unidades">Unidades</option>
+                        </select>
+                    </div>
+                </div>
 
                 <div class="flex justify-end gap-2 mt-3">
                     <button type="button" @click="open = false" class="btn btn-outline btn-size-default">

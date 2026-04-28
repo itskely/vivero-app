@@ -64,18 +64,6 @@ class DestinosModel
         return $usuario;
     }
 
-    public function getDestinosInIds($ids)
-    {
-        $placeholders = implode(",", array_fill(0, count($ids), "?"));
-        $stmt = $this->conn->prepare("SELECT * FROM destino WHERE id IN ($placeholders)");
-        foreach ($ids as $i => $id)
-        {
-            $stmt->bindValue($i + 1, $id, PDO::PARAM_INT);
-        }
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public function crear()
     {
         $stmt = $this->conn->prepare("INSERT INTO destino(nombre_destino, descripcion) VALUES (:nombre,:descripcion)");

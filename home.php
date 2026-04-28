@@ -32,6 +32,9 @@ include "./helpers/Forms.php";
     <script src="//unpkg.com/alpinejs" defer></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/not-a-toast@1.1.5/dist/style.css">
     <script src="./assets/lib/jquery-4.0.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
 </head>
 
 <body class="">

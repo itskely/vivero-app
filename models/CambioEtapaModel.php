@@ -11,6 +11,7 @@ class CambioEtapaModel
     private $cantidad_salida;
     private $cantidad_entrada;
     private $observaciones;
+    private $unidad_medida;
 
     // Variables de busqueda y paginación
     private $busqueda;
@@ -23,7 +24,10 @@ class CambioEtapaModel
     {
         $this->id = $id;
     }
-
+    public function setUnidadMedida($unidad_medida)
+    {
+        $this->unidad_medida = $unidad_medida;
+    }
     public function setLoteId($lote_id)
     {
         $this->lote_id = $lote_id;
@@ -74,6 +78,11 @@ class CambioEtapaModel
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getUnidadMedida()
+    {
+        return $this->unidad_medida;
     }
 
     public function getLoteId()
@@ -171,7 +180,7 @@ class CambioEtapaModel
 
     public function crear()
     {
-        $stmt = $this->conn->prepare("CALL sp_cambiar_etapa_lote(:lote_id, :etapa_origen_id, :ubi_origen_id, :etapa_destino_id, :ubi_destino_id, :cantidad_salida, :cantidad_entrada, :usuario_id, :observaciones)");
+        $stmt = $this->conn->prepare("CALL sp_cambiar_etapa_lote(:lote_id, :etapa_origen_id, :ubi_origen_id, :etapa_destino_id, :ubi_destino_id, :cantidad_salida, :cantidad_entrada, :usuario_id, :observaciones, :unidad_medida)");
         $lote_id = $this->getLoteId();
         $etapa_origen_id = $this->getEtapaOrigenId();
         $ubi_origen_id = $this->getUbiOrigenId();
@@ -181,6 +190,7 @@ class CambioEtapaModel
         $cantidad_entrada = $this->getCantidadEntrada();
         $usuario_id = $_SESSION['usuario']['id'];
         $observaciones = $this->getObservaciones();
+        $unidad_medida = $this->getUnidadMedida();
 
         $stmt->bindParam(":lote_id", $lote_id);
         $stmt->bindParam(":etapa_origen_id", $etapa_origen_id);
@@ -191,6 +201,7 @@ class CambioEtapaModel
         $stmt->bindParam(":cantidad_entrada", $cantidad_entrada);
         $stmt->bindParam(":usuario_id", $usuario_id);
         $stmt->bindParam(":observaciones", $observaciones);
+        $stmt->bindParam(":unidad_medida", $unidad_medida);
         return $stmt->execute();
     }
 }

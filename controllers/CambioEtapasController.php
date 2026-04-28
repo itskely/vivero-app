@@ -18,18 +18,25 @@ $ubi_destino_id = $_POST['ubi_destino_id'] ?? null;
 $cantidad_salida = $_POST['cantidad_salida'] ?? null;
 $cantidad_entrada = $_POST['cantidad_entrada'] ?? null;
 $observaciones = $_POST['observaciones'] ?? null;
+$unidad_medida = $_POST['unidad_medida'] ?? null;
 
-if ($method === "POST") {
-    if ($lote_id && $inventario_id && $etapa_destino_id && $ubi_destino_id && $cantidad_salida && $cantidad_entrada) {
+if ($method === "POST")
+{
+    if ($lote_id && $inventario_id && $etapa_destino_id && $ubi_destino_id && $cantidad_salida && $cantidad_entrada)
+    {
         $inventario->setId($inventario_id);
         $invLote = $inventario->getOne();
 
-        if (!$invLote) {
+        if (!$invLote)
+        {
             $_SESSION["error"] = "Inventario no encontrado";
-        } else {
-            if ($cantidad_salida > $invLote['cantidad_actual'] || $invLote['cantidad_actual'] === 0) {
+        } else
+        {
+            if ($cantidad_salida > $invLote['cantidad_actual'] || $invLote['cantidad_actual'] === 0)
+            {
                 $_SESSION["error"] = "Cantidad de salida mayor a la cantidad en inventario";
-            } else {
+            } else
+            {
                 $cambioEtapa->setId($id);
                 $cambioEtapa->setLoteId($lote_id);
                 $cambioEtapa->setEtapaOrigenId($invLote['etapa_id']);
@@ -39,16 +46,20 @@ if ($method === "POST") {
                 $cambioEtapa->setCantidadSalida($cantidad_salida);
                 $cambioEtapa->setCantidadEntrada($cantidad_entrada);
                 $cambioEtapa->setObservaciones($observaciones);
+                $cambioEtapa->setUnidadMedida($unidad_medida);
 
                 $fueCreado = $cambioEtapa->crear();
-                if ($fueCreado) {
+                if ($fueCreado)
+                {
                     $_SESSION["success"] = "Movimiento creado con éxito";
-                } else {
+                } else
+                {
                     $_SESSION["error"] = "Error al crear el movimiento";
                 }
             }
         }
-    } else {
+    } else
+    {
         $_SESSION["error"] = "Todos los campos son requeridos";
     }
 }
