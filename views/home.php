@@ -32,7 +32,7 @@ include __DIR__ . "/../controllers/PlantaController.php";
         </a>
         <a href="/home.php?page_id=26" class="quick-card">
             <i class="fa-solid fa-share quick-card-icon"></i>
-            <span class="quick-card-title">salidas</span>
+            <span class="quick-card-title">Entradas/Salidas</span>
 
         </a>
         <a href="/home.php?page_id=22" class="quick-card">

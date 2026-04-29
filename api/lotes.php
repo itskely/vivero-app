@@ -33,7 +33,7 @@ $totalPaginas = ceil($totalRegistros / $limit);
 $lote->setLimit($limit);
 $lote->setOffset($offset);
 $allLotes = $lote->getAll();
-$plantaIds = array_unique(array_column($allLotes, 'planta_id'));
+$plantaIds = array_values(array_unique(array_column($allLotes, 'planta_id'))); // Solucionar error de falsos index
 $allPlantas = count($plantaIds) > 0 ? $planta->getPlantasInIds($plantaIds) : [];
 
 $plantasMap = [];

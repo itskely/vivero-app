@@ -15,7 +15,6 @@ $params = $_GET;
 $id = $_GET['id'] ?? null;
 $delete_id = $_GET['delete_id'] ?? null;
 $planta_id = $_POST['planta_id'] ?? null;
-$codigo_lote = $_POST['codigo_lote'] ?? null;
 $unidad_medida = $_POST['unidad_medida'] ?? null;
 $cantidad = $_POST['cantidad'] ?? null;
 $etapa_id = $_POST['etapa_id'] ?? null;
@@ -25,11 +24,10 @@ $observaciones = $_POST['observaciones'] ?? null;
 
 if ($method === "POST")
 {
-    if ($planta_id && $codigo_lote && $unidad_medida && $cantidad && $etapa_id && $ubicacion_id && $origen && $observaciones)
+    if ($planta_id && $unidad_medida && $cantidad && $etapa_id && $ubicacion_id && $origen && $observaciones)
     {
         $lote->setId($id);
         $lote->setPlantaId($planta_id);
-        $lote->setCodigoLote($codigo_lote);
         $lote->setUnidadMedida($unidad_medida);
         $lote->setCantidad($cantidad);
         $lote->setEtapaId($etapa_id);

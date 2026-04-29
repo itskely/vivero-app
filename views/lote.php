@@ -39,7 +39,6 @@ include __DIR__ . "/../controllers/LotesController.php";
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <?= Form::input("text", "codigo_lote", "codigo_lote", "", "Código de lote", "AGU-2024-001") ?>
                     <div>
                         <label for="unidad_medida" class="block mb-2.5 text-sm font-medium">Unidad de Medida</label>
                         <select id="unidad_medida" name="unidad_medida" class="input-component" required>

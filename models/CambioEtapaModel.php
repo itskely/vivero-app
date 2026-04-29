@@ -147,7 +147,7 @@ class CambioEtapaModel
     public function getCount()
     {
         $busqueda = $this->getBusqueda();
-        $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM lotes WHERE codigo_lote LIKE :busqueda OR observaciones LIKE :busqueda");
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM lotes WHERE id LIKE :busqueda OR observaciones LIKE :busqueda");
         $param = "%$busqueda%";
         $stmt->bindParam(":busqueda", $param);
         $stmt->execute();
@@ -159,7 +159,7 @@ class CambioEtapaModel
         $busqueda = $this->getBusqueda();
         $limit = $this->getLimit();
         $offset = $this->getOffset();
-        $stmt = $this->conn->prepare("SELECT * FROM lotes WHERE codigo_lote LIKE :busqueda OR observaciones LIKE :busqueda LIMIT :lim OFFSET :offs");
+        $stmt = $this->conn->prepare("SELECT * FROM lotes WHERE id LIKE :busqueda OR observaciones LIKE :busqueda LIMIT :lim OFFSET :offs");
         $param = "%$busqueda%";
         $stmt->bindParam(":busqueda", $param);
         $stmt->bindParam(":lim", $limit, PDO::PARAM_INT);
@@ -199,6 +199,33 @@ class CambioEtapaModel
         $stmt->bindParam(":ubi_destino_id", $ubi_destino_id);
         $stmt->bindParam(":cantidad_salida", $cantidad_salida);
         $stmt->bindParam(":cantidad_entrada", $cantidad_entrada);
+        $stmt->bindParam(":usuario_id", $usuario_id);
+        $stmt->bindParam(":observaciones", $observaciones);
+        $stmt->bindParam(":unidad_medida", $unidad_medida);
+        return $stmt->execute();
+    }
+
+    public function transformar()
+    {
+        $stmt = $this->conn->prepare("CALL sp_transformar_lote_etapa(:lote_padre_id, :etapa_origen_id, :ubi_origen_id, :etapa_destino_id, :ubi_destino_id, :cant_salida_padre, :cant_entrada_hijo, :usuario_id, :observaciones, :unidad_medida)");
+        $lote_padre_id = $this->getLoteId();
+        $etapa_origen_id = $this->getEtapaOrigenId();
+        $ubi_origen_id = $this->getUbiOrigenId();
+        $etapa_destino_id = $this->getEtapaDestinoId();
+        $ubi_destino_id = $this->getUbiDestinoId();
+        $cant_salida_padre = $this->getCantidadSalida();
+        $cant_entrada_hijo = $this->getCantidadEntrada();
+        $usuario_id = $_SESSION['usuario']['id'];
+        $observaciones = $this->getObservaciones();
+        $unidad_medida = $this->getUnidadMedida();
+
+        $stmt->bindParam(":lote_padre_id", $lote_padre_id);
+        $stmt->bindParam(":etapa_origen_id", $etapa_origen_id);
+        $stmt->bindParam(":ubi_origen_id", $ubi_origen_id);
+        $stmt->bindParam(":etapa_destino_id", $etapa_destino_id);
+        $stmt->bindParam(":ubi_destino_id", $ubi_destino_id);
+        $stmt->bindParam(":cant_salida_padre", $cant_salida_padre);
+        $stmt->bindParam(":cant_entrada_hijo", $cant_entrada_hijo);
         $stmt->bindParam(":usuario_id", $usuario_id);
         $stmt->bindParam(":observaciones", $observaciones);
         $stmt->bindParam(":unidad_medida", $unidad_medida);

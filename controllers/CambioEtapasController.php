@@ -48,7 +48,13 @@ if ($method === "POST")
                 $cambioEtapa->setObservaciones($observaciones);
                 $cambioEtapa->setUnidadMedida($unidad_medida);
 
-                $fueCreado = $cambioEtapa->crear();
+                // Validar que la unidad no venga vacia o '' en caso de que venga llena entonces se usa 
+                // el metodo transformar() y sino el crear().
+
+                $fueCreado = $unidad_medida !== null && $unidad_medida !== ''
+                    ? $cambioEtapa->transformar()
+                    : $cambioEtapa->crear();
+
                 if ($fueCreado)
                 {
                     $_SESSION["success"] = "Movimiento creado con éxito";

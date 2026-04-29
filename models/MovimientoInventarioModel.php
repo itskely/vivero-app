@@ -138,7 +138,7 @@ class MovimientoInventarioModel
         $busqueda = $this->getBusqueda();
         $limit = $this->getLimit();
         $offset = $this->getOffset();
-        $stmt = $this->conn->prepare("SELECT mi.id, l.codigo_lote, l.unidad_medida, p.nombre_comun, mi.tipo_movimiento, mi.cantidad, e.nombre AS nombre_etapa, u.nombre AS nombre_ubicacion, o.nombre_origen, d.nombre_destino, mi.motivo, mi.fecha, mi.estado FROM movimientos_inventario AS mi 
+        $stmt = $this->conn->prepare("SELECT mi.id, l.id AS lote_id, l.unidad_medida, p.nombre_comun, mi.tipo_movimiento, mi.cantidad, e.nombre AS nombre_etapa, u.nombre AS nombre_ubicacion, o.nombre_origen, d.nombre_destino, mi.motivo, mi.fecha, mi.estado FROM movimientos_inventario AS mi 
         INNER JOIN lotes AS l ON mi.lote_id = l.id 
         INNER JOIN plantas AS p ON l.planta_id = p.id 
         INNER JOIN etapas AS e ON mi.etapa_id = e.id
@@ -146,7 +146,7 @@ class MovimientoInventarioModel
         INNER JOIN usuarios AS us ON mi.usuario_id = us.id 
         INNER JOIN origen AS o ON o.id = l.origen_id
         LEFT JOIN destino AS d ON d.id = mi.destino_id
-        WHERE l.codigo_lote LIKE :busqueda OR p.nombre_comun LIKE :busqueda OR mi.tipo_movimiento LIKE :busqueda OR e.nombre LIKE :busqueda OR u.nombre LIKE :busqueda OR mi.estado LIKE :busqueda ORDER BY mi.id DESC LIMIT :lim OFFSET :offs;");
+        WHERE l.id LIKE :busqueda OR p.nombre_comun LIKE :busqueda OR mi.tipo_movimiento LIKE :busqueda OR e.nombre LIKE :busqueda OR u.nombre LIKE :busqueda OR mi.estado LIKE :busqueda ORDER BY mi.id DESC LIMIT :lim OFFSET :offs;");
         $param = "%$busqueda%";
         $stmt->bindParam(":busqueda", $param);
         $stmt->bindParam(":lim", $limit, PDO::PARAM_INT);

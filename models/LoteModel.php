@@ -5,7 +5,6 @@ class LoteModel
     private $id;
     private $planta_id;
 
-    private $codigo_lote;
     private $unidad_medida;
     private $cantidad;
     private $etapa_id;
@@ -28,10 +27,6 @@ class LoteModel
     public function setPlantaId($planta_id)
     {
         $this->planta_id = $planta_id;
-    }
-    public function setCodigoLote($codigo_lote)
-    {
-        $this->codigo_lote = $codigo_lote;
     }
     public function setUnidadMedida($unidad_medida)
     {
@@ -80,11 +75,6 @@ class LoteModel
     public function getPlantaId()
     {
         return $this->planta_id;
-    }
-
-    public function getCodigoLote()
-    {
-        return $this->codigo_lote;
     }
 
     public function getUnidadMedida()
@@ -137,7 +127,7 @@ class LoteModel
     public function getCount()
     {
         $busqueda = $this->getBusqueda();
-        $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM lotes WHERE codigo_lote LIKE :busqueda OR observaciones LIKE :busqueda");
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM lotes WHERE id LIKE :busqueda OR observaciones LIKE :busqueda");
         $param = "%$busqueda%";
         $stmt->bindParam(":busqueda", $param);
         $stmt->execute();
@@ -149,7 +139,7 @@ class LoteModel
         $busqueda = $this->getBusqueda();
         $limit = $this->getLimit();
         $offset = $this->getOffset();
-        $stmt = $this->conn->prepare("SELECT l.* FROM lotes l LEFT JOIN plantas p ON l.planta_id = p.id WHERE l.codigo_lote LIKE :busqueda OR l.observaciones LIKE :busqueda OR p.nombre_comun LIKE :busqueda OR p.nombre_cientifico LIKE :busqueda OR p.descripcion LIKE :busqueda ORDER BY l.id DESC LIMIT :lim OFFSET :offs");
+        $stmt = $this->conn->prepare("SELECT l.* FROM lotes l LEFT JOIN plantas p ON l.planta_id = p.id WHERE l.id LIKE :busqueda OR l.observaciones LIKE :busqueda OR p.nombre_comun LIKE :busqueda OR p.nombre_cientifico LIKE :busqueda OR p.descripcion LIKE :busqueda ORDER BY l.id DESC LIMIT :lim OFFSET :offs");
         $param = "%$busqueda%";
         $stmt->bindParam(":busqueda", $param);
         $stmt->bindParam(":lim", $limit, PDO::PARAM_INT);
@@ -170,9 +160,8 @@ class LoteModel
 
     public function crear()
     {
-        $stmt = $this->conn->prepare("CALL sp_registrar_nuevo_lote(:planta_id, :codigo_lote, :unidad_medida, :cantidad, :etapa_id, :ubicacion_id, :usuario_id, :observaciones, :origen)");
+        $stmt = $this->conn->prepare("CALL sp_registrar_nuevo_lote(:planta_id, :unidad_medida, :cantidad, :etapa_id, :ubicacion_id, :usuario_id, :observaciones, :origen)");
         $planta_id = $this->getPlantaId();
-        $codigo_lote = $this->getCodigoLote();
         $unidad_medida = $this->getUnidadMedida();
         $cantidad = $this->getCantidad();
         $etapa_id = $this->getEtapaId();
@@ -181,7 +170,6 @@ class LoteModel
         $usuario_id = $_SESSION['usuario']['id'];
         $observaciones = $this->getObservaciones();
         $stmt->bindParam(":planta_id", $planta_id);
-        $stmt->bindParam(":codigo_lote", $codigo_lote);
         $stmt->bindParam(":unidad_medida", $unidad_medida);
         $stmt->bindParam(":cantidad", $cantidad);
         $stmt->bindParam(":etapa_id", $etapa_id);

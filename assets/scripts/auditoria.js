@@ -106,7 +106,7 @@ function getLotes(busqueda = '') {
             data.forEach(function (lote) {
                 var $nuevoItem = $(template).clone();
                 $nuevoItem.attr('data-value', lote.id);
-                $nuevoItem.find('[data-title]').text(lote.codigo_lote);
+                $nuevoItem.find('[data-title]').text(`Lote #${lote.id}`);
                 $nuevoItem.find('[data-subtitle]').text(lote.planta.nombre_comun);
 
                 // Agregar evento de click a cada item, en caso de cliquear, guardamos el valor que tiene en el atributo value

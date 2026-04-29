@@ -107,7 +107,6 @@ DELIMITER //
 
 CREATE PROCEDURE sp_registrar_nuevo_lote(
     IN p_planta_id INT,
-    IN p_codigo_lote VARCHAR(20),
     IN p_unidad_medida VARCHAR(20),
     IN p_cantidad_inicial DECIMAL(10,2),
     IN p_etapa_id INT,
@@ -123,19 +122,14 @@ BEGIN
 
     START TRANSACTION;
 
-    -- 1. Crear el Lote
-    INSERT INTO lotes (planta_id, codigo_lote, fecha_creacion, unidad_medida, usuario_id, observaciones)
-    VALUES (p_planta_id, p_codigo_lote, CURDATE(), p_unidad_medida, p_usuario_id, p_observaciones);
+    INSERT INTO lotes (planta_id, fecha_creacion, unidad_medida, usuario_id, observaciones,origen_id)
+    VALUES (p_especie_id, CURDATE(), p_unidad_medida, p_usuario_id, p_observaciones, p_origen_id);
 
     SET @last_lote_id = LAST_INSERT_ID();
 
-    -- 2. Insertar en Inventario (El trigger de movimientos se encargará del stock)
-    INSERT INTO inventario (lote_id, etapa_id, ubicacion_id, cantidad_actual)
-    VALUES (@last_lote_id, p_etapa_id, p_ubicacion_id, 0);
-
-    -- 3. Registrar el Movimiento de Entrada
-    INSERT INTO movimientos_inventario (lote_id, usuario_id, tipo_movimiento, cantidad, motivo)
-    VALUES (@last_lote_id, p_usuario_id, 'entrada', p_cantidad_inicial, 'Registro inicial de lote');
+    -- El trigger ahora se encarga de todo al insertar aquí
+    INSERT INTO movimientos_inventario (lote_id, etapa_id, ubicacion_id, usuario_id, tipo_movimiento, cantidad, motivo)
+    VALUES (@last_lote_id, p_etapa_id, p_ubicacion_id, p_usuario_id, 'entrada', p_cantidad_inicial, 'Registro inicial');
 
     COMMIT;
 END //
@@ -848,3 +842,150 @@ ORDER BY m.id ASC;
 1.  **La Anulación funciona:** Si el stock está disponible, el sistema revierte el movimiento y limpia el inventario.
 2.  **La Integridad es prioridad:** El sistema prefiere dar un error que permitir que un stock quede en $-80$.
 3.  **La Auditoría es el cierre:** Si el error es viejo y ya no se puede anular, el ajuste de auditoría "nivela" el sistema con la realidad, dejando una nota clara de por qué se hizo.
+
+---
+
+### 1. El concepto: Relación Padre-Hijo (Trazabilidad)
+
+Si creas un nuevo lote con `UUID()`, pierdes la conexión de ADN con el lote original a menos que guardemos quién fue el "padre". Sin esto, si los 12 árboles mueren, nunca sabrás que vinieron de esos 8 gramos de semillas defectuosas.
+
+#### Primero, ajustemos la tabla de lotes:
+
+```sql
+ALTER TABLE lotes ADD COLUMN lote_padre_id INT NULL AFTER id;
+ALTER TABLE lotes ADD FOREIGN KEY (lote_padre_id) REFERENCES lotes(id);
+```
+
+### 2. El Procedimiento: "La Transformación"
+
+Para que el sistema no explote, debemos entender que la Salida valida contra el stock del padre (en gramos), pero la Entrada es un acto de creación en el hijo (en unidades). No hay una validación matemática que compare ambos porque son dimensiones distintas.
+
+```sql
+DELIMITER $$
+
+CREATE PROCEDURE sp_transformar_lote_etapa(
+    IN p_lote_padre_id INT,
+    IN p_etapa_origen_id INT,
+    IN p_ubi_origen_id INT,
+    IN p_etapa_destino_id INT,
+    IN p_ubi_destino_id INT,
+    IN p_cant_salida_padre DECIMAL(10,2), -- Ej: los 8 gramos
+    IN p_cant_entrada_hijo DECIMAL(10,2),  -- Ej: las 12 plántulas
+    IN p_usuario_id INT,
+    IN p_observaciones TEXT,
+    IN p_nueva_unidad VARCHAR(50)
+)
+BEGIN
+    DECLARE v_nuevo_lote_id INT;
+    DECLARE v_planta_id INT;
+    DECLARE v_origen_id INT;
+
+    -- Handler para errores: si algo falla, no se quita stock ni se crea el hijo
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    -- 1. Obtener la herencia del padre (sin códigos de texto)
+    SELECT planta_id, origen_id
+    INTO v_planta_id, v_origen_id
+    FROM lotes
+    WHERE id = p_lote_padre_id;
+
+    -- 2. Crear el lote hijo (Nace la nueva unidad de medida)
+    INSERT INTO lotes (
+        lote_padre_id,
+        planta_id,
+        fecha_creacion,
+        unidad_medida,
+        usuario_id,
+        origen_id
+    )
+    VALUES (
+        p_lote_padre_id,
+        v_planta_id,
+        CURDATE(),
+        p_nueva_unidad,
+        p_usuario_id,
+        v_origen_id
+    );
+
+    SET v_nuevo_lote_id = LAST_INSERT_ID();
+
+    -- 3. SALIDA DEL PADRE (Consumimos los gramos/semillas)
+    -- El trigger restará de la fila del padre. Si no hay stock suficiente, lanzará error.
+    INSERT INTO movimientos_inventario (
+        lote_id, etapa_id, ubicacion_id, usuario_id, tipo_movimiento, cantidad, motivo
+    )
+    VALUES (
+        p_lote_padre_id, p_etapa_origen_id, p_ubi_origen_id, p_usuario_id,
+        'salida', p_cant_salida_padre, CONCAT('Transformación: ', p_observaciones)
+    );
+
+    -- 4. ENTRADA AL HIJO (Nacen las unidades/plántulas)
+    INSERT INTO movimientos_inventario (
+        lote_id, etapa_id, ubicacion_id, usuario_id, tipo_movimiento, cantidad, motivo
+    )
+    VALUES (
+        v_nuevo_lote_id, p_etapa_destino_id, p_ubi_destino_id, p_usuario_id,
+        'entrada', p_cant_entrada_hijo, 'Ingreso por transformación biológica'
+    );
+
+    -- 5. Historial de Etapas (Para el árbol genealógico en el Front)
+    INSERT INTO historial_etapas (
+        lote_id,
+        etapa_anterior_id,
+        etapa_nueva_id,
+        cantidad_procesada,
+        cantidad_resultante,
+        usuario_id,
+        observaciones
+    )
+    VALUES (
+        v_nuevo_lote_id,
+        p_etapa_origen_id,
+        p_etapa_destino_id,
+        p_cant_salida_padre,
+        p_cant_entrada_hijo,
+        p_usuario_id,
+        CONCAT('Se transformaron ', p_cant_salida_padre, ' en ', p_cant_entrada_hijo, ' ', p_nueva_unidad)
+    );
+
+    COMMIT;
+END$$
+
+DELIMITER ;
+```
+
+### 3. Por qué esto arregla la "Explosión"
+
+El error en la lógica anterior era intentar que un mismo lote cambiara de unidad de medida. Eso es un pecado mortal en bases de datos porque:
+
+- Si el lote 1 tiene historial en gramos y luego le metes unidades, el `SUM(cantidad)` de ese lote daría un número basura (8 gramos + 12 unidades = 20 "cosas").
+
+**Con la relación Padre-Hijo:**
+
+1.  **Lote Padre (Semillas):** Muere o disminuye en **gramos**. Su historial es puro y limpio.
+2.  **Lote Hijo (Plántulas):** Nace en **unidades**. Su stock inicial es 12.
+3.  **La Vista de Inventario:** Ahora mostrará dos filas si ambos tienen stock, o solo la del hijo si el padre se agotó.
+
+| Lote              | Cantidad | Unidad       | Etapa       |
+| :---------------- | :------- | :----------- | :---------- |
+| LOTE-001 (Padre)  | 0.00     | **Gramos**   | Semilla     |
+| LOTE-001-H (Hijo) | 12.00    | **Unidades** | Germinación |
+
+---
+
+### 4. ¿Y la validación del "8 vs 12"?
+
+En el **Trigger**, la única validación que debe existir es:
+
+> _"No puedes sacar más de lo que hay en el lote de origen"_ (Check de los 8g).
+
+La cantidad que **entra** al nuevo lote no tiene por qué compararse con la que sale del viejo, porque el sistema entiende que es un **NUEVO LOTE**. Es como si estuvieras fabricando una mesa con 4 patas: salen 4 patas (unidades) y entra 1 mesa (unidad). Los números no coinciden, pero la lógica de negocio sí.
+
+### 5. Eliminación del campo codigo_lote
+
+Se elimina el campo codigo_lote de la tabla lotes ya que no es necesario y genera confusión. Se utilizará el id de la tabla lotes como identificador único de cada lote. Ya con la planta relacionada a lotes se puede deducir bastante y ya por si mismo es mas que util.

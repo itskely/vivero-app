@@ -139,7 +139,7 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
                                             </div>
                                         <?php endif; ?>
                                         <div>
-                                            <p class="font-medium"><?= $m['codigo_lote'] ?></p>
+                                            <p class="font-medium">Lote #<?= $m['lote_id'] ?></p>
                                             <p class="text-xs text-muted-foreground"><?= $m['nombre_comun'] ?></p>
                                         </div>
                                     </div>
