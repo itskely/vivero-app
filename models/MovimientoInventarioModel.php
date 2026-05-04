@@ -217,4 +217,46 @@ class MovimientoInventarioModel
         $stmt->bindParam(":destino_id", $destino_id);
         return $stmt->execute();
     }
+
+    public function movimientosMes($etapa_id, $year)
+    {
+        // Hacer concat de php de ', etapa_id' en el where en caso de estapa_id ser diferente de null o 'all'
+        $stmt = $this->conn->prepare("SELECT 
+        tipo_movimiento, 
+        SUM(cantidad) as total, 
+        CONCAT(YEAR(fecha), '-', MONTH(fecha)) as ano_mes 
+        FROM movimientos_inventario 
+        WHERE YEAR(fecha) = :year
+        " . ($etapa_id !== 'all' ? " AND etapa_id = :etapa_id" : "") . "
+        GROUP BY YEAR(fecha), MONTH(fecha), tipo_movimiento
+        ORDER BY ano_mes ASC");
+        if ($etapa_id !== 'all')
+        {
+            $stmt->bindParam(":etapa_id", $etapa_id);
+        }
+        $stmt->bindParam(":year", $year);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function years()
+    {
+        $stmt = $this->conn->prepare("SELECT YEAR(fecha) as ano FROM movimientos_inventario GROUP BY YEAR(fecha)");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function movimientosDestino()
+    {
+        $stmt = $this->conn->prepare("SELECT d.nombre_destino, SUM(cantidad) AS total FROM movimientos_inventario AS mi INNER JOIN destino AS d ON mi.destino_id = d.id WHERE destino_id IS NOT NULL GROUP BY destino_id");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function destino()
+    {
+        $stmt = $this->conn->prepare("SELECT tipo_movimiento, COUNT(*) AS total FROM movimientos_inventario GROUP BY YEAR(CURRENT_DATE), MONTH(CURRENT_DATE), tipo_movimiento");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

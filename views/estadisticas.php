@@ -1,3 +1,6 @@
+<?php
+include __DIR__ . "/../controllers/EstadisticasController.php";
+?>
 <!-- Header -->
 <header class="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur supports-backdrop-filter:bg-card/60">
     <div class="container mx-auto px-4 lg:px-6">
@@ -105,56 +108,26 @@
                     <h3 class="text-lg font-semibold">Movimientos en el Tiempo</h3>
                     <p class="text-sm text-muted-foreground">Entradas vs Salidas por período</p>
                 </div>
-                <div class="flex flex-wrap items-center gap-2">
-                    <select id="filterMovTiempo" class="input-field text-sm" onchange="updateMovimientosTiempo()">
-                        <option value="all">Todas las etapas</option>
-                        <option value="1">Semilla</option>
-                        <option value="2">Germinación</option>
-                        <option value="3">Plántula</option>
-                        <option value="4">Vegetativo</option>
-                        <option value="5">Producción</option>
+                <div class="grid grid-cols-2 items-center gap-2">
+                    <select id="filterMovTiempo" class="input-component text-sm" onchange="updateMovimientosTiempo()">
+                        <option value="all" selected>Todas las etapas</option>
+                        <?php
+                        foreach ($allEtapas as $key => $value)
+                        {
+                            ?>
+                            <option value="<?= $value["id"] ?>">
+                                <?= $value["nombre"] ?>
+                            </option>
+                            <?php
+                        }
+                        ?>
                     </select>
-                    <select id="filterMovTiempoGranularity" class="input-field text-sm"
+                    <select id="filterMovTiempoGranularity" class="input-component text-sm"
                         onchange="updateMovimientosTiempo()">
-                        <option value="monthly" selected>Mensual</option>
                     </select>
                 </div>
             </div>
             <div id="chartMovimientosTiempo" class="chart-container"></div>
-        </div>
-
-        <!-- Chart 2: Stock por Especie -->
-        <div class="card p-5">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-                <div>
-                    <h3 class="text-lg font-semibold">Stock por Especie</h3>
-                    <p class="text-sm text-muted-foreground">Inventario actual por planta</p>
-                </div>
-                <select id="filterStockUnidad" class="input-field text-sm" onchange="updateStockEspecie()">
-                    <option value="all">Todas las unidades</option>
-                    <option value="unidades">Unidades</option>
-                    <option value="gramos">Gramos</option>
-                    <option value="kilogramos">Kilogramos</option>
-                </select>
-            </div>
-            <div id="chartStockEspecie" class="chart-container"></div>
-        </div>
-
-        <!-- Chart 3: Movimientos por Etapa -->
-        <div class="card p-5">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-                <div>
-                    <h3 class="text-lg font-semibold">Movimientos por Etapa</h3>
-                    <p class="text-sm text-muted-foreground">Distribución de actividad</p>
-                </div>
-                <select id="filterMovEtapaTipo" class="input-field text-sm" onchange="updateMovimientosEtapa()">
-                    <option value="all">Todos los tipos</option>
-                    <option value="entrada">Solo Entradas</option>
-                    <option value="salida">Solo Salidas</option>
-                    <option value="traslado">Solo Traslados</option>
-                </select>
-            </div>
-            <div id="chartMovimientosEtapa" class="chart-container"></div>
         </div>
 
         <!-- Chart 5: Origen de Lotes -->
@@ -286,19 +259,30 @@
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    async function generateTrendData(baseValue, count, variance = 0.2) {
-        let data = []
-        await fetch("/api/movimientos.php")
-            .then(res => res.json())
-            .then(data => {
-                data = data;
-            })
-            .catch(err => {
-                console.error(err)
-            });
+    async function generateTrendData(etapaFilter, year, chartMode) {
+        let data = [];
+        try {
+            const respuesta = await fetch(`/api/movimientos.php?etapa_id=${etapaFilter}&year=${year}&chart=${chartMode}`);
+            if (respuesta.ok) {
+                data = await respuesta.json();
+            }
+        } catch (error) {
+            console.error(error);
+        }
 
         return data;
     }
+
+    // function generateTrendData(baseValue, count, variance = 0.2) {
+    //     const data = [];
+    //     let current = baseValue;
+    //     for (let i = 0; i < count; i++) {
+    //         const change = current * (Math.random() * variance * 2 - variance);
+    //         current = Math.max(10, current + change);
+    //         data.push(Math.round(current));
+    //     }
+    //     return data;
+    // }
 
     // =====================================================
     // CHART CONFIGURATIONS
@@ -373,23 +357,24 @@
     // CHART 1: Movimientos en el Tiempo
     // =====================================================
     async function updateMovimientosTiempo() {
-        const etapaFilter = document.getElementById('filterMovTiempo').value;
-        const granularity = document.getElementById('filterMovTiempoGranularity').value;
+        const elEtapaFilter = document.getElementById('filterMovTiempo');
+        const elGranularity = document.getElementById('filterMovTiempoGranularity');
+        const etapaFilter = elEtapaFilter.value;
+        const year = elGranularity.value;
 
-        let categories, count;
-        switch (granularity) {
-            default:
-                categories = generateMonths(12);
-                count = 12;
-        }
+        let data = await generateTrendData(etapaFilter, year, "movimientos_mes");
 
-        // Simulate filtered data
-        const baseEntradas = etapaFilter === 'all' ? 200 : randomInt(50, 150);
-        const baseSalidas = etapaFilter === 'all' ? 180 : randomInt(40, 130);
+        let years = data.years;
+        let entradas = data.series.entrada;
+        let salidas = data.series.salida;
+        let categories = data.labels;
 
-        let entradas = await generateTrendData(baseEntradas, count, 0.25);
-        let salidas = await generateTrendData(baseSalidas, count, 0.25);
-        console.log(entradas, salidas);
+        // Agregar opcion al elGranularity por cada ano en el array
+        elGranularity.innerHTML = ''
+        years.sort((a, b) => b.ano - a.ano).map((dato) => {
+            elGranularity.innerHTML += `<option value="${dato.ano}">${dato.ano}</option>`;
+        })
+        elGranularity.value = data.filter_year
 
         const options = {
             ...getBaseOptions(),
@@ -433,121 +418,6 @@
         };
 
         renderChart('chartMovimientosTiempo', options);
-    }
-
-    // =====================================================
-    // CHART 2: Stock por Especie
-    // =====================================================
-    function updateStockEspecie() {
-        const unidadFilter = document.getElementById('filterStockUnidad').value;
-
-        let plantas = [...MOCK_DATA.plantas].slice(0, 8);
-        let stockData = plantas.map(() => randomInt(200, 2500));
-
-        // Adjust values based on unit filter
-        if (unidadFilter === 'gramos') {
-            stockData = stockData.map(v => v * 100);
-        } else if (unidadFilter === 'kilogramos') {
-            stockData = stockData.map(v => Math.round(v / 10));
-        }
-
-        const options = {
-            ...getBaseOptions(),
-            series: [{
-                name: 'Stock',
-                data: stockData,
-            }],
-            chart: {
-                ...getBaseOptions().chart,
-                type: 'bar',
-                height: 320,
-            },
-            plotOptions: {
-                bar: {
-                    borderRadius: 6,
-                    horizontal: true,
-                    distributed: true,
-                    barHeight: '70%',
-                }
-            },
-            colors: ['#22c55e', '#16a34a', '#15803d', '#166534', '#14532d', '#86efac', '#4ade80', '#a7f3d0'],
-            xaxis: {
-                ...getBaseOptions().xaxis,
-                categories: plantas.map(p => p.nombre_comun),
-            },
-            legend: {
-                show: false,
-            },
-            dataLabels: {
-                enabled: true,
-                formatter: function (val) {
-                    return val.toLocaleString();
-                },
-                style: {
-                    fontSize: '11px',
-                    colors: ['#fff']
-                }
-            },
-        };
-
-        renderChart('chartStockEspecie', options);
-    }
-
-    // =====================================================
-    // CHART 3: Movimientos por Etapa
-    // =====================================================
-    function updateMovimientosEtapa() {
-        const tipoFilter = document.getElementById('filterMovEtapaTipo').value;
-
-        const etapas = MOCK_DATA.etapas.map(e => e.nombre);
-
-        let series = [];
-        if (tipoFilter === 'all' || tipoFilter === 'entrada') {
-            series.push({
-                name: 'Entradas',
-                data: etapas.map(() => randomInt(100, 500)),
-            });
-        }
-        if (tipoFilter === 'all' || tipoFilter === 'salida') {
-            series.push({
-                name: 'Salidas',
-                data: etapas.map(() => randomInt(80, 450)),
-            });
-        }
-        if (tipoFilter === 'all' || tipoFilter === 'traslado') {
-            series.push({
-                name: 'Traslados',
-                data: etapas.map(() => randomInt(30, 200)),
-            });
-        }
-
-        const options = {
-            ...getBaseOptions(),
-            series: series,
-            chart: {
-                ...getBaseOptions().chart,
-                type: 'bar',
-                height: 320,
-                stacked: true,
-            },
-            plotOptions: {
-                bar: {
-                    borderRadius: 4,
-                    horizontal: false,
-                    columnWidth: '60%',
-                }
-            },
-            colors: ['#22c55e', '#f59e0b', '#3b82f6'],
-            xaxis: {
-                ...getBaseOptions().xaxis,
-                categories: etapas,
-            },
-            dataLabels: {
-                enabled: false
-            },
-        };
-
-        renderChart('chartMovimientosEtapa', options);
     }
 
     // =====================================================
@@ -668,8 +538,6 @@
 
     function refreshAllCharts() {
         updateMovimientosTiempo();
-        updateStockEspecie();
-        updateMovimientosEtapa();
         updateOrigenLotes();
         updateInventarioUbicacion();
     }

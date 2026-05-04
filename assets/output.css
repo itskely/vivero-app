@@ -924,9 +924,6 @@
   .mt-6 {
     margin-top: calc(var(--spacing) * 6);
   }
-  .mt-8 {
-    margin-top: calc(var(--spacing) * 8);
-  }
   .mt-10 {
     margin-top: calc(var(--spacing) * 10);
   }
@@ -1324,6 +1321,9 @@
   .flex {
     display: flex;
   }
+  .flex\! {
+    display: flex !important;
+  }
   .grid {
     display: grid;
   }
@@ -1509,9 +1509,6 @@
   .w-1\/2 {
     width: calc(1 / 2 * 100%);
   }
-  .w-2 {
-    width: calc(var(--spacing) * 2);
-  }
   .w-3 {
     width: calc(var(--spacing) * 3);
   }
@@ -1545,11 +1542,26 @@
   .w-full {
     width: 100%;
   }
+  .w-full\! {
+    width: 100% !important;
+  }
   .max-w-2xl {
     max-width: var(--container-2xl);
   }
   .max-w-4xl {
     max-width: var(--container-4xl);
+  }
+  .max-w-64 {
+    max-width: calc(var(--spacing) * 64);
+  }
+  .max-w-64\! {
+    max-width: calc(var(--spacing) * 64) !important;
+  }
+  .max-w-96\! {
+    max-width: calc(var(--spacing) * 96) !important;
+  }
+  .max-w-\[1000px\] {
+    max-width: 1000px;
   }
   .max-w-md {
     max-width: var(--container-md);
@@ -1669,9 +1681,6 @@
   }
   .flex-col {
     flex-direction: column;
-  }
-  .flex-wrap {
-    flex-wrap: wrap;
   }
   .place-items-center {
     place-items: center;
@@ -1880,10 +1889,6 @@
   .border-dashed {
     --tw-border-style: dashed;
     border-style: dashed;
-  }
-  .border-none {
-    --tw-border-style: none;
-    border-style: none;
   }
   .dark {
     & .apexcharts-canvas .apexcharts-tooltip {
@@ -2122,9 +2127,6 @@
   }
   .bg-green-50 {
     background-color: var(--color-green-50);
-  }
-  .bg-green-500 {
-    background-color: var(--color-green-500);
   }
   .bg-green-700 {
     background-color: var(--color-green-700);
@@ -2375,9 +2377,6 @@
   }
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
-  }
-  .pt-6 {
-    padding-top: calc(var(--spacing) * 6);
   }
   .search-filtering-row {
     .datatable-wrapper .datatable-container thead tr& th {
@@ -3205,14 +3204,6 @@
       }
     }
   }
-  .supports-\[backdrop-filter\]\:bg-card\/60 {
-    @supports (backdrop-filter: var(--tw)) {
-      background-color: var(--card);
-      @supports (color: color-mix(in lab, red, red)) {
-        background-color: color-mix(in oklab, var(--card) 60%, transparent);
-      }
-    }
-  }
   .sm\:ml-64 {
     @media (width >= 40rem) {
       margin-left: calc(var(--spacing) * 64);
@@ -3264,11 +3255,6 @@
   .md\:inset-0 {
     @media (width >= 48rem) {
       inset: calc(var(--spacing) * 0);
-    }
-  }
-  .md\:flex {
-    @media (width >= 48rem) {
-      display: flex;
     }
   }
   .md\:inline-block {
@@ -3371,16 +3357,6 @@
           translate: var(--tw-translate-x) var(--tw-translate-y);
         }
       }
-    }
-  }
-  .dark\:block {
-    &:is(.dark *) {
-      display: block;
-    }
-  }
-  .dark\:hidden {
-    &:is(.dark *) {
-      display: none;
     }
   }
   .dark\:border-amber-600 {
