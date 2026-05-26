@@ -3,14 +3,14 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
 ?>
 <!-- Header -->
 <header class="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur supports-backdrop-filter:bg-card/60">
-    <div class="container mx-auto px-4 lg:px-6">
+    <div>
         <div class="flex h-16 items-center justify-between">
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2">
                     <div class="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
                         <i data-lucide="leaf" class="h-5 w-5 text-primary-foreground"></i>
                     </div>
-                    <span class="text-lg font-semibold">ViveroTrack</span>
+                    <span class="text-lg font-semibold">Vivero</span>
                 </div>
                 <span class="hidden md:inline-block text-muted-foreground">|</span>
                 <span class="hidden md:inline-block text-sm text-muted-foreground">Dashboard de Estadísticas</span>
@@ -26,7 +26,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
     </div>
 </header>
 
-<main class="container mx-auto px-4 lg:px-6 py-6">
+<main class="py-6">
     <!-- Stats Cards Row -->
     <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <!-- Stock Total -->
@@ -108,17 +108,19 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
                     <h3 class="text-lg font-semibold">Movimientos en el Tiempo</h3>
                     <p class="text-sm text-muted-foreground">Entradas vs Salidas por período</p>
                 </div>
-                <div class="grid grid-cols-2 items-center gap-2">
+                <div class="grid grid-cols-3 items-center gap-2">
+                    <button class="btn btn-outline btn-size-default w-fit ml-auto"
+                        onclick="exportChart('chartMovimientosTiempo', 'movimientos_tiempo')">Exportar</button>
+
                     <select id="filterMovTiempo" class="input-component text-sm" onchange="updateMovimientosTiempo()">
                         <option value="all" selected>Todas las etapas</option>
                         <?php
-                        foreach ($allEtapas as $key => $value)
-                        {
-                            ?>
+                        foreach ($allEtapas as $key => $value) {
+                        ?>
                             <option value="<?= $value["id"] ?>">
                                 <?= $value["nombre"] ?>
                             </option>
-                            <?php
+                        <?php
                         }
                         ?>
                     </select>
@@ -130,32 +132,25 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             <div id="chartMovimientosTiempo" class="chart-container"></div>
         </div>
 
-        <!-- Chart 5: Origen de Lotes -->
+        <!-- Chart 5: Salidas por Destino -->
         <div class="card p-5">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                 <div>
-                    <h3 class="text-lg font-semibold">Origen de Lotes</h3>
-                    <p class="text-sm text-muted-foreground">Trazabilidad de procedencia</p>
+                    <h3 class="text-lg font-semibold">Salidas por destino</h3>
+                    <p class="text-sm text-muted-foreground">Trazabilidad de salidas </p>
                 </div>
-                <select id="filterOrigenTipo" class="input-field text-sm" onchange="updateOrigenLotes()">
-                    <option value="all">Todos los tipos</option>
-                    <option value="Interno">Interno</option>
-                    <option value="compra">Compra</option>
-                    <option value="Donaciones">Donaciones</option>
-                    <option value="externo">Externo</option>
-                </select>
             </div>
             <div id="chartOrigenLotes" class="chart-container"></div>
         </div>
 
         <!-- Chart 6: Inventario por Ubicación -->
-        <div class="card p-5">
+        <!-- <div class="card p-5">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                 <div>
                     <h3 class="text-lg font-semibold">Inventario por Ubicación</h3>
                     <p class="text-sm text-muted-foreground">Distribución física del stock</p>
                 </div>
-                <select id="filterUbicacionEtapa" class="input-field text-sm" onchange="updateInventarioUbicacion()">
+                <select id="filterUbicacionEtapa" class="input-component w-fit text-sm" onchange="updateInventarioUbicacion()">
                     <option value="all">Todas las etapas</option>
                     <option value="1">Semilla</option>
                     <option value="2">Germinación</option>
@@ -165,7 +160,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
                 </select>
             </div>
             <div id="chartInventarioUbicacion" class="chart-container"></div>
-        </div>
+        </div> -->
 
 
     </div>
@@ -178,44 +173,141 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
 
     const MOCK_DATA = {
         // Datos de catálogos
-        plantas: [
-            { id: 1, nombre_comun: 'Albahaca', nombre_cientifico: 'Ocimum basilicum' },
-            { id: 2, nombre_comun: 'Romero', nombre_cientifico: 'Salvia rosmarinus' },
-            { id: 3, nombre_comun: 'Menta', nombre_cientifico: 'Mentha spicata' },
-            { id: 4, nombre_comun: 'Lavanda', nombre_cientifico: 'Lavandula angustifolia' },
-            { id: 5, nombre_comun: 'Tomillo', nombre_cientifico: 'Thymus vulgaris' },
-            { id: 6, nombre_comun: 'Orégano', nombre_cientifico: 'Origanum vulgare' },
-            { id: 7, nombre_comun: 'Cilantro', nombre_cientifico: 'Coriandrum sativum' },
-            { id: 8, nombre_comun: 'Perejil', nombre_cientifico: 'Petroselinum crispum' },
-            { id: 9, nombre_comun: 'Salvia', nombre_cientifico: 'Salvia officinalis' },
-            { id: 10, nombre_comun: 'Hierbabuena', nombre_cientifico: 'Mentha × piperita' },
-            { id: 11, nombre_comun: 'Eneldo', nombre_cientifico: 'Anethum graveolens' },
-            { id: 12, nombre_comun: 'Estragón', nombre_cientifico: 'Artemisia dracunculus' },
+        plantas: [{
+                id: 1,
+                nombre_comun: 'Albahaca',
+                nombre_cientifico: 'Ocimum basilicum'
+            },
+            {
+                id: 2,
+                nombre_comun: 'Romero',
+                nombre_cientifico: 'Salvia rosmarinus'
+            },
+            {
+                id: 3,
+                nombre_comun: 'Menta',
+                nombre_cientifico: 'Mentha spicata'
+            },
+            {
+                id: 4,
+                nombre_comun: 'Lavanda',
+                nombre_cientifico: 'Lavandula angustifolia'
+            },
+            {
+                id: 5,
+                nombre_comun: 'Tomillo',
+                nombre_cientifico: 'Thymus vulgaris'
+            },
+            {
+                id: 6,
+                nombre_comun: 'Orégano',
+                nombre_cientifico: 'Origanum vulgare'
+            },
+            {
+                id: 7,
+                nombre_comun: 'Cilantro',
+                nombre_cientifico: 'Coriandrum sativum'
+            },
+            {
+                id: 8,
+                nombre_comun: 'Perejil',
+                nombre_cientifico: 'Petroselinum crispum'
+            },
+            {
+                id: 9,
+                nombre_comun: 'Salvia',
+                nombre_cientifico: 'Salvia officinalis'
+            },
+            {
+                id: 10,
+                nombre_comun: 'Hierbabuena',
+                nombre_cientifico: 'Mentha × piperita'
+            },
+            {
+                id: 11,
+                nombre_comun: 'Eneldo',
+                nombre_cientifico: 'Anethum graveolens'
+            },
+            {
+                id: 12,
+                nombre_comun: 'Estragón',
+                nombre_cientifico: 'Artemisia dracunculus'
+            },
         ],
 
-        etapas: [
-            { id: 1, nombre: 'Semilla' },
-            { id: 2, nombre: 'Germinación' },
-            { id: 3, nombre: 'Plántula' },
-            { id: 4, nombre: 'Vegetativo' },
-            { id: 5, nombre: 'Producción' },
+        etapas: [{
+                id: 1,
+                nombre: 'Semilla'
+            },
+            {
+                id: 2,
+                nombre: 'Germinación'
+            },
+            {
+                id: 3,
+                nombre: 'Plántula'
+            },
+            {
+                id: 4,
+                nombre: 'Vegetativo'
+            },
+            {
+                id: 5,
+                nombre: 'Producción'
+            },
         ],
 
-        ubicaciones: [
-            { id: 1, nombre: 'Invernadero A' },
-            { id: 2, nombre: 'Invernadero B' },
-            { id: 3, nombre: 'Almacén Central' },
-            { id: 4, nombre: 'Zona de Secado' },
-            { id: 5, nombre: 'Cuarto Frío' },
-            { id: 6, nombre: 'Área de Empaque' },
+        ubicaciones: [{
+                id: 1,
+                nombre: 'Invernadero A'
+            },
+            {
+                id: 2,
+                nombre: 'Invernadero B'
+            },
+            {
+                id: 3,
+                nombre: 'Almacén Central'
+            },
+            {
+                id: 4,
+                nombre: 'Zona de Secado'
+            },
+            {
+                id: 5,
+                nombre: 'Cuarto Frío'
+            },
+            {
+                id: 6,
+                nombre: 'Área de Empaque'
+            },
         ],
 
-        origenes: [
-            { id: 1, nombre_origen: 'Producción Propia', tipo: 'Interno' },
-            { id: 2, nombre_origen: 'Proveedor Semillas SA', tipo: 'compra' },
-            { id: 3, nombre_origen: 'Jardín Botánico', tipo: 'Donaciones' },
-            { id: 4, nombre_origen: 'Cooperativa Regional', tipo: 'externo' },
-            { id: 5, nombre_origen: 'Importación', tipo: 'compra' },
+        origenes: [{
+                id: 1,
+                nombre_origen: 'Producción Propia',
+                tipo: 'Interno'
+            },
+            {
+                id: 2,
+                nombre_origen: 'Proveedor Semillas SA',
+                tipo: 'compra'
+            },
+            {
+                id: 3,
+                nombre_origen: 'Jardín Botánico',
+                tipo: 'Donaciones'
+            },
+            {
+                id: 4,
+                nombre_origen: 'Cooperativa Regional',
+                tipo: 'externo'
+            },
+            {
+                id: 5,
+                nombre_origen: 'Importación',
+                tipo: 'compra'
+            },
         ],
     };
 
@@ -226,7 +318,10 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         const now = new Date();
         for (let i = count - 1; i >= 0; i--) {
             const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-            months.push(date.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }));
+            months.push(date.toLocaleDateString('es-ES', {
+                month: 'short',
+                year: 'numeric'
+            }));
         }
         return months;
     }
@@ -250,7 +345,10 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         for (let i = count - 1; i >= 0; i--) {
             const date = new Date(now);
             date.setDate(date.getDate() - i);
-            days.push(date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }));
+            days.push(date.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: 'short'
+            }));
         }
         return days;
     }
@@ -263,6 +361,20 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         let data = [];
         try {
             const respuesta = await fetch(`/api/movimientos.php?etapa_id=${etapaFilter}&year=${year}&chart=${chartMode}`);
+            if (respuesta.ok) {
+                data = await respuesta.json();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+
+        return data;
+    }
+
+    async function salidasDestinoData(chartMode) {
+        let data = [];
+        try {
+            const respuesta = await fetch(`/api/movimientos.php?chart=${chartMode}`);
             if (respuesta.ok) {
                 data = await respuesta.json();
             }
@@ -299,13 +411,13 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
                 toolbar: {
                     show: true,
                     tools: {
-                        download: true,
+                        download: false,
                         selection: false,
-                        zoom: true,
-                        zoomin: true,
-                        zoomout: true,
+                        zoom: false,
+                        zoomin: false,
+                        zoomout: false,
                         pan: false,
-                        reset: true
+                        reset: false
                     },
                 },
                 background: 'transparent',
@@ -313,9 +425,9 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             theme: {
                 mode: isDark ? 'dark' : 'light',
             },
-            colors: ['#22c55e', '#16a34a', '#15803d', '#166534', '#14532d', '#86efac'],
+            colors: ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-4)', 'var(--chart-5)', 'var(--chart-6)'],
             grid: {
-                borderColor: isDark ? 'rgba(255,255,255,0.1)' : '#e5e5e5',
+                borderColor: 'var(--muted-foreground)',
                 strokeDashArray: 4,
             },
             tooltip: {
@@ -325,27 +437,27 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
                 position: 'top',
                 horizontalAlign: 'right',
                 labels: {
-                    colors: isDark ? '#a3a3a3' : '#737373',
+                    colors: 'var(--foreground)',
                 },
             },
             xaxis: {
                 labels: {
                     style: {
-                        colors: isDark ? '#a3a3a3' : '#737373',
+                        colors: 'var(--foreground)',
                         fontSize: '12px',
                     },
                 },
                 axisBorder: {
-                    color: isDark ? 'rgba(255,255,255,0.1)' : '#e5e5e5',
+                    color: 'var(--muted-foreground)',
                 },
                 axisTicks: {
-                    color: isDark ? 'rgba(255,255,255,0.1)' : '#e5e5e5',
+                    color: 'var(--muted-foreground)',
                 },
             },
             yaxis: {
                 labels: {
                     style: {
-                        colors: isDark ? '#a3a3a3' : '#737373',
+                        colors: 'var(--foreground)',
                         fontSize: '12px',
                     },
                 },
@@ -378,8 +490,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
 
         const options = {
             ...getBaseOptions(),
-            series: [
-                {
+            series: [{
                     name: 'Entradas',
                     data: entradas,
                 },
@@ -407,7 +518,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
                     stops: [0, 90, 100]
                 }
             },
-            colors: ['#22c55e', '#f59e0b'],
+            colors: ['var(--chart-2)', 'var(--chart-1)'],
             xaxis: {
                 ...getBaseOptions().xaxis,
                 categories: categories,
@@ -421,26 +532,25 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
     }
 
     // =====================================================
-    // CHART 5: Origen de Lotes
+    // CHART 5: salidas por destinos 
     // =====================================================
-    function updateOrigenLotes() {
-        const tipoFilter = document.getElementById('filterOrigenTipo').value;
+    async function updateOrigenLotes() {
 
-        let origenes = MOCK_DATA.origenes;
-        if (tipoFilter !== 'all') {
-            origenes = origenes.filter(o => o.tipo === tipoFilter);
-        }
+        let data = await salidasDestinoData("salidas_destino");
+        let origenes = data.data;
+
+        console.log(data);
 
         const options = {
             ...getBaseOptions(),
-            series: origenes.map(() => randomInt(10, 60)),
+            series: origenes.map((origen) => parseInt(origen.total)),
             chart: {
                 ...getBaseOptions().chart,
                 type: 'donut',
                 height: 320,
             },
-            labels: origenes.map(o => o.nombre_origen),
-            colors: ['#22c55e', '#16a34a', '#15803d', '#166534', '#86efac'],
+            labels: origenes.map(o => o.nombre),
+            colors: ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-4)', 'var(--chart-5)'],
             plotOptions: {
                 pie: {
                     donut: {
@@ -458,7 +568,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             },
             dataLabels: {
                 enabled: true,
-                formatter: function (val) {
+                formatter: function(val) {
                     return Math.round(val) + '%';
                 },
             },
@@ -499,7 +609,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
                     barHeight: '65%',
                 }
             },
-            colors: ['#22c55e', '#16a34a', '#15803d', '#166534', '#14532d', '#86efac'],
+            colors: ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-4)', 'var(--chart-5)'],
             xaxis: {
                 ...getBaseOptions().xaxis,
                 categories: ubicaciones,
@@ -509,7 +619,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             },
             dataLabels: {
                 enabled: true,
-                formatter: function (val) {
+                formatter: function(val) {
                     return val.toLocaleString();
                 },
                 style: {
@@ -522,6 +632,27 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         renderChart('chartInventarioUbicacion', options);
     }
 
+
+    function exportChart(id, name = "chart") {
+        // Retrieve the chart instance via its assigned chart.id
+        const chartInstance = chartInstances[id];
+
+        if (!chartInstance) {
+            console.error("Chart instance not found");
+            return;
+        }
+        chartInstance.dataURI().then(({
+            imgURI
+        }) => {
+            console.log(imgURI);
+            const enlace = document.createElement('a');
+            enlace.href = imgURI;
+            enlace.download = name + '.png'; // Nombre del archivo final
+            document.body.appendChild(enlace);
+            enlace.click();
+            document.body.removeChild(enlace);
+        });
+    }
 
 
     // =====================================================
@@ -546,7 +677,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
     // INITIALIZATION
     // =====================================================
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         // Initialize Lucide icons
         lucide.createIcons();
 

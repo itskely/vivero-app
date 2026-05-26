@@ -230,8 +230,7 @@ class MovimientoInventarioModel
         " . ($etapa_id !== 'all' ? " AND etapa_id = :etapa_id" : "") . "
         GROUP BY YEAR(fecha), MONTH(fecha), tipo_movimiento
         ORDER BY ano_mes ASC");
-        if ($etapa_id !== 'all')
-        {
+        if ($etapa_id !== 'all') {
             $stmt->bindParam(":etapa_id", $etapa_id);
         }
         $stmt->bindParam(":year", $year);
@@ -248,7 +247,7 @@ class MovimientoInventarioModel
 
     public function movimientosDestino()
     {
-        $stmt = $this->conn->prepare("SELECT d.nombre_destino, SUM(cantidad) AS total FROM movimientos_inventario AS mi INNER JOIN destino AS d ON mi.destino_id = d.id WHERE destino_id IS NOT NULL GROUP BY destino_id");
+        $stmt = $this->conn->prepare("SELECT d.nombre_destino AS nombre, SUM(cantidad) AS total FROM movimientos_inventario AS mi INNER JOIN destino AS d ON mi.destino_id = d.id WHERE destino_id IS NOT NULL GROUP BY destino_id");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

@@ -131,7 +131,8 @@ class UserModel
         $id = $this->getId();
         $stmt->bindParam(":id", $id);
         $stmt->execute();
-        if ($stmt->rowCount() > 0) {
+        if ($stmt->rowCount() > 0)
+        {
             return true;
         }
         return false;

@@ -28,16 +28,16 @@ include __DIR__ . "/../controllers/PlantaController.php";
 
         <a href="/home.php?page_id=17" class="quick-card">
             <i class="fa-solid fa-dolly quick-card-icon"></i>
-            <span class="quick-card-title">lotes</span>
+            <span class="quick-card-title">Lotes</span>
         </a>
         <a href="/home.php?page_id=26" class="quick-card">
             <i class="fa-solid fa-share quick-card-icon"></i>
-            <span class="quick-card-title">Entradas/Salidas</span>
+            <span class="quick-card-title">Salidas</span>
 
         </a>
         <a href="/home.php?page_id=22" class="quick-card">
             <i class="fa-solid fa-right-left quick-card-icon"></i>
-            <span class="quick-card-title">cambiar etapa</span>
+            <span class="quick-card-title">Cambiar etapa</span>
         </a>
     </div>
 </section>

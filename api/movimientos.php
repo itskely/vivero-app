@@ -6,8 +6,7 @@ $movimientoInventario = new MovimientoInventarioModel();
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['usuario']))
-{
+if (!isset($_SESSION['usuario'])) {
     die(json_encode(
         [
             "error" => "No autenticado"
@@ -19,8 +18,7 @@ $etapa_id = !empty($_GET['etapa_id']) ? $_GET['etapa_id'] : "all";
 $year = !empty($_GET['year']) ? $_GET['year'] : date('Y');
 $mode = !empty($_GET['chart']) ? $_GET['chart'] : null;
 
-switch ($mode)
-{
+switch ($mode) {
     case 'movimientos_mes':
         $movimientos = $movimientoInventario->movimientosMes($etapa_id, $year);
         $years = $movimientoInventario->years();
@@ -42,13 +40,11 @@ switch ($mode)
 
         $sanitisedLabels = [];
 
-        foreach ($movimientos as $value)
-        {
+        foreach ($movimientos as $value) {
             $anoMes = explode("-", $value['ano_mes']);
             $numeroMes = $anoMes[1];
             $value = $meses[$numeroMes] . " " . $anoMes[0];
-            if (!in_array($value, $sanitisedLabels))
-            {
+            if (!in_array($value, $sanitisedLabels)) {
                 $sanitisedLabels[] = $value;
             }
         }
@@ -63,14 +59,13 @@ switch ($mode)
                 "salida" => []
             ]
         ];
-        foreach ($movimientos as $value)
-        {
+        foreach ($movimientos as $value) {
             $data['series'][$value['tipo_movimiento']][] = (float) $value['total'];
         }
 
         echo json_encode($data);
         break;
-    case 'destinos_lotes':
+    case 'salidas_destino':
         $movimientosDestino = $movimientoInventario->movimientosDestino();
         echo json_encode([
             "data" => $movimientosDestino
