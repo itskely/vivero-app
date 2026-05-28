@@ -6,31 +6,29 @@ include __DIR__ . "/../controllers/SalidasController.php";
     <!-- SUCCESS -->
 
     <?php
-    if (isset($_SESSION["success"]))
-    {
-        ?>
+    if (isset($_SESSION["success"])) {
+    ?>
         <script>
             toast({
                 message: "<?= $_SESSION["success"] ?>",
                 position: "top-right"
             });
         </script>
-        <?php
+    <?php
         unset($_SESSION["success"]);
     }
     ?>
 
     <?php
-    if (isset($_SESSION["error"]))
-    {
-        ?>
+    if (isset($_SESSION["error"])) {
+    ?>
         <script>
             toast({
                 message: "<?= $_SESSION["error"] ?>",
                 position: "top-right"
             });
         </script>
-        <?php
+    <?php
         unset($_SESSION["error"]);
     }
     ?>
@@ -126,11 +124,10 @@ include __DIR__ . "/../controllers/SalidasController.php";
                     <select name="tipo_movimiento" id="tipo_movimiento" class="input-component" required>
                         <option value="" disabled selected>Seleccionar tipo de movimiento</option>
                         <?php
-                        if ($_SESSION['usuario']["id_rol"] != 9)
-                        {
-                            ?>
+                        if ($_SESSION['usuario']["id_rol"] != 9) {
+                        ?>
                             <option value="entrada">Entrada</option>
-                            <?php
+                        <?php
                         }
                         ?>
                         <option value="salida">Salida</option>
@@ -205,7 +202,8 @@ include __DIR__ . "/../controllers/SalidasController.php";
                 </tr>
             </thead>
             <tbody>
-                <?php // foreach ($movimientos ?? [] as $m): ?>
+                <?php // foreach ($movimientos ?? [] as $m): 
+                ?>
                     <tr class="border-b">
                         <td class="px-6 py-4"><?= $m['lote'] ?></td>
                         <td class="px-6 py-4"><?= $m['origen'] ?></td>
@@ -213,7 +211,8 @@ include __DIR__ . "/../controllers/SalidasController.php";
                         <td class="px-6 py-4"><?= $m['cantidad'] ?></td>
                         <td class="px-6 py-4"><?= $m['fecha'] ?></td>
                     </tr>
-                <?php // endforeach; ?>
+                <?php // endforeach; 
+                ?>
             </tbody>
         </table>
     </div> -->

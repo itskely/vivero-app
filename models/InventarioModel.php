@@ -9,6 +9,37 @@ class InventarioModel
     private $cantidad_actual;
     private $conn = null;
 
+    // Variables de busqueda y paginación
+    private $busqueda;
+    private $limit;
+    private $offset;
+
+    public function setBusqueda($busqueda)
+    {
+        $this->busqueda = $busqueda;
+    }
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+    }
+    public function setOffset($offset)
+    {
+        $this->offset = $offset;
+    }
+
+    public function getBusqueda()
+    {
+        return $this->busqueda;
+    }
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+    public function getOffset()
+    {
+        return $this->offset;
+    }
+
     // Setters
     public function setId($id)
     {
@@ -94,66 +125,45 @@ class InventarioModel
         return $inventarios;
     }
 
-    public function getIsHomePage()
+    public function getCount()
     {
-        $stmt = $this->conn->prepare("SELECT * FROM pages WHERE is_home = 1");
+        $busqueda = $this->getBusqueda();
+        $stmt = $this->conn->prepare("
+            SELECT COUNT(*) as total 
+            FROM inventario i
+            JOIN lotes l ON i.lote_id = l.id
+            JOIN plantas p ON l.planta_id = p.id
+            JOIN etapas e ON i.etapa_id = e.id
+            JOIN ubicaciones u ON i.ubicacion_id = u.id
+            WHERE p.nombre_comun LIKE :busqueda OR p.nombre_cientifico LIKE :busqueda OR e.nombre LIKE :busqueda OR u.nombre LIKE :busqueda
+        ");
+        $param = "%$busqueda%";
+        $stmt->bindParam(":busqueda", $param);
         $stmt->execute();
-        $page = $stmt->fetch();
-        return $page;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function crear()
+    public function getAllCompleto()
     {
-        $stmt = $this->conn->prepare("INSERT INTO roles(nombre) VALUES (:name)");
-        $name = $this->getName();
-        $stmt->bindParam(":name", $name);
-        return $stmt->execute();
-    }
-
-    public function update()
-    {
-        $stmt = $this->conn->prepare("UPDATE roles SET nombre=:name WHERE id = :id");
-        $id = $this->getId();
-        $name = $this->getName();
-
-        $stmt->bindParam(":id", $id);
-        $stmt->bindParam(":name", $name);
-        return $stmt->execute();
-    }
-
-    public function delete()
-    {
-        $stmt = $this->conn->prepare("DELETE FROM roles WHERE id = :id");
-        $id = $this->getId();
-        $stmt->bindParam(":id", $id);
-        $stmt->execute();
-        if ($stmt->rowCount() > 0)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    public function getRolePages($role_id)
-    {
-        $stmt = $this->conn->prepare("SELECT page_id, role_id FROM role_pages WHERE role_id = :role_id");
-        $stmt->bindParam(":role_id", $role_id);
+        $busqueda = $this->getBusqueda();
+        $limit = $this->getLimit();
+        $offset = $this->getOffset();
+        $stmt = $this->conn->prepare("
+            SELECT i.*, p.nombre_comun, p.nombre_cientifico, e.nombre as etapa, u.nombre as ubicacion, l.unidad_medida
+            FROM inventario i
+            LEFT JOIN lotes l ON i.lote_id = l.id
+            LEFT JOIN plantas p ON l.planta_id = p.id
+            LEFT JOIN etapas e ON i.etapa_id = e.id
+            LEFT JOIN ubicaciones u ON i.ubicacion_id = u.id
+            WHERE p.nombre_comun LIKE :busqueda OR p.nombre_cientifico LIKE :busqueda OR e.nombre LIKE :busqueda OR u.nombre LIKE :busqueda
+            ORDER BY i.ultima_actualizacion DESC
+            LIMIT :lim OFFSET :offs
+        ");
+        $param = "%$busqueda%";
+        $stmt->bindParam(":busqueda", $param);
+        $stmt->bindParam(":lim", $limit, PDO::PARAM_INT);
+        $stmt->bindParam(":offs", $offset, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function insPageRole($page_id, $role_id)
-    {
-        $stmt = $this->conn->prepare("INSERT INTO role_pages(page_id, role_id) VALUES (:page_id, :role_id)");
-        $stmt->bindParam(":page_id", $page_id);
-        $stmt->bindParam(":role_id", $role_id);
-        return $stmt->execute();
-    }
-
-    public function delPageRole($role_id)
-    {
-        $stmt = $this->conn->prepare("DELETE FROM role_pages WHERE role_id = :role_id");
-        $stmt->bindParam(":role_id", $role_id);
-        return $stmt->execute();
     }
 }

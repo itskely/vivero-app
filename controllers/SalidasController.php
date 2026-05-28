@@ -15,23 +15,17 @@ $destino_id = $_POST['destino_id'] ?? null;
 $observaciones = $_POST['observaciones'] ?? null;
 $tipo_movimiento = $_POST['tipo_movimiento'] ?? null;
 
-if ($method === "POST")
-{
-    if ($lote_id && $inventario_id && $cantidad_salida && $destino_id && $tipo_movimiento)
-    {
+if ($method === "POST") {
+    if ($lote_id && $inventario_id && $cantidad_salida && $destino_id && $tipo_movimiento) {
         $inventario->setId($inventario_id);
         $invLote = $inventario->getOne();
 
-        if (!$invLote)
-        {
+        if (!$invLote) {
             $_SESSION["error"] = "Inventario no encontrado";
-        } else
-        {
-            if ($cantidad_salida > $invLote['cantidad_actual'] || $invLote['cantidad_actual'] === 0)
-            {
+        } else {
+            if ($cantidad_salida > $invLote['cantidad_actual'] || $invLote['cantidad_actual'] === 0) {
                 $_SESSION["error"] = "Cantidad de salida mayor a la cantidad en inventario";
-            } else
-            {
+            } else {
                 $movimiento->setLoteId($lote_id);
                 $movimiento->setEtapaId($invLote['etapa_id']);
                 $movimiento->setUbicacionId($invLote['ubicacion_id']);
@@ -41,17 +35,14 @@ if ($method === "POST")
                 $movimiento->setMotivo($observaciones);
 
                 $fueCreado = $movimiento->store();
-                if ($fueCreado)
-                {
+                if ($fueCreado) {
                     $_SESSION["success"] = "Movimiento creado con éxito";
-                } else
-                {
+                } else {
                     $_SESSION["error"] = "Error al crear el movimiento";
                 }
             }
         }
-    } else
-    {
+    } else {
         $_SESSION["error"] = "Todos los campos son requeridos";
     }
 }

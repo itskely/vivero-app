@@ -33,7 +33,7 @@ include __DIR__ . "/../controllers/LotesController.php";
                         <select id="planta_id" name="planta_id" class="input-component" required>
                             <option value="" selected disabled>Seleccionar planta</option>
                             <?php foreach ($allPlantas as $p): ?>
-                                <option value="<?= $p['id'] ?>" <?= $oneLote && $oneLote['planta_id'] == $p['id'] ? 'selected' : '' ?>>
+                                <option value="<?= $p['id'] ?>">
                                     <?= $p['nombre_comun'] ?>
                                 </option>
                             <?php endforeach; ?>
@@ -44,7 +44,7 @@ include __DIR__ . "/../controllers/LotesController.php";
                         <select id="unidad_medida" name="unidad_medida" class="input-component" required>
                             <option value="" selected disabled>Seleccionar unidad de medida</option>
                             <?php foreach ($unidades_medida as $p): ?>
-                                <option class="capitalize" value="<?= $p ?>" <?= $oneLote && $oneLote['unidad_medida'] == $p ? 'selected' : '' ?>>
+                                <option class="capitalize" value="<?= $p ?>">
                                     <?= $p ?>
                                 </option>
                             <?php endforeach; ?>
@@ -56,7 +56,7 @@ include __DIR__ . "/../controllers/LotesController.php";
                         <select id="etapa_id" name="etapa_id" class="input-component" required>
                             <option value="" selected disabled>Seleccionar etapa</option>
                             <?php foreach ($allEtapas as $p): ?>
-                                <option value="<?= $p['id'] ?>" <?= $oneLote && $oneLote['etapa_id'] == $p['id'] ? 'selected' : '' ?>>
+                                <option value="<?= $p['id'] ?>">
                                     <?= $p['nombre'] ?>
                                 </option>
                             <?php endforeach; ?>
@@ -67,7 +67,7 @@ include __DIR__ . "/../controllers/LotesController.php";
                         <select id="ubicacion_id" name="ubicacion_id" class="input-component" required>
                             <option value="" selected disabled>Seleccionar ubicación</option>
                             <?php foreach ($allUbicaciones as $p): ?>
-                                <option value="<?= $p['id'] ?>" <?= $oneLote && $oneLote['ubicacion_id'] == $p['id'] ? 'selected' : '' ?>>
+                                <option value="<?= $p['id'] ?>">
                                     <?= $p['nombre'] ?>
                                 </option>
                             <?php endforeach; ?>
@@ -79,7 +79,7 @@ include __DIR__ . "/../controllers/LotesController.php";
                             <option value="" selected disabled>Seleccionar origen</option>
 
                             <?php foreach ($allOrigen as $o): ?>
-                                <option value="<?= $o['id'] ?>" <?= $oneLote && $oneLote['origen_id'] == $o['id'] ? 'selected' : '' ?>>
+                                <option value="<?= $o['id'] ?>">
                                     <?= $o['nombre_origen'] ?>
                                 </option>
                             <?php endforeach; ?>
@@ -87,35 +87,33 @@ include __DIR__ . "/../controllers/LotesController.php";
                     </div>
 
                     <div class="col-span-2">
-                        <?= Form::textarea("observaciones", "observaciones", $oneLote ? $oneLote['observaciones'] : "", "Observaciones", "Notas adicionales sobre el lote...") ?>
+                        <?= Form::textarea("observaciones", "observaciones", "", "Observaciones", "Notas adicionales sobre el lote...") ?>
                     </div>
 
                     <?php
-                    if (isset($_SESSION["success"]))
-                    {
-                        ?>
+                    if (isset($_SESSION["success"])) {
+                    ?>
                         <script>
                             toast({
                                 message: "<?= $_SESSION["success"] ?>",
                                 position: "top-right"
                             });
                         </script>
-                        <?php
+                    <?php
                         unset($_SESSION["success"]);
                     }
                     ?>
 
                     <?php
-                    if (isset($_SESSION["error"]))
-                    {
-                        ?>
+                    if (isset($_SESSION["error"])) {
+                    ?>
                         <script>
                             toast({
                                 message: "<?= $_SESSION["error"] ?>",
                                 position: "top-right"
                             });
                         </script>
-                        <?php
+                    <?php
                         unset($_SESSION["error"]);
                     }
                     ?>

@@ -160,23 +160,28 @@ class LoteModel
 
     public function crear()
     {
-        $stmt = $this->conn->prepare("CALL sp_registrar_nuevo_lote(:planta_id, :unidad_medida, :cantidad, :etapa_id, :ubicacion_id, :usuario_id, :observaciones, :origen)");
-        $planta_id = $this->getPlantaId();
-        $unidad_medida = $this->getUnidadMedida();
-        $cantidad = $this->getCantidad();
-        $etapa_id = $this->getEtapaId();
-        $ubicacion_id = $this->getUbicacionId();
-        $origen = $this->getOrigen();
-        $usuario_id = $_SESSION['usuario']['id'];
-        $observaciones = $this->getObservaciones();
-        $stmt->bindParam(":planta_id", $planta_id);
-        $stmt->bindParam(":unidad_medida", $unidad_medida);
-        $stmt->bindParam(":cantidad", $cantidad);
-        $stmt->bindParam(":etapa_id", $etapa_id);
-        $stmt->bindParam(":ubicacion_id", $ubicacion_id);
-        $stmt->bindParam(":origen", $origen);
-        $stmt->bindParam(":usuario_id", $usuario_id);
-        $stmt->bindParam(":observaciones", $observaciones);
-        return $stmt->execute();
+        try {
+
+            $stmt = $this->conn->prepare("CALL sp_registrar_nuevo_lote(:planta_id, :unidad_medida, :cantidad, :etapa_id, :ubicacion_id, :usuario_id, :observaciones, :origen)");
+            $planta_id = $this->getPlantaId();
+            $unidad_medida = $this->getUnidadMedida();
+            $cantidad = $this->getCantidad();
+            $etapa_id = $this->getEtapaId();
+            $ubicacion_id = $this->getUbicacionId();
+            $origen = $this->getOrigen();
+            $usuario_id = $_SESSION['usuario']['id'];
+            $observaciones = $this->getObservaciones();
+            $stmt->bindParam(":planta_id", $planta_id);
+            $stmt->bindParam(":unidad_medida", $unidad_medida);
+            $stmt->bindParam(":cantidad", $cantidad);
+            $stmt->bindParam(":etapa_id", $etapa_id);
+            $stmt->bindParam(":ubicacion_id", $ubicacion_id);
+            $stmt->bindParam(":origen", $origen);
+            $stmt->bindParam(":usuario_id", $usuario_id);
+            $stmt->bindParam(":observaciones", $observaciones);
+            return $stmt->execute();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
     }
 }
