@@ -68,8 +68,7 @@ class EtapasModel
     {
         $placeholders = implode(",", array_fill(0, count($ids), "?"));
         $stmt = $this->conn->prepare("SELECT * FROM etapas WHERE id IN ($placeholders)");
-        foreach ($ids as $i => $id)
-        {
+        foreach ($ids as $i => $id) {
             $stmt->bindValue($i + 1, $id, PDO::PARAM_INT);
         }
         $stmt->execute();
@@ -109,8 +108,7 @@ class EtapasModel
         $id = $this->getId();
         $stmt->bindParam(":id", $id);
         $stmt->execute();
-        if ($stmt->rowCount() > 0)
-        {
+        if ($stmt->rowCount() > 0) {
             return true;
         }
         return false;

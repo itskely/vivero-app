@@ -82,7 +82,7 @@ const alertAudit = $('#alert-audit');
 // Form
 const form = $('#form-cambiar-etapa');
 
-let selectedLote = null;
+let selectedInventario = null;
 let selectedStock = null;
 
 buttonLotes.click(function () {
@@ -103,19 +103,21 @@ function getLotes(busqueda = '') {
         success: function (response) {
             const { data, pagination } = response;
             lotesContainer.html('');
-            data.forEach(function (lote) {
+            data.forEach(function (inventario) {
                 var $nuevoItem = $(template).clone();
-                $nuevoItem.attr('data-value', lote.id);
-                $nuevoItem.find('[data-title]').text(`Lote #${lote.id}`);
-                $nuevoItem.find('[data-subtitle]').text(lote.planta.nombre_comun);
+                $nuevoItem.attr('data-value', inventario.lote_id);
+                $nuevoItem.find('[data-title]').text(`${inventario.etapa} - ${inventario.ubicacion} - ${inventario.cantidad_actual} ${inventario.lote_id}`);
+                $nuevoItem.find('[data-subtitle]').text(inventario.nombre_comun);
 
                 // Agregar evento de click a cada item, en caso de cliquear, guardamos el valor que tiene en el atributo value
                 // luego seteamos el valor al input hidden llamado "lote" con el id de lote seleccionado
                 // y mostramos la informacion del lote seleccionado en el boton lote_button
                 $nuevoItem.click(function () {
-                    selectedLote = lote;
-                    selectedStock = null;
+                    selectedInventario = inventario;
+                    selectedStock = inventario;
                     inputHidden.val($(this).attr('data-value'));
+                    inventario_id.val(inventario.id);
+                    cantidad_real.val(inventario.cantidad_actual);
                     // Añadir a todos los demas la clase opacity-o y al que esta en 100
                     lotesContainer.find('[data-selected]').removeClass('opacity-100').addClass('opacity-0');
                     $(this).find('[data-selected]').removeClass('opacity-0').addClass('opacity-100');
@@ -145,7 +147,7 @@ function getLotes(busqueda = '') {
                                 $nuevoItem.find('[data-ubicacion]').text(stock.ubicacion.nombre);
                                 $nuevoItem
                                     .find('[data-cantidad]')
-                                    .text(stock.cantidad_actual + ' ' + selectedLote.unidad_medida);
+                                    .text(stock.cantidad_actual + ' ' + selectedInventario.unidad_medida);
 
                                 $nuevoItem.click(function () {
                                     selectedStock = stock;
@@ -265,15 +267,15 @@ $(cantidad_real).on('input', function () {
     $icon.html(current.icon);
     $title.text(current.title);
 
-    $stockSistema.text(`${stockDisponible} ${selectedLote.unidad_medida}`);
-    $stockReal.text(`${cantidadReal} ${selectedLote.unidad_medida}`);
+    $stockSistema.text(`${stockDisponible} ${selectedInventario.unidad_medida}`);
+    $stockReal.text(`${cantidadReal} ${selectedInventario.unidad_medida}`);
 
     const absDiff = Math.abs(diff);
 
-    $diferencia.text(`${isMayor ? '+' : '-'}${absDiff} ${selectedLote.unidad_medida} (${porcentaje.toFixed(2)}%)`);
+    $diferencia.text(`${isMayor ? '+' : '-'}${absDiff} ${selectedInventario.unidad_medida} (${porcentaje.toFixed(2)}%)`);
 
     $message.text(
-        `Se registrará una ${isMayor ? 'ENTRADA' : 'SALIDA'} de ${absDiff} ${selectedLote.unidad_medida} para ajustar el inventario.`
+        `Se registrará una ${isMayor ? 'ENTRADA' : 'SALIDA'} de ${absDiff} ${selectedInventario.unidad_medida} para ajustar el inventario.`
     );
 
     alertAudit.show('fast');

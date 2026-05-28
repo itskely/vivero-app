@@ -55,7 +55,7 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
                                 <circle cx="11" cy="11" r="8"></circle>
                             </svg>
                             <div class="flex flex-col items-start justify-baseline">
-                                <span data-title>Buscar lote por código...</span>
+                                <span data-title>Buscar por etapa,especie...</span>
                                 <span data-subtitle class="text-xs"></span>
                             </div>
                         </div>

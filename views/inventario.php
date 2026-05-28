@@ -27,40 +27,39 @@ include __DIR__ . "/../controllers/InventarioController.php";
             <thead class="text-sm bg-accent border-b rounded-base border-default">
                 <tr>
 
-                    <th scope="col" class="px-6 py-3 font-medium">Lote ID</th>
-                    <th scope="col" class="px-6 py-3 font-medium">Planta</th>
-                    <th scope="col" class="px-6 py-3 font-medium">Etapa</th>
+                    <th scope="col" class="px-6 py-3 font-medium">etapa </th>
+                    <th scope="col" class="px-6 py-3 font-medium">especie</th>
                     <th scope="col" class="px-6 py-3 font-medium">Ubicación</th>
-                    <th scope="col" class="px-6 py-3 font-medium text-right">Cantidad</th>
-                    <th scope="col" class="px-6 py-3 font-medium">Última actualización</th>
+                    <th scope="col" class="px-6 py-3 font-medium">Unidad de medida </th>
+                    <th scope="col" class="px-6 py-3 font-medium text-right">lotes</th>
+                    <th scope="col" class="px-6 py-3 font-medium">Total</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (count($allInventarios) > 0): ?>
                     <?php foreach ($allInventarios as $inv): ?>
                         <tr class="rounded-xl bg-card border hover:bg-neutral-secondary-hover transition-colors">
-
                             <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                                #<?= htmlspecialchars($inv['lote_id']) ?>
+                                <?= htmlspecialchars($inv['etapa']) ?>
                             </th>
                             <td class="px-6 py-4">
                                 <div class="font-medium text-heading"><?= htmlspecialchars($inv['nombre_comun']) ?></div>
-                                <div class="text-xs text-muted-foreground italic"><?= htmlspecialchars($inv['nombre_cientifico']) ?></div>
+                                <span class="text-xs text-muted-foreground"><?= htmlspecialchars($inv['nombre_cientifico']) ?></span>
                             </td>
                             <td class="px-6 py-4">
                                 <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                                    <?= htmlspecialchars($inv['etapa']) ?>
+                                    <?= htmlspecialchars($inv['ubicacion']) ?>
                                 </span>
                             </td>
                             <td class="px-6 py-4">
-                                <?= htmlspecialchars($inv['ubicacion']) ?>
+                                <?= htmlspecialchars($inv['unidad_medida']) ?>
                             </td>
                             <td class="px-6 py-4 text-right font-semibold">
-                                <?= htmlspecialchars(number_format($inv['cantidad_actual'], 2)) ?>
-                                <span class="text-xs font-normal text-muted-foreground"><?= htmlspecialchars($inv['unidad_medida']) ?></span>
+                                <?= htmlspecialchars($inv['numero_lotes']) ?>
                             </td>
                             <td class="px-6 py-4 text-xs">
-                                <?= htmlspecialchars(date('d/m/Y H:i', strtotime($inv['ultima_actualizacion']))) ?>
+                                <?= htmlspecialchars(number_format($inv['total_unidades'])) ?>
+                                <span class="text-xs font-normal text-muted-foreground"><?= htmlspecialchars($inv['unidad_medida']) ?></span>
                             </td>
                         </tr>
                     <?php endforeach; ?>
