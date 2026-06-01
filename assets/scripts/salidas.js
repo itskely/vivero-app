@@ -49,9 +49,9 @@ function getLotes(busqueda = '') {
             lotesContainer.html('');
             data.forEach(function (lote) {
                 var $nuevoItem = $(template).clone();
-                $nuevoItem.attr('data-value', lote.id);
-                $nuevoItem.find('[data-title]').text(`Lote #${lote.id}`);
-                $nuevoItem.find('[data-subtitle]').text(lote.planta.nombre_comun);
+                $nuevoItem.attr('data-value', lote.lote_id);
+                $nuevoItem.find('[data-title]').text(`Lote #${lote.lote_id}`);
+                $nuevoItem.find('[data-subtitle]').text(lote.nombre_comun);
                 // $nuevoItem.find('[data-cantidad]').text(lote.cantidad);
                 // $nuevoItem.find('[data-etapa]').text(lote.etapa);
 

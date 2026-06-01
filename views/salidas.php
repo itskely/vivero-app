@@ -122,15 +122,15 @@ include __DIR__ . "/../controllers/SalidasController.php";
                 <div class="space-y-2">
                     <label for="tipo_movimiento" class="block text-sm font-medium">Tipo de movimiento</label>
                     <select name="tipo_movimiento" id="tipo_movimiento" class="input-component" required>
-                        <option value="" disabled selected>Seleccionar tipo de movimiento</option>
+                        <option value="" disabled>Seleccionar tipo de movimiento</option>
                         <?php
                         if ($_SESSION['usuario']["id_rol"] != 9) {
                         ?>
-                            <option value="entrada">Entrada</option>
+                            <!-- <option value="entrada" selected>Entrada</option> -->
                         <?php
                         }
                         ?>
-                        <option value="salida">Salida</option>
+                        <option value="salida" selected>Salida</option>
                     </select>
                 </div>
 

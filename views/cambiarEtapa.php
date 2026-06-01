@@ -6,31 +6,29 @@ include __DIR__ . "/../controllers/CambioEtapasController.php";
     <!-- SUCCESS -->
 
     <?php
-    if (isset($_SESSION["success"]))
-    {
-        ?>
+    if (isset($_SESSION["success"])) {
+    ?>
         <script>
             toast({
                 message: "<?= $_SESSION["success"] ?>",
                 position: "top-right"
             });
         </script>
-        <?php
+    <?php
         unset($_SESSION["success"]);
     }
     ?>
 
     <?php
-    if (isset($_SESSION["error"]))
-    {
-        ?>
+    if (isset($_SESSION["error"])) {
+    ?>
         <script>
             toast({
                 message: "<?= $_SESSION["error"] ?>",
                 position: "top-right"
             });
         </script>
-        <?php
+    <?php
         unset($_SESSION["error"]);
     }
     ?>
@@ -332,7 +330,8 @@ include __DIR__ . "/../controllers/CambioEtapasController.php";
                 </tr>
             </thead>
             <tbody>
-                <?php // foreach ($movimientos ?? [] as $m): ?>
+                <?php // foreach ($movimientos ?? [] as $m): 
+                ?>
                     <tr class="border-b">
                         <td class="px-6 py-4"><?= $m['lote'] ?></td>
                         <td class="px-6 py-4"><?= $m['origen'] ?></td>
@@ -340,7 +339,8 @@ include __DIR__ . "/../controllers/CambioEtapasController.php";
                         <td class="px-6 py-4"><?= $m['cantidad'] ?></td>
                         <td class="px-6 py-4"><?= $m['fecha'] ?></td>
                     </tr>
-                <?php // endforeach; ?>
+                <?php // endforeach; 
+                ?>
             </tbody>
         </table>
     </div> -->

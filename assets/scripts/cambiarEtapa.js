@@ -11,10 +11,6 @@ const lotesContainer = $('#lotes-container');
 const template = $('#template-option').html();
 const buttonLotes = $('#lote_button');
 const inputHidden = $('#lote_id');
-const availableStock = $('#available-stock');
-
-const templateStock = $('#template-stock').html();
-const stockContainer = $('#stock-container');
 
 const inventario_id = $('#inventario_id');
 const etapa_destino_id = $('#etapa_destino_id');
@@ -32,8 +28,7 @@ const alertStockError = $('#alert-stock-error');
 // Form
 const form = $('#form-cambiar-etapa');
 
-let selectedLote = null;
-let selectedStock = null;
+let selectedInventario = null;
 
 buttonLotes.click(function () {
     $(this).next().toggle('fast');
@@ -53,11 +48,11 @@ function getLotes(busqueda = '') {
         success: function (response) {
             const { data, pagination } = response;
             lotesContainer.html('');
-            data.forEach(function (lote) {
+            data.forEach(function (inventario) {
                 var $nuevoItem = $(template).clone();
-                $nuevoItem.attr('data-value', lote.id);
-                $nuevoItem.find('[data-title]').text(`Lote #${lote.id}`);
-                $nuevoItem.find('[data-subtitle]').text(lote.planta.nombre_comun);
+                $nuevoItem.attr('data-value', inventario.lote_id);
+                $nuevoItem.find('[data-title]').text(`${inventario.etapa} - ${inventario.ubicacion}`);
+                $nuevoItem.find('[data-subtitle]').text(`${inventario.nombre_comun} (${inventario.cantidad_actual} ${inventario.unidad_medida})`);
                 // $nuevoItem.find('[data-cantidad]').text(lote.cantidad);
                 // $nuevoItem.find('[data-etapa]').text(lote.etapa);
 
@@ -65,8 +60,7 @@ function getLotes(busqueda = '') {
                 // luego seteamos el valor al input hidden llamado "lote" con el id de lote seleccionado
                 // y mostramos la informacion del lote seleccionado en el boton lote_button
                 $nuevoItem.click(function () {
-                    selectedLote = lote;
-                    selectedStock = null;
+                    selectedInventario = inventario;
                     inputHidden.val($(this).attr('data-value'));
                     // Añadir a todos los demas la clase opacity-o y al que esta en 100
                     lotesContainer.find('[data-selected]').removeClass('opacity-100').addClass('opacity-0');
@@ -79,48 +73,10 @@ function getLotes(busqueda = '') {
                     buttonLotes.find('[data-subtitle]').text($(this).find('[data-subtitle]').text());
                     buttonLotes.next().toggle('fast');
 
-                    $.ajax({
-                        url: '/api/inventario.php?lote_id=' + $(this).attr('data-value'),
-                        type: 'GET',
-                        dataType: 'json',
-                        beforeSend: function () {
-                            availableStock.hide('fast');
-                            stockContainer.html('');
-                        },
-                        complete: function () {
-                            availableStock.show('fast');
-                        },
-                        success: function (data) {
-                            data.forEach(function (stock) {
-                                var $nuevoItem = $(templateStock).clone();
-                                $nuevoItem.find('[data-etapa]').text(stock.etapa.nombre);
-                                $nuevoItem.find('[data-ubicacion]').text(stock.ubicacion.nombre);
-                                $nuevoItem
-                                    .find('[data-cantidad]')
-                                    .text(stock.cantidad_actual + ' ' + selectedLote.unidad_medida);
-
-                                $nuevoItem.click(function () {
-                                    selectedStock = stock;
-                                    ubi_destino_id.val(stock.ubicacion_id);
-                                    inventario_id.val(stock.id);
-                                    $('[data-stock-origen]').text(stock.cantidad_actual);
-                                    $('[data-max-salida]').text(stock.cantidad_actual);
-
-                                    stockContainer
-                                        .find('[data-stock-item]')
-                                        .removeClass('border-primary shadow-lg shadow-primary/30')
-                                        .addClass('border-border');
-                                    $(this)
-                                        .removeClass('border-border')
-                                        .addClass('border-primary shadow-lg shadow-primary/30');
-                                });
-                                stockContainer.append($nuevoItem);
-                            });
-                        },
-                        error: function (error) {
-                            console.log('Error al obtener los lotes: ', error);
-                        },
-                    });
+                    ubi_destino_id.val(inventario.ubicacion_id);
+                    inventario_id.val(inventario.id);
+                    $('[data-stock-origen]').text(inventario.cantidad_actual);
+                    $('[data-max-salida]').text(inventario.cantidad_actual);
                 });
 
                 lotesContainer.append($nuevoItem);
@@ -163,8 +119,8 @@ $(cantidad_salida).on('input', function () {
 
     if (cantidadEntrada === cantidadSalida) {
         alertSuccess.show('fast');
-        alertSuccess.find('[data-stock-out]').text(cantidadSalida + ' ' + selectedLote.unidad_medida);
-        alertSuccess.find('[data-stock-in]').text(cantidadEntrada + ' ' + selectedLote.unidad_medida);
+        alertSuccess.find('[data-stock-out]').text(cantidadSalida + ' ' + selectedInventario.unidad_medida);
+        alertSuccess.find('[data-stock-in]').text(cantidadEntrada + ' ' + selectedInventario.unidad_medida);
     } else {
         alertSuccess.hide('fast');
     }
@@ -172,11 +128,11 @@ $(cantidad_salida).on('input', function () {
     if (cantidadEntrada < cantidadSalida) {
         let porcentaje = ((cantidadSalida - cantidadEntrada) / cantidadSalida) * 100;
         alertMerma.show('fast');
-        alertMerma.find('[data-stock-out]').text(cantidadSalida + ' ' + selectedLote.unidad_medida);
-        alertMerma.find('[data-stock-in]').text(cantidadEntrada + ' ' + selectedLote.unidad_medida);
+        alertMerma.find('[data-stock-out]').text(cantidadSalida + ' ' + selectedInventario.unidad_medida);
+        alertMerma.find('[data-stock-in]').text(cantidadEntrada + ' ' + selectedInventario.unidad_medida);
         alertMerma
             .find('[data-stock-merma]')
-            .text(cantidadSalida - cantidadEntrada + ' ' + selectedLote.unidad_medida + ' (' + porcentaje + '%)');
+            .text(cantidadSalida - cantidadEntrada + ' ' + selectedInventario.unidad_medida + ' (' + porcentaje + '%)');
         alertMerma.find('[data-stock-merma-porcentaje]').css('width', porcentaje + '%');
     } else {
         alertMerma.hide('fast');
@@ -207,8 +163,8 @@ $(cantidad_entrada).on('input', function () {
 
     if (cantidadEntrada === cantidadSalida) {
         alertSuccess.show('fast');
-        $('[data-stock-out]').text(cantidadSalida + ' ' + selectedLote.unidad_medida);
-        $('[data-stock-in]').text(cantidadEntrada + ' ' + selectedLote.unidad_medida);
+        $('[data-stock-out]').text(cantidadSalida + ' ' + selectedInventario.unidad_medida);
+        $('[data-stock-in]').text(cantidadEntrada + ' ' + selectedInventario.unidad_medida);
     } else {
         alertSuccess.hide('fast');
     }
@@ -216,11 +172,11 @@ $(cantidad_entrada).on('input', function () {
     if (cantidadEntrada < cantidadSalida) {
         let porcentaje = ((cantidadSalida - cantidadEntrada) / cantidadSalida) * 100;
         alertMerma.show('fast');
-        alertMerma.find('[data-stock-out]').text(cantidadSalida + ' ' + selectedLote.unidad_medida);
-        alertMerma.find('[data-stock-in]').text(cantidadEntrada + ' ' + selectedLote.unidad_medida);
+        alertMerma.find('[data-stock-out]').text(cantidadSalida + ' ' + selectedInventario.unidad_medida);
+        alertMerma.find('[data-stock-in]').text(cantidadEntrada + ' ' + selectedInventario.unidad_medida);
         alertMerma
             .find('[data-stock-merma]')
-            .text(cantidadSalida - cantidadEntrada + ' ' + selectedLote.unidad_medida + ' (' + porcentaje + '%)');
+            .text(cantidadSalida - cantidadEntrada + ' ' + selectedInventario.unidad_medida + ' (' + porcentaje + '%)');
         alertMerma.find('[data-stock-merma-porcentaje]').css('width', porcentaje + '%');
     } else {
         alertMerma.hide('fast');
@@ -236,11 +192,11 @@ form.on('submit', function (e) {
     const stockOrigen = parseInt($('[data-stock-origen]').text());
     const stockDisponible = parseInt($('[data-stock-available]').text());
 
-    if (!selectedLote || !selectedStock) {
+    if (!selectedInventario) {
         e.preventDefault();
 
         toast({
-            message: 'Debe seleccionar un lote y un stock',
+            message: 'Debe seleccionar un lote',
             duration: 4000,
             autoClose: true,
             pauseOnHover: true,
