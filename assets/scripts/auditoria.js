@@ -70,7 +70,7 @@ const inputHidden = $('#lote_id'); // DETECT
 const availableStock = $('#available-stock');
 
 const templateStock = $('#template-stock').html();
-const stockContainer = $('#stock-container');
+
 
 const inventario_id = $('#inventario_id'); // DETECT
 
@@ -106,8 +106,8 @@ function getLotes(busqueda = '') {
             data.forEach(function (inventario) {
                 var $nuevoItem = $(template).clone();
                 $nuevoItem.attr('data-value', inventario.lote_id);
-                $nuevoItem.find('[data-title]').text(`${inventario.etapa} - ${inventario.ubicacion} - ${inventario.cantidad_actual} ${inventario.lote_id}`);
-                $nuevoItem.find('[data-subtitle]').text(inventario.nombre_comun);
+                $nuevoItem.find('[data-title]').text(`${inventario.etapa} - ${inventario.ubicacion}`);
+                $nuevoItem.find('[data-subtitle]').text(`lote # ${inventario.lote_id}-${inventario.nombre_comun} (${inventario.cantidad_actual} ${inventario.unidad_medida})`);
 
                 // Agregar evento de click a cada item, en caso de cliquear, guardamos el valor que tiene en el atributo value
                 // luego seteamos el valor al input hidden llamado "lote" con el id de lote seleccionado
@@ -129,46 +129,7 @@ function getLotes(busqueda = '') {
                     buttonLotes.find('[data-subtitle]').text($(this).find('[data-subtitle]').text());
                     buttonLotes.next().toggle('fast');
 
-                    $.ajax({
-                        url: '/api/inventario.php?lote_id=' + $(this).attr('data-value'),
-                        type: 'GET',
-                        dataType: 'json',
-                        beforeSend: function () {
-                            availableStock.hide('fast');
-                            stockContainer.html('');
-                        },
-                        complete: function () {
-                            availableStock.show('fast');
-                        },
-                        success: function (data) {
-                            data.forEach(function (stock) {
-                                var $nuevoItem = $(templateStock).clone();
-                                $nuevoItem.find('[data-etapa]').text(stock.etapa.nombre);
-                                $nuevoItem.find('[data-ubicacion]').text(stock.ubicacion.nombre);
-                                $nuevoItem
-                                    .find('[data-cantidad]')
-                                    .text(stock.cantidad_actual + ' ' + selectedInventario.unidad_medida);
-
-                                $nuevoItem.click(function () {
-                                    selectedStock = stock;
-                                    inventario_id.val(stock.id);
-                                    cantidad_real.val(stock.cantidad_actual);
-
-                                    stockContainer
-                                        .find('[data-stock-item]')
-                                        .removeClass('border-primary shadow-lg shadow-primary/30')
-                                        .addClass('border-border');
-                                    $(this)
-                                        .removeClass('border-border')
-                                        .addClass('border-primary shadow-lg shadow-primary/30');
-                                });
-                                stockContainer.append($nuevoItem);
-                            });
-                        },
-                        error: function (error) {
-                            console.log('Error al obtener los lotes: ', error);
-                        },
-                    });
+                    
                 });
 
                 lotesContainer.append($nuevoItem);

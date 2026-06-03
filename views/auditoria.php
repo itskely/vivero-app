@@ -118,25 +118,7 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
                     </div>
                 </div>
 
-                <div id="available-stock" class="p-4 rounded-lg bg-muted/50 border space-y-3 hidden">
-                    <h4 class="font-medium text-sm">Stock disponible por ubicación:</h4>
-                    <div class="grid gap-2" id="stock-container">
-                        <template id="template-stock">
-                            <button data-stock-item type="button"
-                                class="flex items-center justify-between p-3 rounded-lg border transition-colors border-border hover:border-primary/50">
-                                <div class="flex items-center gap-3">
-                                    <span
-                                        class="inline-flex items-center font-medium rounded-full border bg-emerald-100 text-emerald-700 border-emerald-300 px-2 py-0.5 text-xs">
-                                        <span class="w-1.5 h-1.5 rounded-full mr-1.5 bg-emerald-500" data-dot></span>
-                                        <span data-etapa></span>
-                                    </span>
-                                    <span class="text-sm text-muted-foreground" data-ubicacion></span>
-                                </div>
-                                <span class="font-semibold tabular-nums" data-cantidad></span>
-                            </button>
-                        </template>
-                    </div>
-                </div>
+
 
                 <div class="grid gap-4">
 

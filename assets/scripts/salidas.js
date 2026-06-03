@@ -11,10 +11,7 @@ const lotesContainer = $('#lotes-container');
 const template = $('#template-option').html();
 const buttonLotes = $('#lote_button');
 const inputHidden = $('#lote_id');
-const availableStock = $('#available-stock');
 
-const templateStock = $('#template-stock').html();
-const stockContainer = $('#stock-container');
 
 const inventario_id = $('#inventario_id');
 const etapa_destino_id = $('#etapa_destino_id');
@@ -26,8 +23,7 @@ const cantidad_entrada = $('#cantidad_entrada');
 // Form
 const form = $('#form-salidas');
 
-let selectedLote = null;
-let selectedStock = null;
+let selectedInventario = null;
 
 buttonLotes.click(function () {
     $(this).next().toggle('fast');
@@ -47,11 +43,11 @@ function getLotes(busqueda = '') {
         success: function (response) {
             const { data, pagination } = response;
             lotesContainer.html('');
-            data.forEach(function (lote) {
+            data.forEach(function (inventario) {
                 var $nuevoItem = $(template).clone();
-                $nuevoItem.attr('data-value', lote.lote_id);
-                $nuevoItem.find('[data-title]').text(`Lote #${lote.lote_id}`);
-                $nuevoItem.find('[data-subtitle]').text(lote.nombre_comun);
+                $nuevoItem.attr('data-value', inventario.lote_id);
+                $nuevoItem.find('[data-title]').text(`${inventario.etapa} - ${inventario.ubicacion}`);
+                $nuevoItem.find('[data-subtitle]').text(`lote # ${inventario.lote_id}-${inventario.nombre_comun} (${inventario.cantidad_actual} ${inventario.unidad_medida})`);
                 // $nuevoItem.find('[data-cantidad]').text(lote.cantidad);
                 // $nuevoItem.find('[data-etapa]').text(lote.etapa);
 
@@ -59,8 +55,7 @@ function getLotes(busqueda = '') {
                 // luego seteamos el valor al input hidden llamado "lote" con el id de lote seleccionado
                 // y mostramos la informacion del lote seleccionado en el boton lote_button
                 $nuevoItem.click(function () {
-                    selectedLote = lote;
-                    selectedStock = null;
+                    selectedInventario = inventario;
                     inputHidden.val($(this).attr('data-value'));
                     // Añadir a todos los demas la clase opacity-o y al que esta en 100
                     lotesContainer.find('[data-selected]').removeClass('opacity-100').addClass('opacity-0');

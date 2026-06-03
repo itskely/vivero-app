@@ -119,10 +119,13 @@ class InventarioModel
             INNER JOIN etapas e ON i.etapa_id = e.id
             INNER JOIN ubicaciones u ON i.ubicacion_id = u.id
             WHERE 
-                p.nombre_comun LIKE :busqueda
-                OR p.nombre_cientifico LIKE :busqueda
-                OR e.nombre LIKE :busqueda
-                OR u.nombre LIKE :busqueda
+                i.cantidad_actual > 0
+                AND (
+                    p.nombre_comun LIKE :busqueda
+                    OR p.nombre_cientifico LIKE :busqueda
+                    OR e.nombre LIKE :busqueda
+                    OR u.nombre LIKE :busqueda
+                )
             ORDER BY
                 e.nombre,
                 p.nombre_comun,
@@ -149,10 +152,13 @@ class InventarioModel
             LEFT JOIN etapas e ON i.etapa_id = e.id
             LEFT JOIN ubicaciones u ON i.ubicacion_id = u.id
             WHERE 
-                p.nombre_comun LIKE :busqueda
-                OR p.nombre_cientifico LIKE :busqueda
-                OR e.nombre LIKE :busqueda
-                OR u.nombre LIKE :busqueda");
+                i.cantidad_actual > 0
+                AND (
+                    p.nombre_comun LIKE :busqueda
+                    OR p.nombre_cientifico LIKE :busqueda
+                    OR e.nombre LIKE :busqueda
+                    OR u.nombre LIKE :busqueda
+                )");
         $param = "%" . $busqueda . "%";
         $stmt->bindParam(":busqueda", $param);
         $stmt->execute();

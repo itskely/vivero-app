@@ -52,7 +52,7 @@ function getLotes(busqueda = '') {
                 var $nuevoItem = $(template).clone();
                 $nuevoItem.attr('data-value', inventario.lote_id);
                 $nuevoItem.find('[data-title]').text(`${inventario.etapa} - ${inventario.ubicacion}`);
-                $nuevoItem.find('[data-subtitle]').text(`${inventario.nombre_comun} (${inventario.cantidad_actual} ${inventario.unidad_medida})`);
+                $nuevoItem.find('[data-subtitle]').text(`lote # ${inventario.lote_id}-${inventario.nombre_comun} (${inventario.cantidad_actual} ${inventario.unidad_medida})`);
                 // $nuevoItem.find('[data-cantidad]').text(lote.cantidad);
                 // $nuevoItem.find('[data-etapa]').text(lote.etapa);
 
