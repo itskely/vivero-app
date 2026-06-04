@@ -119,7 +119,7 @@ include __DIR__ . "/../controllers/SalidasController.php";
                     </div>
                 </div>
 
-                <div class="space-y-2">
+                <div class="space-y-2 hidden">
                     <label for="tipo_movimiento" class="block text-sm font-medium">Tipo de movimiento</label>
                     <select name="tipo_movimiento" id="tipo_movimiento" class="input-component" required>
                         <option value="" disabled>Seleccionar tipo de movimiento</option>

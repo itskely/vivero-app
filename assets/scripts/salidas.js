@@ -68,48 +68,7 @@ function getLotes(busqueda = '') {
                     buttonLotes.find('[data-subtitle]').text($(this).find('[data-subtitle]').text());
                     buttonLotes.next().toggle('fast');
 
-                    $.ajax({
-                        url: '/api/inventario.php?lote_id=' + $(this).attr('data-value'),
-                        type: 'GET',
-                        dataType: 'json',
-                        beforeSend: function () {
-                            availableStock.hide('fast');
-                            stockContainer.html('');
-                        },
-                        complete: function () {
-                            availableStock.show('fast');
-                        },
-                        success: function (data) {
-                            data.forEach(function (stock) {
-                                var $nuevoItem = $(templateStock).clone();
-                                $nuevoItem.find('[data-etapa]').text(stock.etapa.nombre);
-                                $nuevoItem.find('[data-ubicacion]').text(stock.ubicacion.nombre);
-                                $nuevoItem
-                                    .find('[data-cantidad]')
-                                    .text(stock.cantidad_actual + ' ' + selectedLote.unidad_medida);
-
-                                $nuevoItem.click(function () {
-                                    selectedStock = stock;
-                                    ubi_destino_id.val(stock.ubicacion_id);
-                                    inventario_id.val(stock.id);
-                                    $('[data-stock-origen]').text(stock.cantidad_actual);
-                                    $('[data-max-salida]').text(stock.cantidad_actual);
-
-                                    stockContainer
-                                        .find('[data-stock-item]')
-                                        .removeClass('border-primary shadow-lg shadow-primary/30')
-                                        .addClass('border-border');
-                                    $(this)
-                                        .removeClass('border-border')
-                                        .addClass('border-primary shadow-lg shadow-primary/30');
-                                });
-                                stockContainer.append($nuevoItem);
-                            });
-                        },
-                        error: function (error) {
-                            console.log('Error al obtener los lotes: ', error);
-                        },
-                    });
+                    inventario_id.val(inventario.id);
                 });
 
                 lotesContainer.append($nuevoItem);
