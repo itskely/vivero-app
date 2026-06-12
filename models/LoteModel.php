@@ -4,7 +4,7 @@ class LoteModel
 {
     private $id;
     private $planta_id;
-
+    private $tipo_material;
     private $unidad_medida;
     private $cantidad;
     private $etapa_id;
@@ -27,6 +27,10 @@ class LoteModel
     public function setPlantaId($planta_id)
     {
         $this->planta_id = $planta_id;
+    }
+    public function setTipoMaterial($tipo_material)
+    {
+        $this->tipo_material = $tipo_material;
     }
     public function setUnidadMedida($unidad_medida)
     {
@@ -76,7 +80,10 @@ class LoteModel
     {
         return $this->planta_id;
     }
-
+    public function getTipoMaterial()
+    {
+        return $this->tipo_material;
+    }
     public function getUnidadMedida()
     {
         return $this->unidad_medida;
@@ -162,15 +169,17 @@ class LoteModel
     {
         try {
 
-            $stmt = $this->conn->prepare("CALL sp_registrar_nuevo_lote(:planta_id, :unidad_medida, :cantidad, :etapa_id, :ubicacion_id, :usuario_id, :observaciones, :origen)");
+            $stmt = $this->conn->prepare("CALL sp_registrar_nuevo_lote(:planta_id, :unidad_medida, :cantidad, :etapa_id, :ubicacion_id, :usuario_id, :observaciones, :origen, :tipo_material)");
             $planta_id = $this->getPlantaId();
             $unidad_medida = $this->getUnidadMedida();
             $cantidad = $this->getCantidad();
             $etapa_id = $this->getEtapaId();
             $ubicacion_id = $this->getUbicacionId();
             $origen = $this->getOrigen();
+            $tipo_material = $this->getTipoMaterial();
             $usuario_id = $_SESSION['usuario']['id'];
             $observaciones = $this->getObservaciones();
+
             $stmt->bindParam(":planta_id", $planta_id);
             $stmt->bindParam(":unidad_medida", $unidad_medida);
             $stmt->bindParam(":cantidad", $cantidad);
@@ -179,6 +188,7 @@ class LoteModel
             $stmt->bindParam(":origen", $origen);
             $stmt->bindParam(":usuario_id", $usuario_id);
             $stmt->bindParam(":observaciones", $observaciones);
+            $stmt->bindParam(":tipo_material", $tipo_material);
             return $stmt->execute();
         } catch (Exception $e) {
             die($e->getMessage());

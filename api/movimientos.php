@@ -71,11 +71,71 @@ switch ($mode) {
             "data" => $movimientosDestino
         ]);
         break;
-    default:
-        echo json_encode(
-            [
-                "error" => "Modo no reconocido"
-            ]
-        );
+    case 'semillas_recolectadas':
+
+        $mode = $_GET['mode'] ?? 'mes';
+
+        $mes = !empty($_GET['mes'])
+            ? (int) $_GET['mes']
+            : date('n');
+        $unidad = !empty($_GET['unidad'])
+            ? $_GET['unidad']
+            : 'gramos';
+        $cuatrimestre = !empty($_GET['cuatrimestre'])
+            ? (int) $_GET['cuatrimestre']
+            : 1;
+
+        if ($mode === 'mes') {
+
+            $semillas = $movimientoInventario
+                ->semillasRecolectadasMes(
+                    $year,
+                    $mes,
+                    $unidad
+                );
+        } elseif ($mode === 'cuatrimestre') {
+
+            switch ($cuatrimestre) {
+
+                case 1:
+                    $mesInicio = 1;
+                    $mesFin = 4;
+                    break;
+
+                case 2:
+                    $mesInicio = 5;
+                    $mesFin = 8;
+                    break;
+
+                case 3:
+                    $mesInicio = 9;
+                    $mesFin = 12;
+                    break;
+
+                default:
+                    $mesInicio = 1;
+                    $mesFin = 4;
+            }
+
+            $semillas = $movimientoInventario
+                ->semillasRecolectadasCuatrimestre(
+                    $year,
+                    $mesInicio,
+                    $mesFin,
+                    $unidad
+                );
+        } else {
+
+            $semillas = $movimientoInventario
+                ->semillasRecolectadasAnio(
+                    $year,
+                    $unidad
+                );
+        }
+
+        echo json_encode([
+            "data" => $semillas
+        ]);
+
         break;
 }

@@ -13,6 +13,7 @@ $origenModel = new OrigenModel();
 $method = $_SERVER['REQUEST_METHOD'];
 $params = $_GET;
 $planta_id = $_POST['planta_id'] ?? null;
+$tipo_material = $_POST['tipo_material'] ?? null;
 $unidad_medida = $_POST['unidad_medida'] ?? null;
 $cantidad = $_POST['cantidad'] ?? null;
 $etapa_id = $_POST['etapa_id'] ?? null;
@@ -21,8 +22,9 @@ $origen = $_POST['origen_id'] ?? null;
 $observaciones = $_POST['observaciones'] ?? null;
 
 if ($method === "POST") {
-    if ($planta_id && $unidad_medida && $cantidad && $etapa_id && $ubicacion_id && $origen && $observaciones) {
+    if ($planta_id && $tipo_material && $unidad_medida && $cantidad && $etapa_id && $ubicacion_id && $origen && $observaciones) {
         $lote->setPlantaId($planta_id);
+        $lote->setTipoMaterial($tipo_material);
         $lote->setUnidadMedida($unidad_medida);
         $lote->setCantidad($cantidad);
         $lote->setEtapaId($etapa_id);
@@ -72,4 +74,9 @@ $unidades_medida = [
     "unidades",
     "gramos",
     "kilogramos"
+];
+$tipo_material = [
+    "semilla ",
+    "plantula",
+    "esqueje"
 ];

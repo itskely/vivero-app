@@ -71,6 +71,80 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             </div>
             <div id="chartOrigenLotes" class="chart-container"></div>
         </div>
+        <!-- Chart 5: Semillas recolectadas por mes  -->
+        <div class="card p-5">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+
+                <div>
+                    <h3 class="text-lg font-semibold">
+                        Semillas recolectadas
+                    </h3>
+                    <p class="text-sm text-muted-foreground">
+                        Colecta de semillas por especie
+                    </p>
+                </div>
+
+                <div class="flex gap-2">
+                    <select id="filterUnidad"
+                        class="input-component text-sm"
+                        onchange="updateSemillasRecolectadas()">
+
+                        <option value="gramos">Gramos</option>
+                        <option value="unidades">Unidades</option>
+
+                    </select>
+                    <select id="filterMode"
+                        class="input-component text-sm"
+                        onchange="updateFiltroSemillas()">
+
+                        <option value="mes">Mes</option>
+                        <option value="cuatrimestre">Cuatrimestre</option>
+                        <option value="anio">Año</option>
+
+                    </select>
+                    <select id="filterMes"
+                        class="input-component text-sm"
+                        onchange="updateSemillasRecolectadas()">
+
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+
+                    </select>
+
+                    <select id="filterCuatrimestre"
+                        class="input-component text-sm"
+                        onchange="updateSemillasRecolectadas()">
+                        <option value="1">Enero - Abril</option>
+                        <option value="2">Mayo - Agosto</option>
+                        <option value="3">Septiembre - Diciembre</option>
+                    </select>
+
+                    <select id="filterYear"
+                        class="input-component text-sm"
+                        onchange="updateSemillasRecolectadas()">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div id="chartSemillasRecolectadas"
+                class="chart-container">
+            </div>
+        </div>
 
         <!-- Chart 6: Inventario por Ubicación -->
         <!-- <div class="card p-5">
@@ -302,11 +376,17 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
 
     async function salidasDestinoData(chartMode) {
         let data = [];
+
         try {
-            const respuesta = await fetch(`/api/movimientos.php?chart=${chartMode}`);
+
+            const respuesta = await fetch(
+                `/api/movimientos.php?${chartMode}`
+            );
+
             if (respuesta.ok) {
                 data = await respuesta.json();
             }
+
         } catch (error) {
             console.error(error);
         }
@@ -465,7 +545,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
     // =====================================================
     async function updateOrigenLotes() {
 
-        let data = await salidasDestinoData("salidas_destino");
+        let data = await salidasDestinoData("chart=salidas_destino");
         let origenes = data.data;
 
         console.log(data);
@@ -510,11 +590,12 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         renderChart('chartOrigenLotes', options);
     }
 
+
     // =====================================================
     // CHART 6: Inventario por Ubicación
     // =====================================================
     function updateInventarioUbicacion() {
-        const etapaFilter = document.getElementById('filterUbicacionEtapa').value;
+        const etapaFilter = 'all';
 
         const ubicaciones = MOCK_DATA.ubicaciones.map(u => u.nombre);
         const baseValue = etapaFilter === 'all' ? 800 : randomInt(200, 600);
@@ -582,6 +663,105 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             document.body.removeChild(enlace);
         });
     }
+    // =====================================================
+    // CHART 6: Semillas recolectadas
+    // =====================================================
+    async function updateSemillasRecolectadas() {
+        const unidad_medida = document.getElementById(
+            'filterUnidad'
+        ).value;
+        const mes = document.getElementById(
+            'filterMes'
+        ).value;
+
+        const cuatrimestre = document.getElementById(
+            'filterCuatrimestre'
+        ).value;
+
+        const year = document.getElementById(
+            'filterYear'
+        ).value;
+        const mode = document.getElementById(
+            'filterMode'
+        ).value;
+
+        let response = await salidasDestinoData(
+            `chart=semillas_recolectadas&unidad=${unidad_medida}&mode=${mode}&mes=${mes}&cuatrimestre=${cuatrimestre}&year=${year}`
+        );
+
+        let semillas = response.data;
+
+        const options = {
+            ...getBaseOptions(),
+
+            series: [{
+                name: unidad_medida === 'gramos' ?
+                    'Gramos' : 'Unidades',
+
+                data: semillas.map(
+                    s => parseFloat(s.total_gramos)
+                )
+            }],
+
+            chart: {
+                ...getBaseOptions().chart,
+                type: 'bar',
+                height: 350,
+            },
+
+            xaxis: {
+                categories: semillas.map(
+                    s => s.nombre_cientifico
+                ),
+                labels: {
+                    rotate: -45
+                }
+            },
+
+            yaxis: {
+                title: {
+                    text: unidad_medida === 'gramos' ? 'Gramos' : 'Unidades'
+                }
+            },
+
+            dataLabels: {
+                enabled: true
+            }
+        };
+
+        renderChart(
+            'chartSemillasRecolectadas',
+            options
+        );
+    }
+
+    function updateFiltroSemillas() {
+
+        const mode =
+            document.getElementById('filterMode').value;
+
+        document.getElementById('filterMes')
+            .style.display =
+            mode === 'mes' ? 'block' : 'none';
+
+        document.getElementById('filterCuatrimestre')
+            .style.display =
+            mode === 'cuatrimestre' ? 'block' : 'none';
+    }
+
+    function updateFiltroSemillas() {
+
+        const mode =
+            document.getElementById('filterMode').value;
+
+        document.getElementById('filterMes').style.display =
+            mode === 'mes' ? 'block' : 'none';
+
+        document.getElementById('filterCuatrimestre').style.display =
+            mode === 'cuatrimestre' ? 'block' : 'none';
+
+        updateSemillasRecolectadas();
+    }
 
 
     // =====================================================
@@ -599,7 +779,8 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
     function refreshAllCharts() {
         updateMovimientosTiempo();
         updateOrigenLotes();
-        updateInventarioUbicacion();
+
+        updateSemillasRecolectadas();
     }
 
     // =====================================================
@@ -607,14 +788,19 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
     // =====================================================
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize Lucide icons
+
         lucide.createIcons();
 
-        // Initialize all charts
-        refreshAllCharts();
+        const mesActual = new Date().getMonth() + 1;
 
+        document.getElementById('filterMes').value =
+            mesActual;
+
+        updateFiltroSemillas();
+
+        refreshAllCharts();
         // Update stats with mock data
-        document.getElementById('statStock').textContent = randomInt(10000, 15000).toLocaleString();
+        document.getElementById('satStock').textContent = randomInt(10000, 15000).toLocaleString();
         document.getElementById('statLotes').textContent = randomInt(120, 200).toLocaleString();
         document.getElementById('statEntradas').textContent = randomInt(2000, 3000).toLocaleString();
         document.getElementById('statSalidas').textContent = randomInt(1500, 2500).toLocaleString();

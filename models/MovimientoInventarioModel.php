@@ -220,7 +220,7 @@ class MovimientoInventarioModel
 
     public function movimientosMes($etapa_id, $year)
     {
-        // Hacer concat de php de ', etapa_id' en el where en caso de estapa_id ser diferente de null o 'all'
+        // Hacer concat de php de ', etapa_id' en el where en caso de etapa_id ser diferente de null o 'all'
         $stmt = $this->conn->prepare("SELECT 
         tipo_movimiento, 
         SUM(cantidad) as total, 
@@ -256,6 +256,126 @@ class MovimientoInventarioModel
     {
         $stmt = $this->conn->prepare("SELECT tipo_movimiento, COUNT(*) AS total FROM movimientos_inventario GROUP BY YEAR(CURRENT_DATE), MONTH(CURRENT_DATE), tipo_movimiento");
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function semillasRecolectadasMes(
+        $year,
+        $mes,
+        $unidad
+    ) {
+
+        $stmt = $this->conn->prepare("
+        SELECT
+            p.nombre_cientifico,
+            SUM(mi.cantidad) AS total_gramos
+
+        FROM movimientos_inventario mi
+
+        INNER JOIN lotes l
+            ON l.id = mi.lote_id
+
+        INNER JOIN plantas p
+            ON p.id = l.planta_id
+
+        WHERE mi.tipo_movimiento = 'entrada'
+        AND mi.motivo = 'Registro inicial'
+        AND mi.etapa_id = 2
+        AND l.unidad_medida = :unidad
+
+        AND YEAR(mi.fecha) = :year
+        AND MONTH(mi.fecha) = :mes
+
+        GROUP BY p.id, p.nombre_cientifico
+
+        ORDER BY total_gramos DESC
+    ");
+        $stmt->bindParam(":unidad", $unidad);
+        $stmt->bindParam(":year", $year);
+        $stmt->bindParam(":mes", $mes);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function semillasRecolectadasCuatrimestre(
+        $year,
+        $mesInicio,
+        $mesFin,
+        $unidad
+    ) {
+
+        $stmt = $this->conn->prepare("
+        SELECT
+            p.nombre_cientifico,
+            SUM(mi.cantidad) AS total_gramos
+
+        FROM movimientos_inventario mi
+
+        INNER JOIN lotes l
+            ON l.id = mi.lote_id
+
+        INNER JOIN plantas p
+            ON p.id = l.planta_id
+
+        WHERE mi.tipo_movimiento = 'entrada'
+        AND mi.motivo = 'Registro inicial'
+        AND mi.etapa_id = 2
+        AND l.unidad_medida = :unidad
+
+        AND YEAR(mi.fecha) = :year
+        AND MONTH(mi.fecha)
+            BETWEEN :mesInicio
+            AND :mesFin
+
+        GROUP BY p.id, p.nombre_cientifico
+
+        ORDER BY total_gramos DESC
+    ");
+
+        $stmt->bindParam(":year", $year);
+        $stmt->bindParam(":mesInicio", $mesInicio);
+        $stmt->bindParam(":mesFin", $mesFin);
+        $stmt->bindParam(":unidad", $unidad);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function semillasRecolectadasAnio(
+        $year,
+        $unidad
+    ) {
+
+        $stmt = $this->conn->prepare("
+        SELECT
+            p.nombre_cientifico,
+            SUM(mi.cantidad) AS total_gramos
+
+        FROM movimientos_inventario mi
+
+        INNER JOIN lotes l
+            ON l.id = mi.lote_id
+
+        INNER JOIN plantas p
+            ON p.id = l.planta_id
+
+        WHERE mi.tipo_movimiento = 'entrada'
+        AND mi.motivo = 'Registro inicial'
+        AND mi.etapa_id = 2
+        AND l.unidad_medida = :unidad
+
+        AND YEAR(mi.fecha) = :year
+
+        GROUP BY p.id, p.nombre_cientifico
+
+        ORDER BY total_gramos DESC
+    ");
+
+        $stmt->bindParam(":year", $year);
+        $stmt->bindParam(":unidad", $unidad);
+
+        $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

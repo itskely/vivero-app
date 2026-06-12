@@ -301,18 +301,19 @@ CREATE PROCEDURE sp_registrar_nuevo_lote(
     IN p_etapa_id INT,
     IN p_ubicacion_id INT,
     IN p_usuario_id INT,
-    IN p_observaciones TEXT
+    IN p_observaciones TEXT,
+    IN p_tipo_material INT
 )
 BEGIN
     START TRANSACTION;
 
-    INSERT INTO lotes (planta_id, codigo_lote, fecha_creacion, unidad_medida, usuario_id, observaciones)
-    VALUES (p_planta_id, p_codigo_lote, CURDATE(), p_unidad_medida, p_usuario_id, p_observaciones);
+    INSERT INTO lotes (planta_id, codigo_lote, fecha_creacion, unidad_medida, usuario_id, observaciones, tipo_material)
+    VALUES (p_planta_id, p_codigo_lote, CURDATE(), p_unidad_medida, p_usuario_id, p_observaciones, p_tipo_material);
 
     SET @last_lote_id = LAST_INSERT_ID();
 
     -- El trigger ahora se encarga de todo al insertar aquí
-    INSERT INTO movimientos_inventario (lote_id, etapa_id, ubicacion_id, usuario_id, tipo_movimiento, cantidad, motivo)
+    INSERT INTO movimientos_inventario (lote_id, etapa_id, ubicacion_id, usuario_id, tipo_movimiento, cantidad, motivo, tipo_material)
     VALUES (@last_lote_id, p_etapa_id, p_ubicacion_id, p_usuario_id, 'entrada', p_cantidad_inicial, 'Registro inicial');
 
     COMMIT;

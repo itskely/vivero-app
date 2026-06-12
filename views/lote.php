@@ -28,6 +28,36 @@ include __DIR__ . "/../controllers/LotesController.php";
                 </select>
             </div>
             <div>
+                <label for="tipo_material"
+                    class="block mb-2.5 text-sm font-medium">
+
+                    Tipo de Material
+                </label>
+
+                <select id="tipo_material"
+                    name="tipo_material"
+                    class="input-component"
+                    required>
+
+                    <option value="" selected disabled>
+                        Seleccionar tipo de material
+                    </option>
+
+                    <option value="semilla">
+                        Semilla
+                    </option>
+
+                    <option value="plantula">
+                        Plántula
+                    </option>
+
+                    <option value="esqueje">
+                        Esqueje
+                    </option>
+
+                </select>
+            </div>
+            <div>
                 <label for="unidad_medida" class="block mb-2.5 text-sm font-medium">Unidad de Medida</label>
                 <select id="unidad_medida" name="unidad_medida" class="input-component" required>
                     <option value="" selected disabled>Seleccionar unidad de medida</option>

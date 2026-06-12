@@ -26,6 +26,7 @@ include __DIR__ . "/../controllers/SalidasController.php";
             toast({
                 message: "<?= $_SESSION["error"] ?>",
                 position: "top-right"
+
             });
         </script>
     <?php
