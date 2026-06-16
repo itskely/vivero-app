@@ -16,6 +16,8 @@ const inventario_id = $('#inventario_id');
 const etapa_destino_id = $('#etapa_destino_id');
 const ubi_destino_id = $('#ubi_destino_id');
 
+const unidad_medida = $('#unidad_medida');
+
 const cantidad_salida = $('#cantidad_salida');
 const cantidad_entrada = $('#cantidad_entrada');
 
@@ -111,7 +113,7 @@ $(cantidad_salida).on('input', function () {
         alertStockError.hide('fast');
     }
 
-    if (cantidadEntrada > cantidadSalida) {
+    if ((cantidadEntrada > cantidadSalida) && (unidad_medida.val() === '' || unidad_medida.val() === null)) {
         alertError.show('fast');
     } else {
         alertError.hide('fast');
@@ -155,7 +157,7 @@ $(cantidad_entrada).on('input', function () {
         alertStockError.hide('fast');
     }
 
-    if (cantidadEntrada > cantidadSalida) {
+    if ((cantidadEntrada > cantidadSalida) && (unidad_medida.val() === '' || unidad_medida.val() === null)) {
         alertError.show('fast');
     } else {
         alertError.hide('fast');
@@ -226,7 +228,7 @@ form.on('submit', function (e) {
         return;
     }
 
-    if (cantidadEntrada > cantidadSalida) {
+    if ((cantidadEntrada > cantidadSalida) && (unidad_medida.val() === '' || unidad_medida.val() === null)) {
         e.preventDefault();
         return;
     }

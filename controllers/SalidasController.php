@@ -49,3 +49,5 @@ if ($method === "POST") {
 
 
 $allDestinos = $destino->getAll();
+$misSalidas = $movimiento->getSalidasUsuario();
+$totalSalidas = $movimiento->getTotalSalidasHoyUsuario();

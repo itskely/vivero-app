@@ -66,8 +66,67 @@ switch ($mode) {
         echo json_encode($data);
         break;
     case 'salidas_destino':
-        $movimientosDestino = $movimientoInventario->movimientosDestino();
+        $mode = $_GET['mode'] ?? 'mes';
+
+        $mes = !empty($_GET['mes'])
+            ? (int) $_GET['mes']
+            : date('n');
+        $cuatrimestre = !empty($_GET['cuatrimestre'])
+            ? (int) $_GET['cuatrimestre']
+            : 1;
+
+        if ($mode === 'mes') {
+
+            $movimientosDestino = $movimientoInventario
+                ->salidasDestinosMes(
+                    $year,
+                    $mes
+                );
+        } elseif ($mode === 'cuatrimestre') {
+
+            switch ($cuatrimestre) {
+
+                case 1:
+                    $mesInicio = 1;
+                    $mesFin = 4;
+                    break;
+
+                case 2:
+                    $mesInicio = 5;
+                    $mesFin = 8;
+                    break;
+
+                case 3:
+                    $mesInicio = 9;
+                    $mesFin = 12;
+                    break;
+
+                default:
+                    $mesInicio = 1;
+                    $mesFin = 4;
+            }
+
+            $movimientosDestino = $movimientoInventario
+                ->salidasDestinosCuatrimestre(
+                    $year,
+                    $mesInicio,
+                    $mesFin
+                );
+        } else {
+
+            $movimientosDestino = $movimientoInventario
+                ->salidasDestinosAnio(
+                    $year
+                );
+        }
+        $years = $movimientoInventario->years();
+        $yearArray = [];
+        foreach ($years as $value) {
+            $yearArray[] = (int) $value['ano'];
+        }
+
         echo json_encode([
+            "years" => $yearArray,
             "data" => $movimientosDestino
         ]);
         break;
@@ -133,7 +192,14 @@ switch ($mode) {
                 );
         }
 
+        $years = $movimientoInventario->years();
+        $yearArray = [];
+        foreach ($years as $value) {
+            $yearArray[] = (int) $value['ano'];
+        }
+
         echo json_encode([
+            "years" => $yearArray,
             "data" => $semillas
         ]);
 

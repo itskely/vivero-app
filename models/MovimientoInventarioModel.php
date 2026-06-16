@@ -247,8 +247,104 @@ class MovimientoInventarioModel
 
     public function movimientosDestino()
     {
-        $stmt = $this->conn->prepare("SELECT d.nombre_destino AS nombre, SUM(cantidad) AS total FROM movimientos_inventario AS mi INNER JOIN destino AS d ON mi.destino_id = d.id WHERE destino_id IS NOT NULL GROUP BY destino_id");
+        $stmt = $this->conn->prepare("
+        SELECT 
+            d.nombre_destino AS nombre, 
+            SUM(cantidad) AS total 
+        FROM movimientos_inventario AS mi 
+        INNER JOIN destino AS d ON mi.destino_id = d.id 
+        WHERE destino_id IS NOT NULL 
+        GROUP BY destino_id
+        ");
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function salidasDestinosMes(
+        $year,
+        $mes
+    ) {
+
+        $stmt = $this->conn->prepare("
+        SELECT
+            d.nombre_destino AS nombre,
+            SUM(mi.cantidad) AS total
+
+        FROM movimientos_inventario mi
+
+        INNER JOIN destino d
+            ON d.id = mi.destino_id
+
+        WHERE mi.destino_id IS NOT NULL 
+
+        AND YEAR(mi.fecha) = :year
+        AND MONTH(mi.fecha) = :mes
+
+        GROUP BY mi.destino_id
+    ");
+        $stmt->bindParam(":year", $year);
+        $stmt->bindParam(":mes", $mes);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function salidasDestinosCuatrimestre(
+        $year,
+        $mesInicio,
+        $mesFin
+    ) {
+
+        $stmt = $this->conn->prepare("
+        SELECT
+            d.nombre_destino AS nombre,
+            SUM(mi.cantidad) AS total
+
+        FROM movimientos_inventario mi
+
+        INNER JOIN destino d
+            ON d.id = mi.destino_id
+
+        WHERE mi.destino_id IS NOT NULL 
+
+        AND YEAR(mi.fecha) = :year
+        AND MONTH(mi.fecha) BETWEEN :mesInicio AND :mesFin
+
+        GROUP BY mi.destino_id
+    ");
+        $stmt->bindParam(":year", $year);
+        $stmt->bindParam(":mesInicio", $mesInicio);
+        $stmt->bindParam(":mesFin", $mesFin);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function salidasDestinosAnio(
+        $year
+    ) {
+
+        $stmt = $this->conn->prepare("
+        SELECT
+            d.nombre_destino AS nombre,
+            SUM(mi.cantidad) AS total
+
+        FROM movimientos_inventario mi
+
+        INNER JOIN destino d
+            ON d.id = mi.destino_id
+
+        WHERE mi.destino_id IS NOT NULL 
+
+        AND YEAR(mi.fecha) = :year
+
+        GROUP BY mi.destino_id
+    ");
+        $stmt->bindParam(":year", $year);
+
+        $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -377,5 +473,50 @@ class MovimientoInventarioModel
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getSalidasUsuario()
+    {
+        $usuario_id = $_SESSION['usuario']['id'];
+
+        $sql = "SELECT
+                p.nombre_comun AS planta,
+                mi.cantidad,
+                d.nombre_destino AS destino,
+                mi.motivo,
+                mi.fecha
+            FROM movimientos_inventario mi
+            INNER JOIN lotes l ON mi.lote_id = l.id
+            INNER JOIN plantas p ON l.planta_id = p.id
+            LEFT JOIN destino d ON mi.destino_id = d.id
+            WHERE mi.usuario_id = :usuario_id
+            AND mi.tipo_movimiento = 'salida'
+            AND mi.estado = 'activo'
+            AND mi.destino_id IS NOT NULL
+            AND DATE(mi.fecha) = CURDATE()
+            ORDER BY mi.fecha DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':usuario_id', $usuario_id);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getTotalSalidasHoyUsuario()
+    {
+        $usuario_id = $_SESSION['usuario']['id'];
+
+        $sql = "SELECT COALESCE(SUM(cantidad),0) AS total
+            FROM movimientos_inventario
+            WHERE usuario_id = :usuario_id
+            AND tipo_movimiento = 'salida'
+            AND estado = 'activo'
+            AND destino_id IS NOT NULL
+            AND DATE(fecha) = CURDATE()";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':usuario_id', $usuario_id);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

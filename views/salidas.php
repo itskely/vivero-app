@@ -191,31 +191,72 @@ include __DIR__ . "/../controllers/SalidasController.php";
     </div>
 
 
-    <!-- <div class="relative overflow-x-auto shadow-xs rounded-base border">
+    <h3 class="text-lg font-semibold mt-6 mb-3">
+        Mis últimas salidas
+    </h3>
+    <div class="w-fit mb-4 p-4 rounded-base border bg-accent">
+        <strong>Total hoy:</strong>
+        <?= $totalSalidas['total'] ?>
+    </div>
+
+    <div class="relative overflow-x-auto shadow-xs rounded-base border">
         <table class="w-full text-sm text-left rtl:text-right text-body">
             <thead class="text-sm bg-accent border-b rounded-base border-default">
                 <tr>
-                    <th class="px-6 py-3">Lote</th>
-                    <th class="px-6 py-3">Origen</th>
-                    <th class="px-6 py-3">Destino</th>
-                    <th class="px-6 py-3">Cantidad</th>
-                    <th class="px-6 py-3">Fecha</th>
+                    <th scope="col" class="px-6 py-3 font-medium">
+                        Planta
+                    </th>
+                    <th scope="col" class="px-6 py-3 font-medium">
+                        Cantidad
+                    </th>
+                    <th scope="col" class="px-6 py-3 font-medium">
+                        Destino
+                    </th>
+                    <th scope="col" class="px-6 py-3 font-medium">
+                        Motivo
+                    </th>
+                    <th scope="col" class="px-6 py-3 font-medium">
+                        Fecha
+                    </th>
                 </tr>
             </thead>
+
             <tbody>
-                <?php // foreach ($movimientos ?? [] as $m): 
-                ?>
-                    <tr class="border-b">
-                        <td class="px-6 py-4"><?= $m['lote'] ?></td>
-                        <td class="px-6 py-4"><?= $m['origen'] ?></td>
-                        <td class="px-6 py-4"><?= $m['destino'] ?></td>
-                        <td class="px-6 py-4"><?= $m['cantidad'] ?></td>
-                        <td class="px-6 py-4"><?= $m['fecha'] ?></td>
+                <?php foreach ($misSalidas as $salida): ?>
+                    <tr class="bg-neutral-primary border-b border-default">
+
+                        <th scope="row"
+                            class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                            <?= $salida['planta'] ?>
+                        </th>
+
+                        <td class="px-6 py-4">
+                            <?= $salida['cantidad'] ?>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <?= $salida['destino'] ?>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <?= $salida['motivo'] ?>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <?= date('d/m/Y H:i', strtotime($salida['fecha'])) ?>
+                        </td>
+
                     </tr>
-                <?php // endforeach; 
-                ?>
+                <?php endforeach; ?>
+
+                <?php if (empty($misSalidas)): ?>
+                    <tr class="bg-neutral-primary border-b border-default">
+                        <td colspan="5" class="px-6 py-4 text-center">
+                            No has registrado salidas todavía.
+                        </td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
-        </table>
-    </div> -->
-</div>
-<script src="/assets/scripts/salidas.js"></script>
+
+    </div>
+    <script src="/assets/scripts/salidas.js"></script>

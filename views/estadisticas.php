@@ -30,44 +30,69 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
     <!-- Charts Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        <!-- Chart 1: Movimientos en el Tiempo -->
-        <div class="card p-5 lg:col-span-2">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-                <div>
-                    <h3 class="text-lg font-semibold">Movimientos en el Tiempo</h3>
-                    <p class="text-sm text-muted-foreground">Entradas vs Salidas por período</p>
-                </div>
-                <div class="grid grid-cols-3 items-center gap-2">
-                    <button class="btn btn-outline btn-size-default w-fit ml-auto"
-                        onclick="exportChart('chartMovimientosTiempo', 'movimientos_tiempo')">Exportar</button>
-
-                    <select id="filterMovTiempo" class="input-component text-sm" onchange="updateMovimientosTiempo()">
-                        <option value="all" selected>Todas las etapas</option>
-                        <?php
-                        foreach ($allEtapas as $key => $value) {
-                        ?>
-                            <option value="<?= $value["id"] ?>">
-                                <?= $value["nombre"] ?>
-                            </option>
-                        <?php
-                        }
-                        ?>
-                    </select>
-                    <select id="filterMovTiempoGranularity" class="input-component text-sm"
-                        onchange="updateMovimientosTiempo()">
-                    </select>
-                </div>
-            </div>
-            <div id="chartMovimientosTiempo" class="chart-container"></div>
-        </div>
-
         <!-- Chart 5: Salidas por Destino -->
         <div class="card p-5">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+
                 <div>
-                    <h3 class="text-lg font-semibold">Salidas por destino</h3>
-                    <p class="text-sm text-muted-foreground">Trazabilidad de salidas </p>
+                    <h3 class="text-lg font-semibold">
+                        Salidas por destino
+                    </h3>
+
+                    <p class="text-sm text-muted-foreground">
+                        Trazabilidad de salidas
+                    </p>
                 </div>
+
+                <div class="flex gap-2">
+
+                    <select id="filterModeDestino"
+                        class="input-component text-sm"
+                        onchange="updateFiltroDestinos()">
+
+                        <option value="mes">Mes</option>
+                        <option value="cuatrimestre">Cuatrimestre</option>
+                        <option value="anio">Año</option>
+
+                    </select>
+
+                    <select id="filterMesDestino"
+                        class="input-component text-sm"
+                        onchange="updateOrigenLotes()">
+
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+
+                    </select>
+
+                    <select id="filterCuatrimestreDestino"
+                        class="input-component text-sm"
+                        onchange="updateOrigenLotes()">
+
+                        <option value="1">Enero - Abril</option>
+                        <option value="2">Mayo - Agosto</option>
+                        <option value="3">Septiembre - Diciembre</option>
+
+                    </select>
+
+                    <select id="filterYearDestino"
+                        class="input-component text-sm"
+                        onchange="updateOrigenLotes()">
+
+                    </select>
+
+                </div>
+
             </div>
             <div id="chartOrigenLotes" class="chart-container"></div>
         </div>
@@ -132,9 +157,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
                     <select id="filterYear"
                         class="input-component text-sm"
                         onchange="updateSemillasRecolectadas()">
-                        <option value="2024">2024</option>
-                        <option value="2025">2025</option>
-                        <option value="2026">2026</option>
+
                     </select>
 
                 </div>
@@ -146,174 +169,10 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             </div>
         </div>
 
-        <!-- Chart 6: Inventario por Ubicación -->
-        <!-- <div class="card p-5">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-                <div>
-                    <h3 class="text-lg font-semibold">Inventario por Ubicación</h3>
-                    <p class="text-sm text-muted-foreground">Distribución física del stock</p>
-                </div>
-                <select id="filterUbicacionEtapa" class="input-component w-fit text-sm" onchange="updateInventarioUbicacion()">
-                    <option value="all">Todas las etapas</option>
-                    <option value="1">Semilla</option>
-                    <option value="2">Germinación</option>
-                    <option value="3">Plántula</option>
-                    <option value="4">Vegetativo</option>
-                    <option value="5">Producción</option>
-                </select>
-            </div>
-            <div id="chartInventarioUbicacion" class="chart-container"></div>
-        </div> -->
-
-
     </div>
 </main>
 
 <script>
-    // =====================================================
-    // MOCK DATA - Simula respuestas JSON del backend
-    // =====================================================
-
-    const MOCK_DATA = {
-        // Datos de catálogos
-        plantas: [{
-                id: 1,
-                nombre_comun: 'Albahaca',
-                nombre_cientifico: 'Ocimum basilicum'
-            },
-            {
-                id: 2,
-                nombre_comun: 'Romero',
-                nombre_cientifico: 'Salvia rosmarinus'
-            },
-            {
-                id: 3,
-                nombre_comun: 'Menta',
-                nombre_cientifico: 'Mentha spicata'
-            },
-            {
-                id: 4,
-                nombre_comun: 'Lavanda',
-                nombre_cientifico: 'Lavandula angustifolia'
-            },
-            {
-                id: 5,
-                nombre_comun: 'Tomillo',
-                nombre_cientifico: 'Thymus vulgaris'
-            },
-            {
-                id: 6,
-                nombre_comun: 'Orégano',
-                nombre_cientifico: 'Origanum vulgare'
-            },
-            {
-                id: 7,
-                nombre_comun: 'Cilantro',
-                nombre_cientifico: 'Coriandrum sativum'
-            },
-            {
-                id: 8,
-                nombre_comun: 'Perejil',
-                nombre_cientifico: 'Petroselinum crispum'
-            },
-            {
-                id: 9,
-                nombre_comun: 'Salvia',
-                nombre_cientifico: 'Salvia officinalis'
-            },
-            {
-                id: 10,
-                nombre_comun: 'Hierbabuena',
-                nombre_cientifico: 'Mentha × piperita'
-            },
-            {
-                id: 11,
-                nombre_comun: 'Eneldo',
-                nombre_cientifico: 'Anethum graveolens'
-            },
-            {
-                id: 12,
-                nombre_comun: 'Estragón',
-                nombre_cientifico: 'Artemisia dracunculus'
-            },
-        ],
-
-        etapas: [{
-                id: 1,
-                nombre: 'Semilla'
-            },
-            {
-                id: 2,
-                nombre: 'Germinación'
-            },
-            {
-                id: 3,
-                nombre: 'Plántula'
-            },
-            {
-                id: 4,
-                nombre: 'Vegetativo'
-            },
-            {
-                id: 5,
-                nombre: 'Producción'
-            },
-        ],
-
-        ubicaciones: [{
-                id: 1,
-                nombre: 'Invernadero A'
-            },
-            {
-                id: 2,
-                nombre: 'Invernadero B'
-            },
-            {
-                id: 3,
-                nombre: 'Almacén Central'
-            },
-            {
-                id: 4,
-                nombre: 'Zona de Secado'
-            },
-            {
-                id: 5,
-                nombre: 'Cuarto Frío'
-            },
-            {
-                id: 6,
-                nombre: 'Área de Empaque'
-            },
-        ],
-
-        origenes: [{
-                id: 1,
-                nombre_origen: 'Producción Propia',
-                tipo: 'Interno'
-            },
-            {
-                id: 2,
-                nombre_origen: 'Proveedor Semillas SA',
-                tipo: 'compra'
-            },
-            {
-                id: 3,
-                nombre_origen: 'Jardín Botánico',
-                tipo: 'Donaciones'
-            },
-            {
-                id: 4,
-                nombre_origen: 'Cooperativa Regional',
-                tipo: 'externo'
-            },
-            {
-                id: 5,
-                nombre_origen: 'Importación',
-                tipo: 'compra'
-            },
-        ],
-    };
-
     // Generar meses para gráficas
     function generateMonths(count = 12) {
         const months = [];
@@ -360,20 +219,6 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    async function generateTrendData(etapaFilter, year, chartMode) {
-        let data = [];
-        try {
-            const respuesta = await fetch(`/api/movimientos.php?etapa_id=${etapaFilter}&year=${year}&chart=${chartMode}`);
-            if (respuesta.ok) {
-                data = await respuesta.json();
-            }
-        } catch (error) {
-            console.error(error);
-        }
-
-        return data;
-    }
-
     async function salidasDestinoData(chartMode) {
         let data = [];
 
@@ -393,17 +238,6 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
 
         return data;
     }
-
-    // function generateTrendData(baseValue, count, variance = 0.2) {
-    //     const data = [];
-    //     let current = baseValue;
-    //     for (let i = 0; i < count; i++) {
-    //         const change = current * (Math.random() * variance * 2 - variance);
-    //         current = Math.max(10, current + change);
-    //         data.push(Math.round(current));
-    //     }
-    //     return data;
-    // }
 
     // =====================================================
     // CHART CONFIGURATIONS
@@ -475,80 +309,40 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
     }
 
     // =====================================================
-    // CHART 1: Movimientos en el Tiempo
-    // =====================================================
-    async function updateMovimientosTiempo() {
-        const elEtapaFilter = document.getElementById('filterMovTiempo');
-        const elGranularity = document.getElementById('filterMovTiempoGranularity');
-        const etapaFilter = elEtapaFilter.value;
-        const year = elGranularity.value;
-
-        let data = await generateTrendData(etapaFilter, year, "movimientos_mes");
-
-        let years = data.years;
-        let entradas = data.series.entrada;
-        let salidas = data.series.salida;
-        let categories = data.labels;
-
-        // Agregar opcion al elGranularity por cada ano en el array
-        elGranularity.innerHTML = ''
-        years.sort((a, b) => b.ano - a.ano).map((dato) => {
-            elGranularity.innerHTML += `<option value="${dato.ano}">${dato.ano}</option>`;
-        })
-        elGranularity.value = data.filter_year
-
-        const options = {
-            ...getBaseOptions(),
-            series: [{
-                    name: 'Entradas',
-                    data: entradas,
-                },
-                {
-                    name: 'Salidas',
-                    data: salidas,
-                },
-            ],
-            chart: {
-                ...getBaseOptions().chart,
-                type: 'area',
-                height: 320,
-                stacked: false,
-            },
-            stroke: {
-                curve: 'smooth',
-                width: 2,
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.4,
-                    opacityTo: 0.1,
-                    stops: [0, 90, 100]
-                }
-            },
-            colors: ['var(--chart-2)', 'var(--chart-1)'],
-            xaxis: {
-                ...getBaseOptions().xaxis,
-                categories: categories,
-            },
-            dataLabels: {
-                enabled: false
-            },
-        };
-
-        renderChart('chartMovimientosTiempo', options);
-    }
-
-    // =====================================================
     // CHART 5: salidas por destinos 
     // =====================================================
     async function updateOrigenLotes() {
+        const mes = document.getElementById(
+            'filterMesDestino'
+        ).value;
 
-        let data = await salidasDestinoData("chart=salidas_destino");
-        let origenes = data.data;
+        const cuatrimestre = document.getElementById(
+            'filterCuatrimestreDestino'
+        ).value;
 
-        console.log(data);
+        const year = document.getElementById(
+            'filterYearDestino'
+        ).value;
+        const mode = document.getElementById(
+            'filterModeDestino'
+        ).value;
+
+        const filterYearDestino = document.getElementById('filterYearDestino');
+        const currentYear = new Date().getFullYear()
+        const currentMonth = new Date().getMonth() + 1
+
+
+        let response = await salidasDestinoData(
+            `chart=salidas_destino&mes=${mes.trim() ? mes : currentMonth}&mode=${mode}&cuatrimestre=${cuatrimestre}&year=${year.trim() ? year : currentYear}`
+        );
+
+        let origenes = response.data;
+        let years = response.years
+        filterYearDestino.innerHTML = ''
+        years.sort((a, b) => b - a).map((dato) => {
+            filterYearDestino.innerHTML += `<option value="${dato}">${dato}</option>`;
+        })
+        filterYearDestino.value = year.trim() ? year : currentYear
 
         const options = {
             ...getBaseOptions(),
@@ -588,58 +382,6 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         };
 
         renderChart('chartOrigenLotes', options);
-    }
-
-
-    // =====================================================
-    // CHART 6: Inventario por Ubicación
-    // =====================================================
-    function updateInventarioUbicacion() {
-        const etapaFilter = 'all';
-
-        const ubicaciones = MOCK_DATA.ubicaciones.map(u => u.nombre);
-        const baseValue = etapaFilter === 'all' ? 800 : randomInt(200, 600);
-
-        const options = {
-            ...getBaseOptions(),
-            series: [{
-                name: 'Stock',
-                data: ubicaciones.map(() => randomInt(baseValue * 0.5, baseValue * 1.5)),
-            }],
-            chart: {
-                ...getBaseOptions().chart,
-                type: 'bar',
-                height: 320,
-            },
-            plotOptions: {
-                bar: {
-                    borderRadius: 6,
-                    horizontal: true,
-                    distributed: true,
-                    barHeight: '65%',
-                }
-            },
-            colors: ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-4)', 'var(--chart-5)'],
-            xaxis: {
-                ...getBaseOptions().xaxis,
-                categories: ubicaciones,
-            },
-            legend: {
-                show: false,
-            },
-            dataLabels: {
-                enabled: true,
-                formatter: function(val) {
-                    return val.toLocaleString();
-                },
-                style: {
-                    fontSize: '11px',
-                    colors: ['#fff']
-                }
-            },
-        };
-
-        renderChart('chartInventarioUbicacion', options);
     }
 
 
@@ -685,9 +427,20 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             'filterMode'
         ).value;
 
+        const currentMonth = new Date().getMonth() + 1
+        const currentYear = new Date().getFullYear()
+
         let response = await salidasDestinoData(
-            `chart=semillas_recolectadas&unidad=${unidad_medida}&mode=${mode}&mes=${mes}&cuatrimestre=${cuatrimestre}&year=${year}`
+            `chart=semillas_recolectadas&unidad=${unidad_medida}&mode=${mode}&mes=${mes.trim() ? mes : currentMonth}&cuatrimestre=${cuatrimestre}&year=${year.trim() ? year : currentYear}`
         );
+
+
+        let years = response.years
+        filterYear.innerHTML = ''
+        years.sort((a, b) => b - a).map((dato) => {
+            filterYear.innerHTML += `<option value="${dato}">${dato}</option>`;
+        })
+        filterYear.value = year.trim() ? year : currentYear
 
         let semillas = response.data;
 
@@ -749,20 +502,19 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             mode === 'cuatrimestre' ? 'block' : 'none';
     }
 
-    function updateFiltroSemillas() {
+    function updateFiltroDestinos() {
 
         const mode =
-            document.getElementById('filterMode').value;
+            document.getElementById('filterModeDestino').value;
 
-        document.getElementById('filterMes').style.display =
+        document.getElementById('filterMesDestino')
+            .style.display =
             mode === 'mes' ? 'block' : 'none';
 
-        document.getElementById('filterCuatrimestre').style.display =
+        document.getElementById('filterCuatrimestreDestino')
+            .style.display =
             mode === 'cuatrimestre' ? 'block' : 'none';
-
-        updateSemillasRecolectadas();
     }
-
 
     // =====================================================
     // UTILITY FUNCTIONS
@@ -777,9 +529,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
     }
 
     function refreshAllCharts() {
-        updateMovimientosTiempo();
         updateOrigenLotes();
-
         updateSemillasRecolectadas();
     }
 
@@ -796,13 +546,12 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         document.getElementById('filterMes').value =
             mesActual;
 
+        document.getElementById('filterMesDestino').value =
+            mesActual;
+
         updateFiltroSemillas();
+        updateFiltroDestinos();
 
         refreshAllCharts();
-        // Update stats with mock data
-        document.getElementById('satStock').textContent = randomInt(10000, 15000).toLocaleString();
-        document.getElementById('statLotes').textContent = randomInt(120, 200).toLocaleString();
-        document.getElementById('statEntradas').textContent = randomInt(2000, 3000).toLocaleString();
-        document.getElementById('statSalidas').textContent = randomInt(1500, 2500).toLocaleString();
     });
 </script>
