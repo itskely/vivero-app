@@ -78,5 +78,6 @@ $unidades_medida = [
 $tipo_material = [
     "semilla ",
     "plantula",
-    "esqueje"
+    "esqueje",
+    "planta"
 ];

@@ -235,7 +235,7 @@ class InventarioModel
                 u.id,
                 l.unidad_medida
             ORDER BY
-                e.nombre,
+                e.id,
                 p.nombre_comun,
                 l.unidad_medida
             LIMIT :lim OFFSET :offs;

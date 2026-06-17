@@ -168,8 +168,74 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
                 class="chart-container">
             </div>
         </div>
+        <div class="card p-5">
 
-    </div>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+
+                <div>
+                    <h3 class="text-lg font-semibold">
+                        Plántulas recolectadas
+                    </h3>
+
+                    <p class="text-sm text-muted-foreground">
+                        Colecta de plantulas por especie
+                    </p>
+                </div>
+
+                <div class="flex gap-2">
+
+                    <select id="filterModePlantulas"
+                        class="input-component text-sm"
+                        onchange="updateFiltroPlantulas()">
+
+                        <option value="mes">Mes</option>
+                        <option value="cuatrimestre">Cuatrimestre</option>
+                        <option value="anio">Año</option>
+
+                    </select>
+
+                    <select id="filterMesPlantulas"
+                        class="input-component text-sm"
+                        onchange="updatePlantulasRecolectadas()">
+
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+
+                    </select>
+
+                    <select id="filterCuatrimestrePlantulas"
+                        class="input-component text-sm"
+                        onchange="updatePlantulasRecolectadas()">
+
+                        <option value="1">Enero - Abril</option>
+                        <option value="2">Mayo - Agosto</option>
+                        <option value="3">Septiembre - Diciembre</option>
+
+                    </select>
+
+                    <select id="filterYearPlantulas"
+                        class="input-component text-sm"
+                        onchange="updatePlantulasRecolectadas()">
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div id="chartPlantulasRecolectadas"></div>
+
+        </div>
+
 </main>
 
 <script>
@@ -501,6 +567,78 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             .style.display =
             mode === 'cuatrimestre' ? 'block' : 'none';
     }
+    async function updatePlantulasRecolectadas() {
+
+        const mes = document.getElementById('filterMesPlantulas').value;
+        const cuatrimestre = document.getElementById('filterCuatrimestrePlantulas').value;
+        const year = document.getElementById('filterYearPlantulas').value;
+        const mode = document.getElementById('filterModePlantulas').value;
+
+        const currentMonth = new Date().getMonth() + 1;
+        const currentYear = new Date().getFullYear();
+
+        let response = await salidasDestinoData(
+            `chart=plantulas_recolectadas&mode=${mode}&mes=${mes || currentMonth}&cuatrimestre=${cuatrimestre}&year=${year || currentYear}`
+        );
+        console.log(response)
+
+        let years = response.years || [];
+
+        const filterYearPlantulas = document.getElementById('filterYearPlantulas');
+        filterYearPlantulas.innerHTML = '';
+
+        years.sort((a, b) => b - a).forEach((dato) => {
+            filterYearPlantulas.innerHTML += `
+            <option value="${dato}">${dato}</option>
+        `;
+        });
+
+        filterYearPlantulas.value = year || currentYear;
+
+        let plantulas = response.data || [];
+
+        const options = {
+            ...getBaseOptions(),
+
+            chart: {
+                ...getBaseOptions().chart,
+                type: 'bar',
+                height: 350,
+            },
+
+            series: [{
+                name: 'Plántulas',
+                data: plantulas.map(p => Number(p.total))
+            }],
+
+            xaxis: {
+                categories: plantulas.map(p => p.nombre_cientifico),
+                labels: {
+                    rotate: -45
+                }
+            },
+
+            dataLabels: {
+                enabled: true
+            }
+        };
+
+        renderChart('chartPlantulasRecolectadas', options);
+    }
+
+    function updateFiltroPlantulas() {
+
+        const mode =
+            document.getElementById('filterModePlantulas').value;
+
+        document.getElementById('filterMesPlantulas')
+            .style.display =
+            mode === 'mes' ? 'block' : 'none';
+
+        document.getElementById('filterCuatrimestrePlantulas')
+            .style.display =
+            mode === 'cuatrimestre' ? 'block' : 'none';
+    }
 
     function updateFiltroDestinos() {
 
@@ -531,6 +669,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
     function refreshAllCharts() {
         updateOrigenLotes();
         updateSemillasRecolectadas();
+        updatePlantulasRecolectadas();
     }
 
     // =====================================================
@@ -549,8 +688,14 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         document.getElementById('filterMesDestino').value =
             mesActual;
 
+        document.getElementById('filterMesPlantulas').value =
+            mesActual;
+
+
+
         updateFiltroSemillas();
         updateFiltroDestinos();
+        updateFiltroPlantulas();
 
         refreshAllCharts();
     });

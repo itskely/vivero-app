@@ -519,4 +519,107 @@ class MovimientoInventarioModel
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function plantulasRecolectadasAnio($year)
+    {
+        $stmt = $this->conn->prepare("
+        SELECT
+            p.nombre_cientifico,
+            SUM(mi.cantidad) AS total
+
+        FROM movimientos_inventario mi
+
+        INNER JOIN lotes l
+            ON l.id = mi.lote_id
+
+        INNER JOIN plantas p
+            ON p.id = l.planta_id
+
+        WHERE mi.tipo_movimiento = 'entrada'
+          AND mi.motivo = 'Registro inicial'
+          AND mi.etapa_id = 4
+          AND l.tipo_material = 'plantula'
+
+          AND YEAR(mi.fecha) = :year
+
+        GROUP BY p.id, p.nombre_cientifico
+
+        ORDER BY total DESC
+    ");
+
+        $stmt->bindParam(":year", $year);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function plantulasRecolectadasMes($year, $mes)
+    {
+        $stmt = $this->conn->prepare("
+        SELECT
+            p.nombre_cientifico,
+            SUM(mi.cantidad) AS total
+
+        FROM movimientos_inventario mi
+
+        INNER JOIN lotes l
+            ON l.id = mi.lote_id
+
+        INNER JOIN plantas p
+            ON p.id = l.planta_id
+
+        WHERE mi.tipo_movimiento = 'entrada'
+          AND mi.motivo = 'Registro inicial'
+          AND mi.etapa_id = 4
+          AND l.tipo_material = 'plantula'
+          AND YEAR(mi.fecha) = :year
+          AND MONTH(mi.fecha) = :mes
+
+        GROUP BY p.id, p.nombre_cientifico
+
+        ORDER BY total DESC
+    ");
+
+        $stmt->bindParam(":year", $year);
+        $stmt->bindParam(":mes", $mes);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function plantulasRecolectadasCuatrimestre($year, $mesInicio, $mesFin)
+    {
+        $stmt = $this->conn->prepare("
+        SELECT
+            p.nombre_cientifico,
+            SUM(mi.cantidad) AS total
+
+        FROM movimientos_inventario mi
+
+        INNER JOIN lotes l
+            ON l.id = mi.lote_id
+
+        INNER JOIN plantas p
+            ON p.id = l.planta_id
+
+        WHERE mi.tipo_movimiento = 'entrada'
+          AND mi.motivo = 'Registro inicial'
+          AND mi.etapa_id = 4
+          AND l.tipo_material = 'plantula'
+
+          AND YEAR(mi.fecha) = :year
+          AND MONTH(mi.fecha) BETWEEN :mesInicio AND :mesFin
+
+        GROUP BY p.id, p.nombre_cientifico
+
+        ORDER BY total DESC
+    ");
+
+        $stmt->bindParam(":year", $year);
+        $stmt->bindParam(":mesInicio", $mesInicio);
+        $stmt->bindParam(":mesFin", $mesFin);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

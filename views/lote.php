@@ -54,6 +54,9 @@ include __DIR__ . "/../controllers/LotesController.php";
                     <option value="esqueje">
                         Esqueje
                     </option>
+                    <option value="planta">
+                        Planta
+                    </option>
 
                 </select>
             </div>

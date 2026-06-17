@@ -204,4 +204,67 @@ switch ($mode) {
         ]);
 
         break;
+    case 'plantulas_recolectadas':
+
+        $mode = $_GET['mode'] ?? 'mes';
+
+        $mes = !empty($_GET['mes'])
+            ? (int) $_GET['mes']
+            : date('n');
+
+        $cuatrimestre = !empty($_GET['cuatrimestre'])
+            ? (int) $_GET['cuatrimestre']
+            : 1;
+
+        switch ($mode) {
+
+            case 'mes':
+
+                $plantulas = $movimientoInventario
+                    ->plantulasRecolectadasMes($year, $mes);
+                break;
+
+            case 'cuatrimestre':
+
+                switch ($cuatrimestre) {
+                    case 1:
+                        $inicio = 1;
+                        $fin = 4;
+                        break;
+                    case 2:
+                        $inicio = 5;
+                        $fin = 8;
+                        break;
+                    case 3:
+                        $inicio = 9;
+                        $fin = 12;
+                        break;
+                    default:
+                        $inicio = 1;
+                        $fin = 4;
+                }
+
+                $plantulas = $movimientoInventario
+                    ->plantulasRecolectadasCuatrimestre($year, $inicio, $fin);
+
+                break;
+
+            default:
+                $plantulas = $movimientoInventario
+                    ->plantulasRecolectadasAnio($year);
+                break;
+        }
+
+        $years = $movimientoInventario->years();
+        $yearArray = [];
+        foreach ($years as $value) {
+            $yearArray[] = (int) $value['ano'];
+        }
+
+        echo json_encode([
+            'years' => $yearArray,
+            'data'  => $plantulas,
+        ]);
+
+        break;
 }
