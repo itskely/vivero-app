@@ -29,73 +29,6 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
 <main class="py-6">
     <!-- Charts Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <!-- Chart 5: Salidas por Destino -->
-        <div class="card p-5">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-
-                <div>
-                    <h3 class="text-lg font-semibold">
-                        Salidas por destino
-                    </h3>
-
-                    <p class="text-sm text-muted-foreground">
-                        Trazabilidad de salidas
-                    </p>
-                </div>
-
-                <div class="flex gap-2">
-
-                    <select id="filterModeDestino"
-                        class="input-component text-sm"
-                        onchange="updateFiltroDestinos()">
-
-                        <option value="mes">Mes</option>
-                        <option value="cuatrimestre">Cuatrimestre</option>
-                        <option value="anio">Año</option>
-
-                    </select>
-
-                    <select id="filterMesDestino"
-                        class="input-component text-sm"
-                        onchange="updateOrigenLotes()">
-
-                        <option value="1">Enero</option>
-                        <option value="2">Febrero</option>
-                        <option value="3">Marzo</option>
-                        <option value="4">Abril</option>
-                        <option value="5">Mayo</option>
-                        <option value="6">Junio</option>
-                        <option value="7">Julio</option>
-                        <option value="8">Agosto</option>
-                        <option value="9">Septiembre</option>
-                        <option value="10">Octubre</option>
-                        <option value="11">Noviembre</option>
-                        <option value="12">Diciembre</option>
-
-                    </select>
-
-                    <select id="filterCuatrimestreDestino"
-                        class="input-component text-sm"
-                        onchange="updateOrigenLotes()">
-
-                        <option value="1">Enero - Abril</option>
-                        <option value="2">Mayo - Agosto</option>
-                        <option value="3">Septiembre - Diciembre</option>
-
-                    </select>
-
-                    <select id="filterYearDestino"
-                        class="input-component text-sm"
-                        onchange="updateOrigenLotes()">
-
-                    </select>
-
-                </div>
-
-            </div>
-            <div id="chartOrigenLotes" class="chart-container"></div>
-        </div>
         <!-- Chart 5: Semillas recolectadas por mes  -->
         <div class="card p-5">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
@@ -235,6 +168,109 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             <div id="chartPlantulasRecolectadas"></div>
 
         </div>
+        <!-- Chart 5: Salidas por Destino -->
+        <div class="card p-5">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+
+                <div>
+                    <h3 class="text-lg font-semibold">
+                        Salidas por destino
+                    </h3>
+
+                    <p class="text-sm text-muted-foreground">
+                        Trazabilidad de salidas
+                    </p>
+                </div>
+
+                <div class="flex gap-2">
+
+                    <select id="filterModeDestino"
+                        class="input-component text-sm"
+                        onchange="updateFiltroDestinos()">
+
+                        <option value="mes">Mes</option>
+                        <option value="cuatrimestre">Cuatrimestre</option>
+                        <option value="anio">Año</option>
+
+                    </select>
+
+                    <select id="filterMesDestino"
+                        class="input-component text-sm"
+                        onchange="updateOrigenLotes()">
+
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+
+                    </select>
+
+                    <select id="filterCuatrimestreDestino"
+                        class="input-component text-sm"
+                        onchange="updateOrigenLotes()">
+
+                        <option value="1">Enero - Abril</option>
+                        <option value="2">Mayo - Agosto</option>
+                        <option value="3">Septiembre - Diciembre</option>
+
+                    </select>
+
+                    <select id="filterYearDestino"
+                        class="input-component text-sm"
+                        onchange="updateOrigenLotes()">
+
+                    </select>
+
+                </div>
+
+            </div>
+            <div id="chartOrigenLotes" class="chart-container"></div>
+        </div>
+
+        <div class="card p-5">
+
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+
+                <div>
+                    <h3 class="text-lg font-semibold">
+                        Inventario actual en Rustificación
+                    </h3>
+                    <p class="text-sm text-muted-foreground">
+                        Cantidad actual por especie
+                    </p>
+                </div>
+
+                <div class="flex gap-2">
+
+
+                    <select id="filterUbicacionRustificacion"
+                        class="input-component text-sm"
+                        onchange="updateInventarioRustificacion()">
+
+                        <option value="Tingua">Tingua</option>
+                        <option value="Arrieros">Arrieros</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div id="chartInventarioRustificacion"
+                class="chart-container">
+            </div>
+
+        </div>
+
+
 
 </main>
 
@@ -653,6 +689,64 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             .style.display =
             mode === 'cuatrimestre' ? 'block' : 'none';
     }
+    async function updateInventarioRustificacion() {
+
+        const ubicacion = document.getElementById(
+            "filterUbicacionRustificacion"
+        ).value;
+
+        let response = await salidasDestinoData(
+            `chart=inventario_rustificacion&ubicacion=${ubicacion}`
+        );
+
+        let especies = response.data;
+
+        const options = {
+            ...getBaseOptions(),
+            chart: {
+                ...getBaseOptions().chart,
+                type: "bar",
+                height: 350
+            },
+            series: [{
+                name: "Cantidad",
+                data: especies.map(e => Number(e.cantidad))
+            }],
+            xaxis: {
+                categories: especies.map(e => e.nombre_comun)
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    borderRadius: 4,
+                    columnWidth: "60%"
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            yaxis: {
+                title: {
+                    text: "Cantidad"
+                }
+            },
+            xaxis: {
+                categories: especies.map(e => e.nombre_comun),
+                title: {
+                    text: "Especie"
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " plantas";
+                    }
+                }
+            }
+        };
+
+        renderChart("chartInventarioRustificacion", options);
+    }
 
     // =====================================================
     // UTILITY FUNCTIONS
@@ -696,6 +790,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         updateFiltroSemillas();
         updateFiltroDestinos();
         updateFiltroPlantulas();
+        updateInventarioRustificacion();
 
         refreshAllCharts();
     });
