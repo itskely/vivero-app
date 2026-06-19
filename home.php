@@ -51,7 +51,7 @@ include "./helpers/Forms.php";
     </button>
 
     <aside id="default-sidebar"
-        class="fixed top-0 left-0 z-40 w-64 h-full transition-transform -translate-x-full sm:translate-x-0"
+        class="fixed top-0 left-0 z-50 w-64 h-full transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidebar">
         <div class="h-full px-3 py-4 overflow-y-auto bg-sidebar border-e border">
             <ul class="space-y-2 font-medium">
@@ -87,7 +87,7 @@ include "./helpers/Forms.php";
 
     <div class="sm:ml-64">
         <!-- Imagen superior -->
-        <div class="w-full h-16 bg-cover bg-center bg-opacity-10 sticky top-0 z-50"
+        <div class="w-full h-16 bg-cover bg-center bg-opacity-10 sticky top-0 z-40"
             style="background-image:url('/assets/img/planta.jpg')">
             <div class="flex-1 w-full h-full bg-black/50 flex items-center justify-end px-4">
                 <button id="mode-button" class="btn btn-outline btn-size-icon">
