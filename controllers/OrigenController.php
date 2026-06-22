@@ -7,7 +7,6 @@ $params = $_GET;
 $id = $_POST['id'] ?? ($_GET['id'] ?? null);
 $delete_id = $_GET['delete_id'] ?? null;
 $nombre = $_POST['nombre'] ?? null;
-$tipo = $_POST['tipo'] ?? null;
 $descripcion = $_POST['descripcion'] ?? null;
 
 
@@ -15,13 +14,12 @@ $descripcion = $_POST['descripcion'] ?? null;
 
 
 if ($method === "POST") {
-    if ($nombre && $descripcion && $tipo) {
+    if ($nombre && $descripcion) {
 
 
         $origen->setId($id);
         $origen->setNombre($nombre);
         $origen->setDescripcion($descripcion);
-        $origen->setTipo($tipo);
 
         if (empty($id)) {
             $fueCreado = $origen->crear();
@@ -72,9 +70,3 @@ if ($delete_id) {
     }
 }
 $allOrigen = $origen->getAll();
-$tipo = [
-    "recolección",
-    "compra",
-    "donación",
-
-];

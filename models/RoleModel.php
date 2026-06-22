@@ -3,7 +3,7 @@
 class RoleModel
 {
     private $id;
-    private $name;
+    private $nombre;
     private $conn = null;
 
     // Setters
@@ -12,9 +12,9 @@ class RoleModel
         $this->id = $id;
     }
 
-    public function setName($name)
+    public function setNombre($nombre)
     {
-        $this->name = $name;
+        $this->nombre = $nombre;
     }
 
     // Getters
@@ -23,9 +23,9 @@ class RoleModel
         return $this->id;
     }
 
-    public function getName()
+    public function getNombre()
     {
-        return $this->name;
+        return $this->nombre;
     }
 
     public function __construct()
@@ -61,20 +61,20 @@ class RoleModel
 
     public function crear()
     {
-        $stmt = $this->conn->prepare("INSERT INTO roles(nombre) VALUES (:name)");
-        $name = $this->getName();
-        $stmt->bindParam(":name", $name);
+        $stmt = $this->conn->prepare("INSERT INTO roles(nombre) VALUES (:nombre)");
+        $nombre = $this->getNombre();
+        $stmt->bindParam(":nombre", $nombre);
         return $stmt->execute();
     }
 
     public function update()
     {
-        $stmt = $this->conn->prepare("UPDATE roles SET nombre=:name WHERE id = :id");
+        $stmt = $this->conn->prepare("UPDATE roles SET nombre=:nombre WHERE id = :id");
         $id = $this->getId();
-        $name = $this->getName();
+        $nombre = $this->getNombre();
 
         $stmt->bindParam(":id", $id);
-        $stmt->bindParam(":name", $name);
+        $stmt->bindParam(":nombre", $nombre);
         return $stmt->execute();
     }
 

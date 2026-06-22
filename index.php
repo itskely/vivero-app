@@ -2,8 +2,7 @@
 session_start();
 include "./config/database.php";
 
-if (isset($_SESSION['usuario']))
-{
+if (isset($_SESSION['usuario'])) {
     header("Location: ./home.php");
     exit;
 }
@@ -29,12 +28,11 @@ if (isset($_SESSION['usuario']))
 
     <main class="flex flex-col items-center justify-center min-h-screen">
         <img src="https://portaljaimeduque.net/img/LOGO_FPJD.png" alt="" class="size-30 shrink-0">
-        <h1 class="text-2xl font-bold text-black text-center mb-24">VIVERO APP</h1>
-        <h2 class="text-2xl  text-green-800 text-center mb-6">iniciar sesión</h2>
-        <form id="login-form" method="POST"
-            class="mx-auto max-w-md w-full space-y-4 rounded-lg border  bg-yellow-50/50 p-6">
+        <h1 class="text-2xl font-bold text-black text-center mb-8">VIVERO APP</h1>
+        <h2 class="text-2xl  text-green-800 text-center mb-6">Iniciar sesión</h2>
+        <form id="login-form" method="POST" class="mx-auto w-80 space-y-4">
             <div>
-                <label class="block text-sm font-medium text-gray-900" for="cedula">Cedula</label>
+                <label class=" block text-sm font-medium text-gray-900" for="cedula">Cedula</label>
 
                 <input name="cedula"
                     class="mt-4 w-full p-2 rounded-lg border-gray-300 focus:border-green-600 focus:outline-none"
@@ -69,16 +67,16 @@ if (isset($_SESSION['usuario']))
         const form = document.getElementById("login-form");
         const span = document.getElementById("error-message");
 
-        form.addEventListener("submit", function (event) {
+        form.addEventListener("submit", function(event) {
 
             event.preventDefault();
 
             const formData = new FormData(form);
 
             fetch("./controllers/AuthController.php", {
-                method: "POST",
-                body: formData
-            })
+                    method: "POST",
+                    body: formData
+                })
                 .then(response => response.json())
                 .then(data => {
 

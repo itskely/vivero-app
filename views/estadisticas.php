@@ -255,11 +255,10 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
                         class="input-component text-sm"
                         onchange="updateInventarioRustificacion()">
 
-                        <option value="Tingua">Tingua</option>
-                        <option value="Arrieros">Arrieros</option>
+                        <option value="2">Tingua</option>
+                        <option value="3">Arrieros</option>
 
                     </select>
-
                 </div>
 
             </div>
@@ -322,23 +321,28 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
     }
 
     async function salidasDestinoData(chartMode) {
-        let data = [];
-
         try {
+            const respuesta = await fetch(`/api/movimientos.php?${chartMode}`);
 
-            const respuesta = await fetch(
-                `/api/movimientos.php?${chartMode}`
-            );
+            const text = await respuesta.text(); // 👈 siempre texto primero
 
-            if (respuesta.ok) {
-                data = await respuesta.json();
+            try {
+                return JSON.parse(text); // 👈 intento seguro
+            } catch (e) {
+                console.error(" Respuesta NO JSON:", text);
+                return {
+                    data: [],
+                    years: []
+                };
             }
 
         } catch (error) {
-            console.error(error);
+            console.error(" Error de red:", error);
+            return {
+                data: [],
+                years: []
+            };
         }
-
-        return data;
     }
 
     // =====================================================
@@ -689,59 +693,47 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             .style.display =
             mode === 'cuatrimestre' ? 'block' : 'none';
     }
+
     async function updateInventarioRustificacion() {
 
-        const ubicacion = document.getElementById(
-            "filterUbicacionRustificacion"
-        ).value;
+        const ubicacion = document.getElementById("filterUbicacionRustificacion").value;
 
-        let response = await salidasDestinoData(
+        const response = await salidasDestinoData(
             `chart=inventario_rustificacion&ubicacion=${ubicacion}`
         );
 
-        let especies = response.data;
+        console.log("RESPUESTA:", response);
+
+        if (!response || !Array.isArray(response.data) || response.data.length === 0) {
+            console.warn("Sin datos para inventario");
+            document.getElementById("chartInventarioRustificacion").innerHTML =
+                "<p class='text-sm text-muted-foreground'>Sin datos disponibles</p>";
+            return;
+        }
+
+        const especies = response.data;
 
         const options = {
             ...getBaseOptions(),
+            colors: ['#064e3b'],
+
             chart: {
                 ...getBaseOptions().chart,
                 type: "bar",
                 height: 350
             },
+
             series: [{
                 name: "Cantidad",
                 data: especies.map(e => Number(e.cantidad))
             }],
+
             xaxis: {
                 categories: especies.map(e => e.nombre_comun)
             },
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    borderRadius: 4,
-                    columnWidth: "60%"
-                }
-            },
+
             dataLabels: {
-                enabled: false
-            },
-            yaxis: {
-                title: {
-                    text: "Cantidad"
-                }
-            },
-            xaxis: {
-                categories: especies.map(e => e.nombre_comun),
-                title: {
-                    text: "Especie"
-                }
-            },
-            tooltip: {
-                y: {
-                    formatter: function(val) {
-                        return val + " plantas";
-                    }
-                }
+                enabled: true
             }
         };
 
@@ -764,6 +756,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         updateOrigenLotes();
         updateSemillasRecolectadas();
         updatePlantulasRecolectadas();
+        updateInventarioRustificacion();
     }
 
     // =====================================================
@@ -790,7 +783,6 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         updateFiltroSemillas();
         updateFiltroDestinos();
         updateFiltroPlantulas();
-        updateInventarioRustificacion();
 
         refreshAllCharts();
     });

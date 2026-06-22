@@ -8,64 +8,53 @@ include __DIR__ . "/../controllers/OrigenController.php";
 
         <form method="POST" class="max-w-sm mx-auto space-y-4">
             <?=
-                Form::input(
-                    "text",
-                    "nombre",
-                    "nombre",
-                    $oneOrigen ? $oneOrigen['nombre_origen'] : "",
-                    "Nombre"
-                );
+            Form::input(
+                "text",
+                "nombre",
+                "nombre",
+                $oneOrigen ? $oneOrigen['nombre_origen'] : "",
+                "Nombre"
+            );
             ?>
             <?=
-                Form::textarea(
-                    "descripcion",
-                    "descripcion",
-                    $oneOrigen ? $oneOrigen['descripcion'] : "",
-                    "Descripción"
-                );
+            Form::textarea(
+                "descripcion",
+                "descripcion",
+                $oneOrigen ? $oneOrigen['descripcion'] : "",
+                "Descripción"
+            );
             ?>
-            <div>
-                <label for="tipo" class="block mb-2.5 text-sm font-medium">Tipo</label>
-                <select id="tipo" name="tipo" class="input-component" required>
-                    <option value="" selected disabled>Seleccionar tipo</option>
-                    <?php foreach ($tipo as $t): ?>
-                        <option value="<?= $t ?>" <?= $oneOrigen && $oneOrigen['tipo'] == $t ? 'selected' : '' ?>><?= $t ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+
 
 
 
             <button type="submit" class="btn btn-default btn-size-default">Crear</button>
             <?php
             if ($oneOrigen):
-                ?>
+            ?>
                 <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>"
                     class="text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">Cancelar</a>
-                <?php
+            <?php
             endif;
             ?>
             <?php
-            if (isset($_SESSION["success"]))
-            {
-                ?>
+            if (isset($_SESSION["success"])) {
+            ?>
                 <div class="p-4 mb-4 text-sm text-fg-success-strong rounded-base bg-success-soft" role="alert">
                     <?= $_SESSION["success"] ?>
                 </div>
-                <?php
+            <?php
                 unset($_SESSION["success"]);
             }
             ?>
 
             <?php
-            if (isset($_SESSION["error"]))
-            {
-                ?>
+            if (isset($_SESSION["error"])) {
+            ?>
                 <div class="p-4 mb-4 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
                     <?= $_SESSION["error"] ?>
                 </div>
-                <?php
+            <?php
                 unset($_SESSION["error"]);
             }
             ?>
@@ -88,9 +77,7 @@ include __DIR__ . "/../controllers/OrigenController.php";
                     <th scope="col" class="px-6 py-3 font-medium">
                         Descripcion
                     </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
-                        Tipo
-                    </th>
+
 
                     <th scope="col" class="px-6 py-3 font-medium">
                         Acciones
@@ -99,9 +86,8 @@ include __DIR__ . "/../controllers/OrigenController.php";
             </thead>
             <tbody>
                 <?php
-                foreach ($allOrigen as $or)
-                {
-                    ?>
+                foreach ($allOrigen as $or) {
+                ?>
                     <tr class="bg-neutral-primary border-b border-default">
                         <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                             <?= $or['id'] ?>
@@ -112,9 +98,7 @@ include __DIR__ . "/../controllers/OrigenController.php";
                         <td class="px-6 py-4">
                             <?= $or['descripcion'] ?>
                         </td>
-                        <td class="px-6 py-4">
-                            <?= $or['tipo'] ?>
-                        </td>
+
                         <td class="px-6 py-4">
                             <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&id=<?= $or['id'] ?>"
                                 class="font-medium text-blue-600 hover:underline"><i
@@ -130,7 +114,7 @@ include __DIR__ . "/../controllers/OrigenController.php";
                             </button>
                         </td>
                     </tr>
-                    <?php
+                <?php
                 }
                 ?>
             </tbody>

@@ -3,8 +3,7 @@ ob_start();
 session_start();
 include "./config/database.php";
 
-if (!isset($_SESSION['usuario']))
-{
+if (!isset($_SESSION['usuario'])) {
     header("Location: ./index.php");
     exit;
 }
@@ -40,15 +39,7 @@ include "./helpers/Forms.php";
 <body class="">
     <script src="https://cdn.jsdelivr.net/npm/not-a-toast@1.1.5/dist/not-a-toast.umd.js"></script>
 
-    <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar"
-        type="button"
-        class="text-heading bg-transparent box-border border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded-base ms-3 mt-3 text-sm p-2 focus:outline-none inline-flex sm:hidden">
-        <span class="sr-only">Open sidebar</span>
-        <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-            viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h10" />
-        </svg>
-    </button>
+
 
     <aside id="default-sidebar"
         class="fixed top-0 left-0 z-50 w-64 h-full transition-transform -translate-x-full sm:translate-x-0"
@@ -61,9 +52,8 @@ include "./helpers/Forms.php";
                 </div>
                 <div class="h-px w-full bg-border"></div>
                 <?php
-                foreach ($pagesRoleUser as $pg)
-                {
-                    ?>
+                foreach ($pagesRoleUser as $pg) {
+                ?>
                     <li>
                         <a href="/home.php?page_id=<?= $pg['id'] ?>"
                             class="<?= $pg['id'] == $page_accessed_id ? "bg-sidebar-accent text-sidebar-accent-foreground" : "" ?> flex text-muted-foreground items-center px-2 py-1.5 hover:bg-sidebar-accent rounded-base hover:text-sidebar-accent-foreground group">
@@ -71,7 +61,7 @@ include "./helpers/Forms.php";
                             <span class="ms-3"><?= $pg['name'] ?></span>
                         </a>
                     </li>
-                    <?php
+                <?php
                 }
                 ?>
                 <li>
@@ -89,11 +79,35 @@ include "./helpers/Forms.php";
         <!-- Imagen superior -->
         <div class="w-full h-16 bg-cover bg-center bg-opacity-10 sticky top-0 z-40"
             style="background-image:url('/assets/img/planta.jpg')">
-            <div class="flex-1 w-full h-full bg-black/50 flex items-center justify-end px-4">
+            <div class="flex-1 w-full h-full bg-black/50 flex items-center justify-between px-4">
+
+                <button
+                    data-drawer-target="default-sidebar"
+                    data-drawer-toggle="default-sidebar"
+                    aria-controls="default-sidebar"
+                    type="button"
+                    class="btn btn-outline btn-size-icon sm:hidden">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="size-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round"
+                            stroke-width="2"
+                            d="M5 7h14M5 12h14M5 17h10" />
+                    </svg>
+                </button>
+
                 <button id="mode-button" class="btn btn-outline btn-size-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="size-6">
+                        <path stroke-linecap="round"
+                            stroke-linejoin="round"
                             d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
                     </svg>
                 </button>
@@ -101,12 +115,10 @@ include "./helpers/Forms.php";
         </div>
         <div class="p-4">
             <?php
-            if ($pageAccessed)
-            {
+            if ($pageAccessed) {
                 require_once("./views/" . $pageAccessed['route']);
-            } else
-            {
-                ?>
+            } else {
+            ?>
                 <main class="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
                     <div class="text-center">
                         <p class="text-base font-semibold bg-primary">404</p>
@@ -123,7 +135,7 @@ include "./helpers/Forms.php";
                         </div>
                     </div>
                 </main>
-                <?php
+            <?php
             }
             ?>
 

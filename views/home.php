@@ -6,12 +6,7 @@ include __DIR__ . "/../controllers/PlantaController.php";
     <div class="bg-accent rounded-2xl shadow-lg p-6 max-w-10xl text-center flex flex-col items-center gap-6 mt-0">
         <h1 class="text-primary text-2xl mb-2">¡Bienvenido a ViveroApp!</h1>
         <p class="text-muted-foreground  text-1xl ">
-            ViveroApp es tu sistema integral para gestionar y conocer todas las plantas de tu vivero de manera eficiente
-            y organizada.
-            En esta plataforma, podrás registrar nuevas especies con información detallada, llevar control de inventario
-            de cada etapa de crecimiento, registrar movimientos internos entre etapas, y gestionar entradas y salidas de
-            manera segura.
-            Además, podrás consultar estadísticas y generar informes.
+            ViveroApp te permite administrar tu vivero de manera fácil y eficiente, con control de especies, inventario, movimientos y estadísticas.
 
         </p>
 
@@ -20,7 +15,7 @@ include __DIR__ . "/../controllers/PlantaController.php";
 <section class="py-12 px-3 ">
 
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 justify-items-center">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 justify-items-center">
         <a href="/home.php?page_id=3" class="quick-card">
             <i class="fa-solid fa-boxes-stacked quick-card-icon"></i>
             <span class="quick-card-title">Inventario</span>
@@ -38,6 +33,10 @@ include __DIR__ . "/../controllers/PlantaController.php";
         <a href="/home.php?page_id=22" class="quick-card">
             <i class="fa-solid fa-right-left quick-card-icon"></i>
             <span class="quick-card-title">Cambiar etapa</span>
+        </a>
+        <a href="/home.php?page_id=11" class="quick-card">
+            <i class="fa-solid fa-chart-line quick-card-icon"></i>
+            <span class="quick-card-title">Estadisticas</span>
         </a>
     </div>
 </section>
@@ -73,10 +72,9 @@ include __DIR__ . "/../controllers/PlantaController.php";
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
         <?php
-        foreach ($allPlants as $pg)
-        {
+        foreach ($allPlants as $pg) {
 
-            ?>
+        ?>
             <div class="rounded-xl bg-card border shadow block max-w-sm ">
                 <div class="max-h-40 h-full relative flex overflow-hidden">
                     <img class="rounded-t-base object-cover object-center w-full h-full"
@@ -100,83 +98,76 @@ include __DIR__ . "/../controllers/PlantaController.php";
                     </div>
                 </div>
             </div>
-            <?php
+        <?php
         }
         ?>
 
     </div>
     <?php
     if ($totalPaginas > 1):
-        ?>
+    ?>
         <div>
             <nav aria-label="Page navigation example" class="w-full flex p-4">
                 <ul class="flex -space-x-px text-sm mx-auto">
                     <?php
-                    if ($page <= 1)
-                    {
-                        ?>
+                    if ($page <= 1) {
+                    ?>
                         <button
                             class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm px-3 h-9 focus:outline-none disabled:opacity-50"
                             disabled>
                             Previous
                         </button>
-                        <?php
-                    } else
-                    {
-                        ?>
+                    <?php
+                    } else {
+                    ?>
                         <a href="/home.php?page_id=<?= $pageAccessed['id']; ?>&page=<?= $page - 1 ?>"
                             class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm px-3 h-9 focus:outline-none">Previous</a>
-                        <?php
+                    <?php
                     }
                     ?>
                     <?php
-                    for ($i = 1; $i <= $totalPaginas; $i++)
-                    {
-                        ?>
+                    for ($i = 1; $i <= $totalPaginas; $i++) {
+                    ?>
                         <li>
                             <?php
-                            if ($i === $page)
-                            {
-                                ?>
+                            if ($i === $page) {
+                            ?>
                                 <a href="/home.php?page_id=<?= $pageAccessed['id']; ?>&page=<?= $i ?>" aria-current="page"
                                     class="flex items-center justify-center text-fg-brand bg-neutral-tertiary-medium box-border border border-default-medium hover:text-fg-brand font-medium text-sm w-9 h-9 focus:outline-none"><?= $i ?></a>
-                                <?php
-                            } else
-                            {
-                                ?>
+                            <?php
+                            } else {
+                            ?>
                                 <a href="/home.php?page_id=<?= $pageAccessed['id']; ?>&page=<?= $i ?>"
                                     class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-9 h-9 focus:outline-none"><?= $i ?></a>
-                                <?php
+                            <?php
                             }
                             ?>
                         </li>
-                        <?php
+                    <?php
                     }
                     ?>
                     <li>
                         <?php
-                        if ($page >= $totalPaginas)
-                        {
-                            ?>
+                        if ($page >= $totalPaginas) {
+                        ?>
                             <button
                                 class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm px-3 h-9 focus:outline-none disabled:opacity-50"
                                 disabled>
                                 Next
                             </button>
-                            <?php
-                        } else
-                        {
-                            ?>
+                        <?php
+                        } else {
+                        ?>
                             <a href="/home.php?page_id=<?= $pageAccessed['id']; ?>&page=<?= $page + 1 ?>"
                                 class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm px-3 h-9 focus:outline-none">Next</a>
-                            <?php
+                        <?php
                         }
                         ?>
                     </li>
                 </ul>
             </nav>
         </div>
-        <?php
+    <?php
     endif;
     ?>
 </div>

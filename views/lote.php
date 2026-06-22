@@ -2,7 +2,7 @@
 include __DIR__ . "/../controllers/LotesController.php";
 ?>
 
-<div>
+<div class="p-4 space-y-4">
 
     <?php include("./views/layouts/header.php"); ?>
 
@@ -15,7 +15,7 @@ include __DIR__ . "/../controllers/LotesController.php";
             <p class="text-muted-foreground text-sm"></p>
         </div>
 
-        <form method="POST" class="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-2">
+        <form method="POST" class=" grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label for="planta_id" class="block mb-2.5 text-sm font-medium">Planta</label>
                 <select id="planta_id" name="planta_id" class="input-component" required>
@@ -107,7 +107,7 @@ include __DIR__ . "/../controllers/LotesController.php";
                 </select>
             </div>
 
-            <div class="col-span-2">
+            <div class="col-span-1 md:col-span-2">
                 <?= Form::textarea("observaciones", "observaciones", "", "Observaciones", "Notas adicionales sobre el lote...") ?>
             </div>
 
@@ -139,7 +139,7 @@ include __DIR__ . "/../controllers/LotesController.php";
             }
             ?>
 
-            <div class="flex items-center justify-end gap-2 col-span-2">
+            <div class="flex items-center justify-end gap-2 col-span-1 md:col-span-2">
                 <button type="submit" class="btn btn-default btn-size-default">
                     Registrar Lote
                 </button>

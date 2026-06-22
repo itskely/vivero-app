@@ -139,7 +139,7 @@ include __DIR__ . "/../controllers/CambioEtapasController.php";
                     </div>
                 </div>
                 <div class="space-y-2 border-l pl-4 ">
-                    <button type="button" class="btn btn-ghost btn-size-default" x-on:click="open = ! open"
+                    <button type="button" class="btn btn-ghost btn-size-default whitespace-normal" x-on:click="open = ! open"
                         x-text="open ? 'Ocultar' : 'Agregar unidad de medida para la nueva etapa'">
                     </button>
                     <!-- Select con unidades de mnedidas (kilogramos, gramos y unidades) -->

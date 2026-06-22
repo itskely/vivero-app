@@ -10,9 +10,9 @@ include __DIR__ . "/../controllers/RolesController.php";
             <?=
             Form::input(
                 "text",
-                "name",
-                "name",
-                $oneRole ? $oneRole['name'] : "",
+                "nombre",
+                "nombre",
+                $oneRole ? $oneRole['nombre'] : "",
                 "Nombre del rol"
             );
             ?>

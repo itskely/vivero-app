@@ -8,7 +8,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 $params = $_GET;
 $id = $_GET['id'] ?? null;
 $delete_id = $_GET['delete_id'] ?? null;
-$name = $_POST['name'] ?? null;
+$nombre = $_POST['nombre'] ?? null;
 
 // Datos recividos por el modal de permisos
 $pages = isset($_POST['pages']) && is_array($_POST['pages']) ? $_POST['pages'] : [];
@@ -22,9 +22,9 @@ if ($method === "POST") {
             $role->insPageRole($page_id, $role_id);
         }
     } else {
-        if ($name) {
+        if ($nombre) {
             $role->setId($id);
-            $role->setName($name);
+            $role->setNombre($nombre);
 
             if (empty($id)) {
                 $fueCreado = $role->crear();

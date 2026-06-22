@@ -236,6 +236,11 @@ class InventarioModel
                 l.unidad_medida
             ORDER BY
                 e.id,
+                CASE
+                    WHEN u.nombre = 'Tingua' THEN 2
+                    WHEN u.nombre = 'Arrieros' THEN 3
+                    ELSE 4
+                END,
                 p.nombre_comun,
                 l.unidad_medida
             LIMIT :lim OFFSET :offs;
@@ -245,6 +250,24 @@ class InventarioModel
         $stmt->bindParam(":lim", $limit, PDO::PARAM_INT);
         $stmt->bindParam(":offs", $offset, PDO::PARAM_INT);
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function inventarioRustificacion($ubicacion_id)
+    {
+        $sql = "SELECT 
+                p.nombre_comun,
+                SUM(i.cantidad_actual) AS cantidad
+            FROM inventario i
+            INNER JOIN lotes l ON l.id = i.lote_id
+            INNER JOIN plantas p ON p.id = l.planta_id
+            WHERE i.ubicacion_id = :ubicacion
+              AND i.etapa_id = 6
+            GROUP BY p.id, p.nombre_comun";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':ubicacion', $ubicacion_id);
+        $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

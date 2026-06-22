@@ -2,6 +2,7 @@
 session_start();
 include __DIR__ . "/../config/database.php";
 include __DIR__ . "/../models/MovimientoInventarioModel.php";
+include __DIR__ . "/../models/InventarioModel.php";
 $movimientoInventario = new MovimientoInventarioModel();
 
 header('Content-Type: application/json');
@@ -265,6 +266,30 @@ switch ($mode) {
             'years' => $yearArray,
             'data'  => $plantulas,
         ]);
+
+        break;
+    case 'inventario_rustificacion':
+
+        try {
+
+            $ubicacion = $_GET['ubicacion'] ?? 'Tingua';
+
+            $inventarioModel = new InventarioModel();
+
+            $data = $inventarioModel->inventarioRustificacion($ubicacion);
+
+            echo json_encode([
+                "data" => $data,
+                "years" => []
+            ]);
+        } catch (Throwable $e) {
+
+            echo json_encode([
+                "data" => [],
+                "years" => [],
+                "error" => $e->getMessage()
+            ]);
+        }
 
         break;
 }
