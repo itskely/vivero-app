@@ -6,36 +6,48 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
     <!-- SUCCESS -->
 
     <?php
-    if (isset($_SESSION["success"]))
-    {
-        ?>
+    if (isset($_SESSION["success"])) {
+    ?>
         <script>
             toast({
                 message: "<?= $_SESSION["success"] ?>",
                 position: "top-right"
             });
         </script>
-        <?php
+    <?php
         unset($_SESSION["success"]);
     }
     ?>
 
     <?php
-    if (isset($_SESSION["error"]))
-    {
-        ?>
+    if (isset($_SESSION["error"])) {
+    ?>
         <script>
             toast({
                 message: "<?= $_SESSION["error"] ?>",
                 position: "top-right"
             });
         </script>
-        <?php
+    <?php
         unset($_SESSION["error"]);
     }
     ?>
     <div class="p-4 space-y-4">
         <?php include("./views/layouts/header.php"); ?>
+        <div class="mt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <form method="GET" action="/home.php" class="w-full md:w-1/3 flex gap-2">
+                <input type="hidden" name="page_id" value="<?= $pageAccessed['id'] ?>">
+                <input type="text" name="busqueda" placeholder="Buscar especie, etapa, ubicación, motivo..."
+                    value="<?= htmlspecialchars($busqueda ?? '') ?>" class="input-component w-full">
+                <button type="submit" class="btn btn-default btn-size-default">
+                    <i class="fa-solid fa-magnifying-glass"></i> Buscar
+                </button>
+            </form>
+
+            <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>" class="btn btn-outline btn-size-default">
+                Limpiar
+            </a>
+        </div>
 
 
     </div>
@@ -95,7 +107,7 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
                     <tbody>
                         <?php
                         foreach ($allMovimientosInventario as $m):
-                            ?>
+                        ?>
                             <tr
                                 class="border-b transition-colors hover:bg-muted/50 <?= $m["estado"] == "anulado" ? "opacity-60 bg-destructive/10 [&>*]:line-through" : "" ?>">
                                 <td class="p-4">
@@ -145,6 +157,7 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
                                     </div>
                                 </td>
                                 <td class="p-4">
+
                                     <?php if ($m['tipo_movimiento'] == "entrada"): ?>
                                         <span data-slot="badge" data-variant="secondary"
                                             class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80">
@@ -158,7 +171,7 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
                                     <?php endif; ?>
                                 </td>
                                 <td class="p-4"><span
-                                        class="font-semibold tabular-nums <?= $m['tipo_movimiento'] == 'salida' ? 'text-red-600' : 'text-primary' ?>"><?= $m['tipo_movimiento'] == 'salida' ? "-" : "+" ?><?= $m['cantidad'] ?>
+                                        class="font-semibold tabular-nums <?= $m['tipo_movimiento'] == 'salida' ? 'text-red-600' : 'text-primary' ?>"><?= $m['tipo_movimiento'] == 'salida' ? "-" : "+" ?><?= (floor($m['cantidad']) == $m['cantidad']) ? intval($m['cantidad']) : $m['cantidad'] ?>
                                         <?= $m['unidad_medida'] ?></span></td>
                                 <td class="p-4"><span
                                         class="inline-flex items-center font-medium rounded-full border border-primary bg-primary/10 text-primary px-2 py-0.5 text-xs"><span
@@ -230,7 +243,7 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
 
                                 </td>
                             </tr>
-                            <?php
+                        <?php
                         endforeach;
                         ?>
                     </tbody>
@@ -239,5 +252,32 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
         </div>
     </div>
 </div>
+<!-- Paginación -->
+<?php if ($totalPaginas > 1): ?>
+    <div class="flex justify-between items-center mt-4 px-4">
+        <span class="text-sm text-muted-foreground">
+            Mostrando <?= min($offset + 1, $totalRegistros) ?> a <?= min($offset + $limit, $totalRegistros) ?> de <?= $totalRegistros ?> resultados
+        </span>
+        <div class="flex gap-1">
+            <?php if ($page > 1): ?>
+                <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page - 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>"
+                    class="btn btn-outline btn-size-small">Anterior</a>
+            <?php endif; ?>
+
+            <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $i ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>"
+                    class="btn btn-size-small <?= $i === $page ? 'bg-brand text-white border-brand' : 'btn-outline' ?>">
+                    <?= $i ?>
+                </a>
+            <?php endfor; ?>
+
+            <?php if ($page < $totalPaginas): ?>
+                <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page + 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>"
+                    class="btn btn-outline btn-size-small">Siguiente</a>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
+
 
 <script src="/assets/scripts/auditoria.js"></script>

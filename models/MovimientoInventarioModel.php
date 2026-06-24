@@ -146,7 +146,7 @@ class MovimientoInventarioModel
         INNER JOIN usuarios AS us ON mi.usuario_id = us.id 
         INNER JOIN origen AS o ON o.id = l.origen_id
         LEFT JOIN destino AS d ON d.id = mi.destino_id
-        WHERE l.id LIKE :busqueda OR p.nombre_comun LIKE :busqueda OR mi.tipo_movimiento LIKE :busqueda OR e.nombre LIKE :busqueda OR u.nombre LIKE :busqueda OR mi.estado LIKE :busqueda ORDER BY mi.id DESC LIMIT :lim OFFSET :offs;");
+        WHERE l.id LIKE :busqueda OR p.nombre_comun LIKE :busqueda OR mi.tipo_movimiento LIKE :busqueda OR e.nombre LIKE :busqueda OR u.nombre LIKE :busqueda OR mi.estado LIKE :busqueda OR mi.motivo  LIKE :busqueda ORDER BY mi.id DESC LIMIT :lim OFFSET :offs;");
         $param = "%$busqueda%";
         $stmt->bindParam(":busqueda", $param);
         $stmt->bindParam(":lim", $limit, PDO::PARAM_INT);
@@ -217,7 +217,6 @@ class MovimientoInventarioModel
         $stmt->bindParam(":destino_id", $destino_id);
         return $stmt->execute();
     }
-
     public function movimientosMes($etapa_id, $year)
     {
         // Hacer concat de php de ', etapa_id' en el where en caso de etapa_id ser diferente de null o 'all'

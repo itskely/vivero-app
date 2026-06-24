@@ -14,31 +14,81 @@ include __DIR__ . "/../controllers/PlantaController.php";
 </section>
 <section class="py-12 px-3 ">
 
+    <?php
+    switch ($_SESSION['usuario']['id_rol']) {
+        case 1:
+        case 2:
+    ?>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 justify-items-center">
+                <a href="/home.php?page_id=3" class="quick-card">
+                    <i class="fa-solid fa-boxes-stacked quick-card-icon"></i>
+                    <span class="quick-card-title">Inventario</span>
+                </a>
 
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 justify-items-center">
-        <a href="/home.php?page_id=3" class="quick-card">
-            <i class="fa-solid fa-boxes-stacked quick-card-icon"></i>
-            <span class="quick-card-title">Inventario</span>
-        </a>
+                <a href="/home.php?page_id=17" class="quick-card">
+                    <i class="fa-solid fa-dolly quick-card-icon"></i>
+                    <span class="quick-card-title">Lotes</span>
+                </a>
+                <a href="/home.php?page_id=26" class="quick-card">
+                    <i class="fa-solid fa-share quick-card-icon"></i>
+                    <span class="quick-card-title">Salidas</span>
 
-        <a href="/home.php?page_id=17" class="quick-card">
-            <i class="fa-solid fa-dolly quick-card-icon"></i>
-            <span class="quick-card-title">Lotes</span>
-        </a>
-        <a href="/home.php?page_id=26" class="quick-card">
-            <i class="fa-solid fa-share quick-card-icon"></i>
-            <span class="quick-card-title">Salidas</span>
+                </a>
+                <a href="/home.php?page_id=22" class="quick-card">
+                    <i class="fa-solid fa-right-left quick-card-icon"></i>
+                    <span class="quick-card-title">Cambiar etapa</span>
+                </a>
+                <a href="/home.php?page_id=11" class="quick-card">
+                    <i class="fa-solid fa-chart-line quick-card-icon"></i>
+                    <span class="quick-card-title">Estadisticas</span>
+                </a>
+            </div>
+        <?php
+            break;
+        case 3:
+        ?>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 justify-items-center">
+                <a href="/home.php?page_id=3" class="quick-card">
+                    <i class="fa-solid fa-boxes-stacked quick-card-icon"></i>
+                    <span class="quick-card-title">Inventario</span>
+                </a>
+                <a href="/home.php?page_id=11" class="quick-card">
+                    <i class="fa-solid fa-chart-line quick-card-icon"></i>
+                    <span class="quick-card-title">Estadisticas</span>
+                </a>
+            </div>
+        <?php
+            break;
 
-        </a>
-        <a href="/home.php?page_id=22" class="quick-card">
-            <i class="fa-solid fa-right-left quick-card-icon"></i>
-            <span class="quick-card-title">Cambiar etapa</span>
-        </a>
-        <a href="/home.php?page_id=11" class="quick-card">
-            <i class="fa-solid fa-chart-line quick-card-icon"></i>
-            <span class="quick-card-title">Estadisticas</span>
-        </a>
-    </div>
+        case 9:
+        ?>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 justify-items-center">
+                <a href="/home.php?page_id=3" class="quick-card">
+                    <i class="fa-solid fa-boxes-stacked quick-card-icon"></i>
+                    <span class="quick-card-title">Inventario</span>
+                </a>
+
+                <a href="/home.php?page_id=26" class="quick-card">
+                    <i class="fa-solid fa-share quick-card-icon"></i>
+                    <span class="quick-card-title">Salidas</span>
+
+                </a>
+
+                <a href="/home.php?page_id=11" class="quick-card">
+                    <i class="fa-solid fa-chart-line quick-card-icon"></i>
+                    <span class="quick-card-title">Estadisticas</span>
+                </a>
+            </div>
+    <?php
+            break;
+        default:
+            break;
+    }
+
+
+
+    ?>
+
 </section>
 
 <div class="mt-10 mb-4 text-center">

@@ -606,6 +606,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         document.getElementById('filterCuatrimestre')
             .style.display =
             mode === 'cuatrimestre' ? 'block' : 'none';
+        updateSemillasRecolectadas();
     }
     async function updatePlantulasRecolectadas() {
 
@@ -678,6 +679,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         document.getElementById('filterCuatrimestrePlantulas')
             .style.display =
             mode === 'cuatrimestre' ? 'block' : 'none';
+        updatePlantulasRecolectadas();
     }
 
     function updateFiltroDestinos() {
@@ -692,6 +694,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         document.getElementById('filterCuatrimestreDestino')
             .style.display =
             mode === 'cuatrimestre' ? 'block' : 'none';
+        updateOrigenLotes();
     }
 
     async function updateInventarioRustificacion() {

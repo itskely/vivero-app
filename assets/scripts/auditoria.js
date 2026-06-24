@@ -71,7 +71,6 @@ const availableStock = $('#available-stock');
 
 const templateStock = $('#template-stock').html();
 
-
 const inventario_id = $('#inventario_id'); // DETECT
 
 const cantidad_real = $('#cantidad_real');
@@ -88,7 +87,12 @@ let selectedStock = null;
 buttonLotes.click(function () {
     $(this).next().toggle('fast');
 });
-
+function formatoNumero(numero) {
+    if (Math.floor(numero) === numero) {
+        return Math.floor(numero);
+    }
+    return numero;
+}
 function getLotes(busqueda = '') {
     $.ajax({
         url: '/api/lotes.php?busqueda=' + busqueda,
@@ -107,7 +111,11 @@ function getLotes(busqueda = '') {
                 var $nuevoItem = $(template).clone();
                 $nuevoItem.attr('data-value', inventario.lote_id);
                 $nuevoItem.find('[data-title]').text(`${inventario.etapa} - ${inventario.ubicacion}`);
-                $nuevoItem.find('[data-subtitle]').text(`lote # ${inventario.lote_id}-${inventario.nombre_comun} (${inventario.cantidad_actual} ${inventario.unidad_medida})`);
+                $nuevoItem
+                    .find('[data-subtitle]')
+                    .text(
+                        `lote # ${inventario.lote_id}-${inventario.nombre_comun} (${formatoNumero(parseFloat(inventario.cantidad_actual))} ${inventario.unidad_medida})`
+                    );
 
                 // Agregar evento de click a cada item, en caso de cliquear, guardamos el valor que tiene en el atributo value
                 // luego seteamos el valor al input hidden llamado "lote" con el id de lote seleccionado
@@ -117,7 +125,7 @@ function getLotes(busqueda = '') {
                     selectedStock = inventario;
                     inputHidden.val($(this).attr('data-value'));
                     inventario_id.val(inventario.id);
-                    cantidad_real.val(inventario.cantidad_actual);
+                    cantidad_real.val(formatoNumero(parseFloat(inventario.cantidad_actual)));
                     // Añadir a todos los demas la clase opacity-o y al que esta en 100
                     lotesContainer.find('[data-selected]').removeClass('opacity-100').addClass('opacity-0');
                     $(this).find('[data-selected]').removeClass('opacity-0').addClass('opacity-100');
@@ -128,8 +136,6 @@ function getLotes(busqueda = '') {
                         .addClass('font-semibold text-foreground');
                     buttonLotes.find('[data-subtitle]').text($(this).find('[data-subtitle]').text());
                     buttonLotes.next().toggle('fast');
-
-                    
                 });
 
                 lotesContainer.append($nuevoItem);
@@ -233,7 +239,9 @@ $(cantidad_real).on('input', function () {
 
     const absDiff = Math.abs(diff);
 
-    $diferencia.text(`${isMayor ? '+' : '-'}${absDiff} ${selectedInventario.unidad_medida} (${porcentaje.toFixed(2)}%)`);
+    $diferencia.text(
+        `${isMayor ? '+' : '-'}${absDiff} ${selectedInventario.unidad_medida} (${porcentaje.toFixed(2)}%)`
+    );
 
     $message.text(
         `Se registrará una ${isMayor ? 'ENTRADA' : 'SALIDA'} de ${absDiff} ${selectedInventario.unidad_medida} para ajustar el inventario.`
