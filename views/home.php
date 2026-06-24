@@ -27,7 +27,7 @@ include __DIR__ . "/../controllers/PlantaController.php";
 
                 <a href="/home.php?page_id=17" class="quick-card">
                     <i class="fa-solid fa-dolly quick-card-icon"></i>
-                    <span class="quick-card-title">Lotes</span>
+                    <span class="quick-card-title">Lotes/Entradas</span>
                 </a>
                 <a href="/home.php?page_id=26" class="quick-card">
                     <i class="fa-solid fa-share quick-card-icon"></i>
