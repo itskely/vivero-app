@@ -5,6 +5,7 @@ include __DIR__ . "/../models/UbicacionesModel.php";
 include __DIR__ . "/../models/InventarioModel.php";
 $movimientoInventario = new MovimientoInventarioModel();
 $etapa = new EtapasModel();
+$allEtapas = $etapa->getAll();
 $ubicacion = new UbicacionesModel();
 $inventario = new InventarioModel();
 
@@ -18,39 +19,29 @@ $cantidad_real = $_POST['cantidad_real'] ?? null;
 $observaciones = $_POST['observaciones'] ?? null;
 
 
-if ($method === "POST")
-{
-    if ($anulacion_id)
-    {
-        try
-        {
+if ($method === "POST") {
+    if ($anulacion_id) {
+        try {
             $movimientoInventario->setId($anulacion_id);
             $movimiento = $movimientoInventario->getOne();
-            if ($movimiento && $movimiento["estado"] === "anulado")
-            {
+            if ($movimiento && $movimiento["estado"] === "anulado") {
                 $_SESSION["error"] = "El movimiento ya se encuentra anulado";
-            } else
-            {
+            } else {
                 $fueAnulado = $movimientoInventario->anular();
-                if ($fueAnulado)
-                {
+                if ($fueAnulado) {
                     $_SESSION["success"] = "Movimiento anulado con éxito";
                 }
             }
-        } catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $_SESSION["error"] = $e->getMessage();
         }
-    } elseif ($lote_id && $inventario_id && $cantidad_real && $observaciones)
-    {
+    } elseif ($lote_id && $inventario_id && $cantidad_real && $observaciones) {
         $inventario->setId($inventario_id);
         $invLote = $inventario->getOne();
 
-        if (!$invLote)
-        {
+        if (!$invLote) {
             $_SESSION["error"] = "Inventario no encontrado";
-        } else
-        {
+        } else {
             $movimientoInventario->setId($id);
             $movimientoInventario->setLoteId($lote_id);
             $movimientoInventario->setEtapaId($invLote['etapa_id']);
@@ -59,16 +50,13 @@ if ($method === "POST")
             $movimientoInventario->setMotivo($observaciones);
 
             $fueCreado = $movimientoInventario->crear();
-            if ($fueCreado)
-            {
+            if ($fueCreado) {
                 $_SESSION["success"] = "Ajuste creado con éxito";
-            } else
-            {
+            } else {
                 $_SESSION["error"] = "Error al crear el ajuste";
             }
         }
-    } else
-    {
+    } else {
         $_SESSION["error"] = "Todos los campos son requeridos";
     }
 }
@@ -76,6 +64,7 @@ if ($method === "POST")
 
 // Parametros de busqueda y paginación
 $busqueda = $_GET['busqueda'] ?? null;
+$tipo = $_GET['tipo'] ?? null;
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
 $movimientoInventario->setBusqueda($busqueda);

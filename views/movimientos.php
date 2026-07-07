@@ -39,10 +39,45 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
                 <input type="hidden" name="page_id" value="<?= $pageAccessed['id'] ?>">
                 <input type="text" name="busqueda" placeholder="Buscar especie, etapa, ubicación, motivo..."
                     value="<?= htmlspecialchars($busqueda ?? '') ?>" class="input-component w-full">
+                <select name="tipo" class="input-component">
+                    <option value="">Todos</option>
+                    <option value="entrada">Entrada</option>
+                    <option value="salida">Salida</option>
+                </select>
+                <label class="flex items-center gap-2">
+                    <input type="checkbox"
+                        name="salidas_vivero"
+                        value="1"
+                        <?= isset($_GET['salidas_vivero']) ? 'checked' : '' ?>>
+                    Solo salidas del vivero
+                </label>
+                <select name="etapa" class="input-component">
+                    <option value="">Todas las etapas</option>
+
+                    <?php foreach ($allEtapas as $e): ?>
+
+                        <option value="<?= $e['id'] ?>"
+                            <?= (($_GET['etapa'] ?? '') == $e['id']) ? 'selected' : '' ?>>
+                            <?= $e['nombre'] ?>
+                        </option>
+
+                    <?php endforeach; ?>
+
+                </select>
+                <input type="date"
+                    name="fecha_inicio"
+                    value="<?= $_GET['fecha_inicio'] ?? '' ?>"
+                    class="input-component">
+
+                <input type="date"
+                    name="fecha_fin"
+                    value="<?= $_GET['fecha_fin'] ?? '' ?>"
+                    class="input-component">
                 <button type="submit" class="btn btn-default btn-size-default">
                     <i class="fa-solid fa-magnifying-glass"></i> Buscar
                 </button>
             </form>
+
 
             <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>" class="btn btn-outline btn-size-default">
                 Limpiar

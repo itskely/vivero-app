@@ -138,6 +138,11 @@ class MovimientoInventarioModel
         $busqueda = $this->getBusqueda();
         $limit = $this->getLimit();
         $offset = $this->getOffset();
+
+        $tipo = $_GET['tipo'] ?? '';
+        $etapa = $_GET['etapa'] ?? '';
+        $fechaInicio = $_GET['fecha_inicio'] ?? '';
+        $fechaFin = $_GET['fecha_fin'] ?? '';
         $stmt = $this->conn->prepare("SELECT mi.id, l.id AS lote_id, l.unidad_medida, p.nombre_comun, mi.tipo_movimiento, mi.cantidad, e.nombre AS nombre_etapa, u.nombre AS nombre_ubicacion, o.nombre_origen, d.nombre_destino, mi.motivo, mi.fecha, mi.estado FROM movimientos_inventario AS mi 
         INNER JOIN lotes AS l ON mi.lote_id = l.id 
         INNER JOIN plantas AS p ON l.planta_id = p.id 
@@ -146,9 +151,13 @@ class MovimientoInventarioModel
         INNER JOIN usuarios AS us ON mi.usuario_id = us.id 
         INNER JOIN origen AS o ON o.id = l.origen_id
         LEFT JOIN destino AS d ON d.id = mi.destino_id
-        WHERE l.id LIKE :busqueda OR p.nombre_comun LIKE :busqueda OR mi.tipo_movimiento LIKE :busqueda OR e.nombre LIKE :busqueda OR u.nombre LIKE :busqueda OR mi.estado LIKE :busqueda OR mi.motivo  LIKE :busqueda ORDER BY mi.id DESC LIMIT :lim OFFSET :offs;");
+        WHERE (l.id LIKE :busqueda OR p.nombre_comun LIKE :busqueda OR mi.tipo_movimiento LIKE :busqueda OR e.nombre LIKE :busqueda OR u.nombre LIKE :busqueda OR mi.estado LIKE :busqueda OR mi.motivo  LIKE :busqueda)AND (:tipo = '' OR mi.tipo_movimiento = :tipo)AND (:etapa = '' OR mi.etapa_id = :etapa) AND (:fechaInicio = '' OR DATE(mi.fecha) >= :fechaInicio) AND (:fechaFin = '' OR DATE(mi.fecha) <= :fechaFin) ORDER BY mi.id DESC LIMIT :lim OFFSET :offs;");
         $param = "%$busqueda%";
         $stmt->bindParam(":busqueda", $param);
+        $stmt->bindParam(":tipo", $tipo);
+        $stmt->bindParam(":etapa", $etapa);
+        $stmt->bindParam(":fechaInicio", $fechaInicio);
+        $stmt->bindParam(":fechaFin", $fechaFin);
         $stmt->bindParam(":lim", $limit, PDO::PARAM_INT);
         $stmt->bindParam(":offs", $offset, PDO::PARAM_INT);
         $stmt->execute();
