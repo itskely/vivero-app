@@ -6,20 +6,140 @@ include __DIR__ . "/../controllers/InventarioController.php";
     <div class="p-4">
         <?php include("./views/layouts/header.php"); ?>
 
-        <div class="mt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <form method="GET" action="/home.php" class="w-full md:w-1/3 flex gap-2">
-                <input type="hidden" name="page_id" value="<?= $pageAccessed['id'] ?>">
-                <input type="text" name="busqueda" placeholder="Buscar especie, etapa, ubicación..."
-                    value="<?= htmlspecialchars($busqueda ?? '') ?>" class="input-component w-full">
-                <button type="submit" class="btn btn-default btn-size-default">
-                    <i class="fa-solid fa-magnifying-glass"></i> Buscar
-                </button>
-            </form>
+        <div class="mt-4">
 
-            <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>" class="btn btn-outline btn-size-default">
-                Limpiar
-            </a>
+            <div class="bg-white rounded-lg shadow p-5">
+
+                <form method="GET" action="/home.php" class="space-y-4">
+
+                    <input type="hidden" name="page_id" value="<?= $pageAccessed['id'] ?>">
+                    <div>
+                        <input type="text"
+                            name="busqueda"
+                            placeholder="Buscar especie, etapa, ubicación..."
+                            value="<?= htmlspecialchars($busqueda ?? '') ?>"
+                            class="input-component w-full">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div>
+                            <label class="block mb-1 font-medium">
+                                Etapa
+                            </label>
+
+                            <select name="etapa" class="input-component w-full">
+
+                                <option value="">Todas las etapas</option>
+
+                                <?php foreach ($allEtapas as $e): ?>
+
+                                    <option value="<?= $e['id'] ?>"
+                                        <?= (($_GET['etapa'] ?? '') == $e['id']) ? 'selected' : '' ?>>
+
+                                        <?= $e['nombre'] ?>
+
+                                    </option>
+
+                                <?php endforeach; ?>
+
+                            </select>
+
+                        </div>
+
+                        <div>
+
+                            <label class="block mb-1 font-medium">
+                                Ubicación
+                            </label>
+
+                            <select name="ubicacion" class="input-component w-full">
+
+                                <option value="">Todas las ubicaciones</option>
+
+                                <?php foreach ($allUbicaciones as $u): ?>
+
+                                    <option value="<?= $u['id'] ?>"
+                                        <?= (($_GET['ubicacion'] ?? '') == $u['id']) ? 'selected' : '' ?>>
+
+                                        <?= $u['nombre'] ?>
+
+                                    </option>
+
+                                <?php endforeach; ?>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div>
+
+                            <label class="block mb-1 font-medium">
+                                Unidad de medida
+                            </label>
+
+                            <select name="unidad" class="input-component w-full">
+
+                                <option value="">Todas</option>
+
+                                <option value="gramos"
+                                    <?= (($_GET['unidad'] ?? '') == 'gramos') ? 'selected' : '' ?>>
+                                    Gramos
+                                </option>
+
+                                <option value="unidades"
+                                    <?= (($_GET['unidad'] ?? '') == 'unidades') ? 'selected' : '' ?>>
+                                    Unidades
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="flex items-end">
+
+                            <label class="flex items-center gap-2">
+
+                                <input type="checkbox"
+                                    name="disponibles"
+                                    value="1"
+                                    <?= isset($_GET['disponibles']) ? 'checked' : '' ?>>
+
+                                Ocultar registros con cantidad 0
+
+                            </label>
+
+                        </div>
+
+                    </div>
+                    <div class="flex gap-3">
+
+                        <button type="submit"
+                            class="btn btn-default btn-size-default">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                            Buscar
+
+                        </button>
+
+                        <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>"
+                            class="btn btn-outline btn-size-default">
+
+                            Limpiar
+
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
         </div>
+
     </div>
 
     <div class="relative overflow-x-auto shadow-xs rounded-base border mt-4">

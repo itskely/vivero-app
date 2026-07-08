@@ -34,56 +34,166 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
     ?>
     <div class="p-4 space-y-4">
         <?php include("./views/layouts/header.php"); ?>
-        <div class="mt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <form method="GET" action="/home.php" class="w-full md:w-1/3 flex gap-2">
-                <input type="hidden" name="page_id" value="<?= $pageAccessed['id'] ?>">
-                <input type="text" name="busqueda" placeholder="Buscar especie, etapa, ubicación, motivo..."
-                    value="<?= htmlspecialchars($busqueda ?? '') ?>" class="input-component w-full">
-                <select name="tipo" class="input-component">
-                    <option value="">Todos</option>
-                    <option value="entrada">Entrada</option>
-                    <option value="salida">Salida</option>
-                </select>
-                <label class="flex items-center gap-2">
-                    <input type="checkbox"
-                        name="salidas_vivero"
-                        value="1"
-                        <?= isset($_GET['salidas_vivero']) ? 'checked' : '' ?>>
-                    Solo salidas del vivero
-                </label>
-                <select name="etapa" class="input-component">
-                    <option value="">Todas las etapas</option>
 
-                    <?php foreach ($allEtapas as $e): ?>
+        <div class="mt-4">
 
-                        <option value="<?= $e['id'] ?>"
-                            <?= (($_GET['etapa'] ?? '') == $e['id']) ? 'selected' : '' ?>>
-                            <?= $e['nombre'] ?>
-                        </option>
+            <div class="bg-white rounded-lg shadow p-5">
 
-                    <?php endforeach; ?>
+                <form id="formBusqueda" method="GET" action="/home.php" class="space-y-4">
+                    <input type="hidden" name="page_id" value="<?= $pageAccessed['id'] ?>">
+                    <div>
+                        <input type="text"
+                            name="busqueda"
+                            placeholder="Buscar especie, etapa, ubicación, motivo..."
+                            value="<?= htmlspecialchars($busqueda ?? '') ?>"
+                            class="input-component w-full">
+                    </div>
 
-                </select>
-                <input type="date"
-                    name="fecha_inicio"
-                    value="<?= $_GET['fecha_inicio'] ?? '' ?>"
-                    class="input-component">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                <input type="date"
-                    name="fecha_fin"
-                    value="<?= $_GET['fecha_fin'] ?? '' ?>"
-                    class="input-component">
-                <button type="submit" class="btn btn-default btn-size-default">
-                    <i class="fa-solid fa-magnifying-glass"></i> Buscar
-                </button>
-            </form>
+                        <div>
+                            <label class="block mb-1 font-medium">
+                                Fecha inicio
+                            </label>
+
+                            <input type="date"
+                                name="fecha_inicio"
+                                value="<?= $_GET['fecha_inicio'] ?? '' ?>"
+                                class="input-component w-full">
+                        </div>
+
+                        <div>
+                            <label class="block mb-1 font-medium">
+                                Fecha fin
+                            </label>
+
+                            <input type="date"
+                                name="fecha_fin"
+                                value="<?= $_GET['fecha_fin'] ?? '' ?>"
+                                class="input-component w-full">
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div>
+
+                            <label class="block mb-1 font-medium">
+                                Tipo de movimiento
+                            </label>
+
+                            <select name="tipo" class="input-component w-full">
+
+                                <option value="">Todos</option>
+
+                                <option value="entrada"
+                                    <?= (($_GET['tipo'] ?? '') == 'entrada') ? 'selected' : '' ?>>
+                                    Entrada
+                                </option>
+
+                                <option value="salida"
+                                    <?= (($_GET['tipo'] ?? '') == 'salida') ? 'selected' : '' ?>>
+                                    Salida
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div>
+
+                            <label class="block mb-1 font-medium">
+                                Etapa
+                            </label>
+
+                            <select name="etapa" class="input-component w-full">
+
+                                <option value="">Todas las etapas</option>
+
+                                <?php foreach ($allEtapas as $e): ?>
+
+                                    <option value="<?= $e['id'] ?>"
+                                        <?= (($_GET['etapa'] ?? '') == $e['id']) ? 'selected' : '' ?>>
+
+                                        <?= $e['nombre'] ?>
+
+                                    </option>
+
+                                <?php endforeach; ?>
+
+                            </select>
 
 
-            <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>" class="btn btn-outline btn-size-default">
-                Limpiar
-            </a>
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <label class="flex items-center gap-2">
+
+                            <input type="checkbox"
+                                name="salidas_vivero"
+                                value="1"
+                                <?= isset($_GET['salidas_vivero']) ? 'checked' : '' ?>>
+
+                            <span>Solo salidas del vivero</span>
+
+                        </label>
+
+                    </div>
+
+                    <div class="flex gap-3">
+
+                        <button type="submit"
+                            class="btn btn-default btn-size-default">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                            Buscar
+
+                        </button>
+
+                        <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>"
+                            class="btn btn-outline btn-size-default">
+
+                            Limpiar
+
+                        </a>
+
+                        <button class="btn btn-default btn-size-default" onclick="submitForm()">
+                            Excel
+                        </button>
+
+                    </div>
+
+                </form>
+
+                <script>
+                    const boton = document.getElementById("miBoton");
+
+                    function submitForm() {
+                        const formBusqueda = document.getElementById("formBusqueda");
+                        formBusqueda.addEventListener("submit", (e) => {
+                            e.preventDefault();
+
+                            const formData = new FormData(formBusqueda);
+
+                            const data = Object.fromEntries(formData);
+
+                            // Armar linea get para enviar a /api/excel.php
+                            const url = new URLSearchParams(data);
+                            window.location.href = "/api/excel.php?" + url.toString();
+                        }, {
+                            once: true
+                        });
+                    }
+                </script>
+
+            </div>
+
         </div>
-
 
     </div>
 
@@ -128,6 +238,7 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
                         <tr>
                             <th class="p-4 text-left font-medium text-muted-foreground">Lote</th>
                             <th class="p-4 text-left font-medium text-muted-foreground">Tipo</th>
+                            <th class="p-4 text-left font-medium text-muted-foreground">Tipo material</th>
                             <th class="p-4 text-left font-medium text-muted-foreground">Cantidad</th>
                             <th class="p-4 text-left font-medium text-muted-foreground">Etapa</th>
                             <th class="p-4 text-left font-medium text-muted-foreground">Ubicación</th>
@@ -204,6 +315,9 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
                                             <?= ucfirst($m['tipo_movimiento']) ?>
                                         </span>
                                     <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?= $m['tipo_material'] ?>
                                 </td>
                                 <td class="p-4"><span
                                         class="font-semibold tabular-nums <?= $m['tipo_movimiento'] == 'salida' ? 'text-red-600' : 'text-primary' ?>"><?= $m['tipo_movimiento'] == 'salida' ? "-" : "+" ?><?= (floor($m['cantidad']) == $m['cantidad']) ? intval($m['cantidad']) : $m['cantidad'] ?>

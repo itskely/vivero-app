@@ -28,6 +28,17 @@ include __DIR__ . "/../controllers/LotesController.php";
                 </select>
             </div>
             <div>
+                <label for="etapa_id" class="block mb-2.5 text-sm font-medium">Etapa Inicial</label>
+                <select id="etapa_id" name="etapa_id" class="input-component" required>
+                    <option value="" selected disabled>Seleccionar etapa</option>
+                    <?php foreach ($allEtapas as $p): ?>
+                        <option value="<?= $p['id'] ?>">
+                            <?= $p['nombre'] ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div id="contenedor_tipo_material">
                 <label for="tipo_material"
                     class="block mb-2.5 text-sm font-medium">
 
@@ -43,9 +54,7 @@ include __DIR__ . "/../controllers/LotesController.php";
                         Seleccionar tipo de material
                     </option>
 
-                    <option value="semilla">
-                        Semilla
-                    </option>
+
 
                     <option value="plantula">
                         Plántula
@@ -72,17 +81,7 @@ include __DIR__ . "/../controllers/LotesController.php";
                 </select>
             </div>
             <?= Form::input("number", "cantidad", "cantidad", "", "Cantidad Inicial", "0") ?>
-            <div>
-                <label for="etapa_id" class="block mb-2.5 text-sm font-medium">Etapa Inicial</label>
-                <select id="etapa_id" name="etapa_id" class="input-component" required>
-                    <option value="" selected disabled>Seleccionar etapa</option>
-                    <?php foreach ($allEtapas as $p): ?>
-                        <option value="<?= $p['id'] ?>">
-                            <?= $p['nombre'] ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+
             <div>
                 <label for="ubicacion_id" class="block mb-2.5 text-sm font-medium">Ubicación</label>
                 <select id="ubicacion_id" name="ubicacion_id" class="input-component" required>
@@ -144,7 +143,36 @@ include __DIR__ . "/../controllers/LotesController.php";
                     Registrar Lote
                 </button>
             </div>
+
         </form>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+
+                const etapa = document.getElementById("etapa_id");
+                const contenedor = document.getElementById("contenedor_tipo_material");
+                const tipoMaterial = document.getElementById("tipo_material");
+
+                function actualizarTipoMaterial() {
+
+                    if (etapa.value == "2") {
+
+                        contenedor.style.display = "none";
+                        tipoMaterial.value = "semilla";
+
+                    } else {
+
+                        contenedor.style.display = "block";
+                        tipoMaterial.value = "";
+
+                    }
+                }
+
+                etapa.addEventListener("change", actualizarTipoMaterial);
+
+                actualizarTipoMaterial();
+
+            });
+        </script>
     </div>
 
 

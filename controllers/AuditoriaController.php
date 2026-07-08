@@ -19,6 +19,7 @@ $cantidad_real = $_POST['cantidad_real'] ?? null;
 $observaciones = $_POST['observaciones'] ?? null;
 
 
+
 if ($method === "POST") {
     if ($anulacion_id) {
         try {
@@ -64,10 +65,14 @@ if ($method === "POST") {
 
 // Parametros de busqueda y paginación
 $busqueda = $_GET['busqueda'] ?? null;
-$tipo = $_GET['tipo'] ?? null;
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
 $movimientoInventario->setBusqueda($busqueda);
+$movimientoInventario->setTipo($_GET['tipo'] ?? "");
+$movimientoInventario->setEtapa($_GET['etapa'] ?? "");
+$movimientoInventario->setFechaInicio($_GET['fecha_inicio'] ?? "");
+$movimientoInventario->setFechaFin($_GET['fecha_fin'] ?? "");
+$movimientoInventario->setSalidasVivero($_GET['salidas_vivero'] ?? "");
 $totalRegistros = $movimientoInventario->getCount()['total'];
 
 $limit = 20;

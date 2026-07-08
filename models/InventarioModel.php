@@ -209,6 +209,10 @@ class InventarioModel
         $busqueda = $this->getBusqueda();
         $limit = $this->getLimit();
         $offset = $this->getOffset();
+        $etapa = $_GET['etapa'] ?? '';
+        $ubicacion = $_GET['ubicacion'] ?? '';
+        $unidad = $_GET['unidad'] ?? '';
+        $disponibles = $_GET['disponibles'] ?? '';
         $stmt = $this->conn->prepare("
             SELECT 
                 e.nombre AS etapa,
@@ -224,11 +228,15 @@ class InventarioModel
             INNER JOIN etapas e ON i.etapa_id = e.id
             INNER JOIN ubicaciones u ON i.ubicacion_id = u.id
             WHERE 
-                i.lote_id LIKE :busqueda
+               (i.lote_id LIKE :busqueda
                 OR p.nombre_comun LIKE :busqueda
                 OR p.nombre_cientifico LIKE :busqueda
                 OR e.nombre LIKE :busqueda
-                OR u.nombre LIKE :busqueda
+                OR u.nombre LIKE :busqueda)
+                AND (:etapa = '' OR e.id = :etapa)
+                AND (:ubicacion = '' OR u.id = :ubicacion)
+                AND (:unidad = '' OR l.unidad_medida = :unidad)
+                AND (:disponibles = '' OR i.cantidad_actual > 0)
             GROUP BY
                 e.id,
                 p.id,
@@ -247,6 +255,10 @@ class InventarioModel
         ");
         $param = "%$busqueda%";
         $stmt->bindParam(":busqueda", $param);
+        $stmt->bindParam(":etapa", $etapa);
+        $stmt->bindParam(":ubicacion", $ubicacion);
+        $stmt->bindParam(":unidad", $unidad);
+        $stmt->bindParam(":disponibles", $disponibles);
         $stmt->bindParam(":lim", $limit, PDO::PARAM_INT);
         $stmt->bindParam(":offs", $offset, PDO::PARAM_INT);
         $stmt->execute();
@@ -270,4 +282,5 @@ class InventarioModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getTotales() {}
 }

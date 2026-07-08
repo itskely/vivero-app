@@ -1,6 +1,10 @@
 <?php
 include __DIR__ . "/../models/InventarioModel.php";
+include __DIR__ . "/../models/EtapasModel.php";
+include __DIR__ . "/../models/UbicacionesModel.php";
 $inventario = new InventarioModel();
+$etapasModel = new EtapasModel();
+$ubicacionesModel = new UbicacionesModel();
 
 // Parametros de busqueda y paginación
 $busqueda = $_GET['busqueda'] ?? null;
@@ -16,4 +20,6 @@ $totalPaginas = ceil($totalRegistros / $limit);
 
 $inventario->setLimit($limit);
 $inventario->setOffset($offset);
+$allEtapas = $etapasModel->getAll();
+$allUbicaciones = $ubicacionesModel->getAll();
 $allInventarios = $inventario->getAllCompleto();
