@@ -64,7 +64,7 @@ include __DIR__ . "/../controllers/LotesController.php";
                         Esqueje
                     </option>
                     <option value="planta">
-                        Planta
+                        Planta desarrollada
                     </option>
 
                 </select>

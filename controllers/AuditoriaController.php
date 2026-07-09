@@ -5,7 +5,6 @@ include __DIR__ . "/../models/UbicacionesModel.php";
 include __DIR__ . "/../models/InventarioModel.php";
 $movimientoInventario = new MovimientoInventarioModel();
 $etapa = new EtapasModel();
-$allEtapas = $etapa->getAll();
 $ubicacion = new UbicacionesModel();
 $inventario = new InventarioModel();
 
@@ -64,15 +63,20 @@ if ($method === "POST") {
 
 
 // Parametros de busqueda y paginación
-$busqueda = $_GET['busqueda'] ?? null;
+$busqueda = $_GET['busqueda'] ?? "";
+$tipo = $_GET['tipo'] ?? "";
+$etapa_id = $_GET['etapa'] ?? "";
+$fecha_inicio = $_GET['fecha_inicio'] ?? "";
+$fecha_fin = $_GET['fecha_fin'] ?? "";
+$salidas_vivero = $_GET['salidas_vivero'] ?? "";
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
 $movimientoInventario->setBusqueda($busqueda);
-$movimientoInventario->setTipo($_GET['tipo'] ?? "");
-$movimientoInventario->setEtapa($_GET['etapa'] ?? "");
-$movimientoInventario->setFechaInicio($_GET['fecha_inicio'] ?? "");
-$movimientoInventario->setFechaFin($_GET['fecha_fin'] ?? "");
-$movimientoInventario->setSalidasVivero($_GET['salidas_vivero'] ?? "");
+$movimientoInventario->setTipo($tipo);
+$movimientoInventario->setEtapa($etapa_id);
+$movimientoInventario->setFechaInicio($fecha_inicio);
+$movimientoInventario->setFechaFin($fecha_fin);
+$movimientoInventario->setSalidasVivero($salidas_vivero);
 $totalRegistros = $movimientoInventario->getCount()['total'];
 
 $limit = 20;
@@ -83,3 +87,4 @@ $totalPaginas = ceil($totalRegistros / $limit);
 $movimientoInventario->setLimit($limit);
 $movimientoInventario->setOffset($offset);
 $allMovimientosInventario = $movimientoInventario->getAll();
+$allEtapas = $etapa->getAll();

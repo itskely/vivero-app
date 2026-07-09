@@ -402,31 +402,29 @@ include __DIR__ . "/../controllers/AuditoriaController.php";
     </div>
 </div>
 <!-- Paginación -->
-<?php if ($totalPaginas > 1): ?>
-    <div class="flex justify-between items-center mt-4 px-4">
-        <span class="text-sm text-muted-foreground">
-            Mostrando <?= min($offset + 1, $totalRegistros) ?> a <?= min($offset + $limit, $totalRegistros) ?> de <?= $totalRegistros ?> resultados
-        </span>
-        <div class="flex gap-1">
-            <?php if ($page > 1): ?>
-                <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page - 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>"
-                    class="btn btn-outline btn-size-small">Anterior</a>
-            <?php endif; ?>
+<div class="flex justify-between items-center mt-4 px-4">
+    <span class="text-sm text-muted-foreground">
+        Mostrando <?= min($offset + 1, $totalRegistros) ?> a <?= min($offset + $limit, $totalRegistros) ?> de <?= $totalRegistros ?> resultados
+    </span>
+    <div class="flex gap-1">
+        <?php if ($page > 1): ?>
+            <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page - 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?><?= $tipo ? '&tipo=' . urlencode($tipo) : '' ?><?= $etapa_id ? '&etapa=' . urlencode($etapa_id) : '' ?><?= $fecha_inicio ? '&fecha_inicio=' . urlencode($fecha_inicio) : '' ?><?= $fecha_fin ? '&fecha_fin=' . urlencode($fecha_fin) : '' ?><?= $salidas_vivero ? '&salidas_vivero=' . urlencode($salidas_vivero) : '' ?>"
+                class="btn btn-outline btn-size-default">Anterior</a>
+        <?php endif; ?>
 
-            <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
-                <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $i ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>"
-                    class="btn btn-size-small <?= $i === $page ? 'bg-brand text-white border-brand' : 'btn-outline' ?>">
-                    <?= $i ?>
-                </a>
-            <?php endfor; ?>
+        <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+            <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $i ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?><?= $tipo ? '&tipo=' . urlencode($tipo) : '' ?><?= $etapa_id ? '&etapa=' . urlencode($etapa_id) : '' ?><?= $fecha_inicio ? '&fecha_inicio=' . urlencode($fecha_inicio) : '' ?><?= $fecha_fin ? '&fecha_fin=' . urlencode($fecha_fin) : '' ?><?= $salidas_vivero ? '&salidas_vivero=' . urlencode($salidas_vivero) : '' ?>"
+                class="btn btn-size-default <?= $i === $page ? 'btn-default' : 'btn-outline' ?>">
+                <?= $i ?>
+            </a>
+        <?php endfor; ?>
 
-            <?php if ($page < $totalPaginas): ?>
-                <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page + 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>"
-                    class="btn btn-outline btn-size-small">Siguiente</a>
-            <?php endif; ?>
-        </div>
+        <?php if ($page < $totalPaginas): ?>
+            <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page + 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?><?= $tipo ? '&tipo=' . urlencode($tipo) : '' ?><?= $etapa_id ? '&etapa=' . urlencode($etapa_id) : '' ?><?= $fecha_inicio ? '&fecha_inicio=' . urlencode($fecha_inicio) : '' ?><?= $fecha_fin ? '&fecha_fin=' . urlencode($fecha_fin) : '' ?><?= $salidas_vivero ? '&salidas_vivero=' . urlencode($salidas_vivero) : '' ?>"
+                class="btn btn-outline btn-size-default">Siguiente</a>
+        <?php endif; ?>
     </div>
-<?php endif; ?>
+</div>
 
 
 <script src="/assets/scripts/auditoria.js"></script>

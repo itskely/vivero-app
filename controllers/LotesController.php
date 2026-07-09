@@ -73,11 +73,11 @@ $allOrigen = $origenModel->getAll();
 $unidades_medida = [
     "unidades",
     "gramos",
-    "kilogramos"
+
 ];
 $tipo_material = [
     "semilla ",
     "plantula",
     "esqueje",
-    "planta"
+    "planta desarrollada"
 ];

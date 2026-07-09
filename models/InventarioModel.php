@@ -9,6 +9,12 @@ class InventarioModel
     private $cantidad_actual;
     private $conn = null;
 
+    private $etapa;
+    private $ubicacion;
+    private $unidad;
+    private $disponibles;
+
+
     // Variables de busqueda y paginación
     private $busqueda;
     private $limit;
@@ -26,6 +32,7 @@ class InventarioModel
     {
         $this->offset = $offset;
     }
+
 
     public function getBusqueda()
     {
@@ -66,6 +73,23 @@ class InventarioModel
         $this->cantidad_actual = $cantidad_actual;
     }
 
+    public function setEtapa($etapa)
+    {
+        $this->etapa = $etapa;
+    }
+    public function setUbicacion($ubicacion)
+    {
+        $this->ubicacion = $ubicacion;
+    }
+    public function setUnidad($unidad)
+    {
+        $this->unidad = $unidad;
+    }
+    public function setDisponibles($disponibles)
+    {
+        $this->disponibles = $disponibles;
+    }
+
     // Getters
     public function getId()
     {
@@ -90,6 +114,25 @@ class InventarioModel
     public function getCantidadActual()
     {
         return $this->cantidad_actual;
+    }
+    public function getEtapa()
+    {
+        return $this->etapa;
+    }
+
+    public function getUbicacion()
+    {
+        return $this->ubicacion;
+    }
+
+    public function getUnidad()
+    {
+        return $this->unidad;
+    }
+
+    public function getDisponibles()
+    {
+        return $this->disponibles;
     }
 
     public function __construct()
@@ -185,7 +228,99 @@ class InventarioModel
         $inventarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $inventarios;
     }
+    public function getCountCompleto()
+    {
+        $busqueda = $this->getBusqueda();
+        $etapa = $this->getEtapa();
+        $ubicacion = $this->getUbicacion();
+        $unidad = $this->getUnidad();
+        $disponibles = $this->getDisponibles();
 
+        $stmt = $this->conn->prepare("
+        SELECT COUNT(*) AS total
+        FROM (
+            SELECT 1
+            FROM inventario i
+            INNER JOIN lotes l ON i.lote_id = l.id
+            INNER JOIN plantas p ON l.planta_id = p.id
+            INNER JOIN etapas e ON i.etapa_id = e.id
+            INNER JOIN ubicaciones u ON i.ubicacion_id = u.id
+            WHERE
+                (
+                    i.lote_id LIKE :busqueda
+                    OR p.nombre_comun LIKE :busqueda
+                    OR p.nombre_cientifico LIKE :busqueda
+                    OR e.nombre LIKE :busqueda
+                    OR u.nombre LIKE :busqueda
+                )
+                AND (:etapa = '' OR e.id = :etapa)
+                AND (:ubicacion = '' OR u.id = :ubicacion)
+                AND (:unidad = '' OR l.unidad_medida = :unidad)
+                AND (:disponibles = '' OR i.cantidad_actual > 0)
+            GROUP BY
+                e.id,
+                p.id,
+                u.id,
+                l.unidad_medida
+        ) AS conteo
+    ");
+
+        $param = "%$busqueda%";
+
+        $stmt->bindParam(":busqueda", $param);
+        $stmt->bindParam(":etapa", $etapa);
+        $stmt->bindParam(":ubicacion", $ubicacion);
+        $stmt->bindParam(":unidad", $unidad);
+        $stmt->bindParam(":disponibles", $disponibles);
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public function getTotales()
+    {
+        $busqueda = $this->getBusqueda();
+        $etapa = $this->getEtapa();
+        $ubicacion = $this->getUbicacion();
+        $unidad = $this->getUnidad();
+        $disponibles = $this->getDisponibles();
+
+        $stmt = $this->conn->prepare("
+        SELECT
+            l.unidad_medida,
+            SUM(i.cantidad_actual) AS total
+        FROM inventario i
+        INNER JOIN lotes l ON i.lote_id = l.id
+        INNER JOIN plantas p ON l.planta_id = p.id
+        INNER JOIN etapas e ON i.etapa_id = e.id
+        INNER JOIN ubicaciones u ON i.ubicacion_id = u.id
+        WHERE
+            (
+                i.lote_id LIKE :busqueda
+                OR p.nombre_comun LIKE :busqueda
+                OR p.nombre_cientifico LIKE :busqueda
+                OR e.nombre LIKE :busqueda
+                OR u.nombre LIKE :busqueda
+            )
+            AND (:etapa = '' OR e.id = :etapa)
+            AND (:ubicacion = '' OR u.id = :ubicacion)
+            AND (:unidad = '' OR l.unidad_medida = :unidad)
+            AND (:disponibles = '' OR i.cantidad_actual > 0)
+        GROUP BY l.unidad_medida
+    ");
+
+        $param = "%$busqueda%";
+
+        $stmt->bindParam(":busqueda", $param);
+        $stmt->bindParam(":etapa", $etapa);
+        $stmt->bindParam(":ubicacion", $ubicacion);
+        $stmt->bindParam(":unidad", $unidad);
+        $stmt->bindParam(":disponibles", $disponibles);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     public function getCount()
     {
         $busqueda = $this->getBusqueda();
@@ -209,10 +344,10 @@ class InventarioModel
         $busqueda = $this->getBusqueda();
         $limit = $this->getLimit();
         $offset = $this->getOffset();
-        $etapa = $_GET['etapa'] ?? '';
-        $ubicacion = $_GET['ubicacion'] ?? '';
-        $unidad = $_GET['unidad'] ?? '';
-        $disponibles = $_GET['disponibles'] ?? '';
+        $etapa = $this->getEtapa();
+        $ubicacion = $this->getUbicacion();
+        $unidad = $this->getUnidad();
+        $disponibles = $this->getDisponibles();
         $stmt = $this->conn->prepare("
             SELECT 
                 e.nombre AS etapa,
@@ -282,5 +417,4 @@ class InventarioModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function getTotales() {}
 }

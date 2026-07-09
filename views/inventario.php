@@ -10,7 +10,7 @@ include __DIR__ . "/../controllers/InventarioController.php";
 
             <div class="bg-white rounded-lg shadow p-5">
 
-                <form method="GET" action="/home.php" class="space-y-4">
+                <form id="formBusqueda" method="GET" action="/home.php" class="space-y-4">
 
                     <input type="hidden" name="page_id" value="<?= $pageAccessed['id'] ?>">
                     <div>
@@ -131,18 +131,57 @@ include __DIR__ . "/../controllers/InventarioController.php";
                             Limpiar
 
                         </a>
+                        <button class="btn btn-default btn-size-default" onclick="submitForm()">
+                            Excel
+                        </button>
+
 
                     </div>
 
                 </form>
+                <script>
+                    const boton = document.getElementById("miBoton");
+
+                    function submitForm() {
+                        const formBusqueda = document.getElementById("formBusqueda");
+                        formBusqueda.addEventListener("submit", (e) => {
+                            e.preventDefault();
+
+                            const formData = new FormData(formBusqueda);
+
+                            const data = Object.fromEntries(formData);
+
+                            // Armar linea get para enviar a /api/excel.php
+                            const url = new URLSearchParams(data);
+                            window.location.href = "/api/excelInventario.php?" + url.toString();
+                        }, {
+                            once: true
+                        });
+                    }
+                </script>
 
             </div>
 
         </div>
 
     </div>
+    <?php if (!empty($totales)): ?>
+        <div class="flex justify-center items-center gap-6 mb-4">
+            <span class="font-semibold text-lg">
+                Totales encontrados:
+            </span>
+
+            <?php foreach ($totales as $t): ?>
+                <span>
+                    <strong><?= number_format($t['total'], 0, ',', '.') ?></strong>
+                    <?= $t['unidad_medida'] ?>
+                </span>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
     <div class="relative overflow-x-auto shadow-xs rounded-base border mt-4">
+
         <table class="w-full text-sm text-left rtl:text-right text-body">
             <thead class="text-sm bg-accent border-b rounded-base border-default">
                 <tr>
@@ -202,20 +241,32 @@ include __DIR__ . "/../controllers/InventarioController.php";
             </span>
             <div class="flex gap-1">
                 <?php if ($page > 1): ?>
-                    <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page - 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>"
-                        class="btn btn-outline btn-size-small">Anterior</a>
+                    <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page - 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>
+                        <?= $etapa ? '&etapa=' . urlencode($etapa) : '' ?>
+                        <?= $ubicacion ? '&ubicacion=' . urlencode($ubicacion) : '' ?>
+                        <?= $unidad ? '&unidad=' . urlencode($unidad) : '' ?>
+                        <?= $disponibles ? '&disponibles=' . urlencode($disponibles) : '' ?>"
+                        class="btn btn-outline btn-size-default">Anterior</a>
                 <?php endif; ?>
 
                 <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
-                    <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $i ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>"
-                        class="btn btn-size-small <?= $i === $page ? 'bg-brand text-white border-brand' : 'btn-outline' ?>">
+                    <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $i ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>
+                        <?= $etapa ? '&etapa=' . urlencode($etapa) : '' ?>
+                        <?= $ubicacion ? '&ubicacion=' . urlencode($ubicacion) : '' ?>
+                        <?= $unidad ? '&unidad=' . urlencode($unidad) : '' ?>
+                        <?= $disponibles ? '&disponibles=' . urlencode($disponibles) : '' ?>"
+                        class="btn btn-size-default <?= $i === $page ? 'btn-default' : 'btn-outline' ?>">
                         <?= $i ?>
                     </a>
                 <?php endfor; ?>
 
                 <?php if ($page < $totalPaginas): ?>
-                    <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page + 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>"
-                        class="btn btn-outline btn-size-small">Siguiente</a>
+                    <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page + 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>
+                        <?= $etapa ? '&etapa=' . urlencode($etapa) : '' ?>
+                        <?= $ubicacion ? '&ubicacion=' . urlencode($ubicacion) : '' ?>
+                        <?= $unidad ? '&unidad=' . urlencode($unidad) : '' ?>
+                        <?= $disponibles ? '&disponibles=' . urlencode($disponibles) : '' ?>"
+                        class="btn btn-outline btn-size-default">Siguiente</a>
                 <?php endif; ?>
             </div>
         </div>

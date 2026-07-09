@@ -171,10 +171,54 @@ class MovimientoInventarioModel
     public function getCount()
     {
         $busqueda = $this->getBusqueda();
-        $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM movimientos_inventario WHERE lote_id LIKE :busqueda OR etapa_id LIKE :busqueda OR ubicacion_id LIKE :busqueda OR cantidad LIKE :busqueda OR motivo LIKE :busqueda");
+        $tipo = $this->getTipo();
+        $etapa = $this->getEtapa();
+        $fechaInicio = $this->getFechaInicio();
+        $fechaFin = $this->getFechaFin();
+        $salidasVivero = $this->getSalidasVivero();
+
+        if ($salidasVivero == 1) {
+            $tipo = 'salida';
+        }
+
+        $stmt = $this->conn->prepare("
+        SELECT COUNT(*) AS total
+        FROM movimientos_inventario AS mi
+        INNER JOIN lotes AS l ON mi.lote_id = l.id
+        INNER JOIN plantas AS p ON l.planta_id = p.id
+        INNER JOIN etapas AS e ON mi.etapa_id = e.id
+        INNER JOIN ubicaciones AS u ON mi.ubicacion_id = u.id
+        INNER JOIN usuarios AS us ON mi.usuario_id = us.id
+        INNER JOIN origen AS o ON o.id = l.origen_id
+        LEFT JOIN destino AS d ON d.id = mi.destino_id
+        WHERE
+            (
+                l.id LIKE :busqueda
+                OR p.nombre_comun LIKE :busqueda
+                OR mi.tipo_movimiento LIKE :busqueda
+                OR e.nombre LIKE :busqueda
+                OR u.nombre LIKE :busqueda
+                OR mi.estado LIKE :busqueda
+                OR mi.motivo LIKE :busqueda
+            )
+            AND (:tipo = '' OR mi.tipo_movimiento = :tipo)
+            AND (:etapa = '' OR mi.etapa_id = :etapa)
+            AND (:fechaInicio = '' OR DATE(mi.fecha) >= :fechaInicio)
+            AND (:fechaFin = '' OR DATE(mi.fecha) <= :fechaFin)
+            AND (:salidasVivero = '' OR mi.destino_id IS NOT NULL)
+    ");
+
         $param = "%$busqueda%";
+
         $stmt->bindParam(":busqueda", $param);
+        $stmt->bindParam(":tipo", $tipo);
+        $stmt->bindParam(":etapa", $etapa);
+        $stmt->bindParam(":fechaInicio", $fechaInicio);
+        $stmt->bindParam(":fechaFin", $fechaFin);
+        $stmt->bindParam(":salidasVivero", $salidasVivero);
+
         $stmt->execute();
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
