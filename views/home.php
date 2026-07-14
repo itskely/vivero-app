@@ -2,8 +2,17 @@
 include __DIR__ . "/../controllers/PlantaController.php";
 ?>
 
+
 <section class="py-12 flex justify-center">
+
     <div class="bg-accent rounded-2xl shadow-lg p-6 max-w-10xl text-center flex flex-col items-center gap-6 mt-0">
+        <div class="flex flex-col items-center gap-0.5">
+            <h1 class="text-primary text-3xl font-bold tracking-tight">
+                ¡Hola, <?= htmlspecialchars($_SESSION['usuario']['nombre_completo']) ?>!
+            </h1>
+
+        </div>
+
         <h1 class="text-primary text-2xl mb-2">¡Bienvenido a ViveroApp!</h1>
         <p class="text-muted-foreground  text-1xl ">
             ViveroApp te permite administrar tu vivero de manera fácil y eficiente, con control de especies, inventario, movimientos y estadísticas.

@@ -95,10 +95,15 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
 
                 </div>
 
+
             </div>
 
             <div id="chartSemillasRecolectadas"
                 class="chart-container">
+            </div>
+            <div class="mt-4 text-right">
+                <span class="font-semibold">Total: </span>
+                <span id="totalSemillas">0</span>
             </div>
         </div>
         <div class="card p-5">
@@ -166,7 +171,10 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             </div>
 
             <div id="chartPlantulasRecolectadas"></div>
-
+            <div class="mt-4 text-right">
+                <span class="font-semibold">Total: </span>
+                <span id="totalPlantulas">0</span>
+            </div>
         </div>
         <!-- Chart 5: Salidas por Destino -->
         <div class="card p-5">
@@ -230,7 +238,6 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
                     </select>
 
                 </div>
-
             </div>
             <div id="chartOrigenLotes" class="chart-container"></div>
         </div>
@@ -265,6 +272,10 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
 
             <div id="chartInventarioRustificacion"
                 class="chart-container">
+            </div>
+            <div class="mt-4 text-right">
+                <span class="font-semibold">Total: </span>
+                <span id="totalInventarioRustificacion">0</span>
             </div>
 
         </div>
@@ -468,7 +479,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
                             show: true,
                             total: {
                                 show: true,
-                                label: 'Total Lotes',
+                                label: 'Total unidades',
                                 color: getBaseOptions().theme.mode === 'dark' ? '#a3a3a3' : '#737373',
                             }
                         }
@@ -549,6 +560,12 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         filterYear.value = year.trim() ? year : currentYear
 
         let semillas = response.data;
+        let total = semillas.reduce((suma, s) => {
+            return suma + parseFloat(s.total_gramos);
+        }, 0);
+
+        document.getElementById("totalSemillas").textContent =
+            `${total.toLocaleString()} ${unidad_medida}`;
 
         const options = {
             ...getBaseOptions(),
@@ -570,7 +587,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
 
             xaxis: {
                 categories: semillas.map(
-                    s => s.nombre_cientifico
+                    s => s.nombre_comun
                 ),
                 labels: {
                     rotate: -45
@@ -637,6 +654,12 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         filterYearPlantulas.value = year || currentYear;
 
         let plantulas = response.data || [];
+        let total = plantulas.reduce((suma, s) => {
+            return suma + parseFloat(s.total);
+        }, 0);
+
+        document.getElementById("totalPlantulas").textContent =
+            `${total.toLocaleString()} unidades`;
 
         const options = {
             ...getBaseOptions(),
@@ -653,7 +676,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             }],
 
             xaxis: {
-                categories: plantulas.map(p => p.nombre_cientifico),
+                categories: plantulas.map(p => p.nombre_comun),
                 labels: {
                     rotate: -45
                 }
@@ -715,6 +738,12 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
         }
 
         const especies = response.data;
+        let total = especies.reduce((suma, e) => {
+            return suma + parseFloat(e.cantidad);
+        }, 0);
+
+        document.getElementById("totalInventarioRustificacion").textContent =
+            `${total.toLocaleString()} unidades`;
 
         const options = {
             ...getBaseOptions(),

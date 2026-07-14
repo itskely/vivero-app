@@ -465,7 +465,7 @@ class MovimientoInventarioModel
 
         $stmt = $this->conn->prepare("
         SELECT
-            p.nombre_cientifico,
+            p.nombre_comun,
             SUM(mi.cantidad) AS total_gramos
 
         FROM movimientos_inventario mi
@@ -477,14 +477,15 @@ class MovimientoInventarioModel
             ON p.id = l.planta_id
 
         WHERE mi.tipo_movimiento = 'entrada'
-        AND mi.motivo = 'Registro inicial'
+        AND mi.motivo LIKE 'Registro inicial%'
         AND mi.etapa_id = 2
+        AND l.tipo_material = 'semilla'
         AND l.unidad_medida = :unidad
 
         AND YEAR(mi.fecha) = :year
         AND MONTH(mi.fecha) = :mes
 
-        GROUP BY p.id, p.nombre_cientifico
+        GROUP BY p.id, p.nombre_comun
 
         ORDER BY total_gramos DESC
     ");
@@ -505,7 +506,7 @@ class MovimientoInventarioModel
 
         $stmt = $this->conn->prepare("
         SELECT
-            p.nombre_cientifico,
+            p.nombre_comun,
             SUM(mi.cantidad) AS total_gramos
 
         FROM movimientos_inventario mi
@@ -517,8 +518,9 @@ class MovimientoInventarioModel
             ON p.id = l.planta_id
 
         WHERE mi.tipo_movimiento = 'entrada'
-        AND mi.motivo = 'Registro inicial'
+        AND mi.motivo LIKE 'Registro inicial%'
         AND mi.etapa_id = 2
+        AND l.tipo_material = 'semilla'
         AND l.unidad_medida = :unidad
 
         AND YEAR(mi.fecha) = :year
@@ -526,7 +528,7 @@ class MovimientoInventarioModel
             BETWEEN :mesInicio
             AND :mesFin
 
-        GROUP BY p.id, p.nombre_cientifico
+        GROUP BY p.id, p.nombre_comun
 
         ORDER BY total_gramos DESC
     ");
@@ -547,7 +549,7 @@ class MovimientoInventarioModel
 
         $stmt = $this->conn->prepare("
         SELECT
-            p.nombre_cientifico,
+            p.nombre_comun,
             SUM(mi.cantidad) AS total_gramos
 
         FROM movimientos_inventario mi
@@ -559,13 +561,14 @@ class MovimientoInventarioModel
             ON p.id = l.planta_id
 
         WHERE mi.tipo_movimiento = 'entrada'
-        AND mi.motivo = 'Registro inicial'
+        AND mi.motivo LIKE 'Registro inicial%'
         AND mi.etapa_id = 2
+        AND l.tipo_material = 'semilla'
         AND l.unidad_medida = :unidad
 
         AND YEAR(mi.fecha) = :year
 
-        GROUP BY p.id, p.nombre_cientifico
+        GROUP BY p.id, p.nombre_comun
 
         ORDER BY total_gramos DESC
     ");
@@ -608,25 +611,35 @@ class MovimientoInventarioModel
     {
         $usuario_id = $_SESSION['usuario']['id'];
 
-        $sql = "SELECT COALESCE(SUM(cantidad),0) AS total
-            FROM movimientos_inventario
-            WHERE usuario_id = :usuario_id
-            AND tipo_movimiento = 'salida'
-            AND estado = 'activo'
-            AND destino_id IS NOT NULL
-            AND DATE(fecha) = CURDATE()";
+        $sql = "
+        SELECT
+            l.unidad_medida,
+            SUM(mi.cantidad) AS total
+        FROM movimientos_inventario mi
+
+        INNER JOIN lotes l
+            ON l.id = mi.lote_id
+
+        WHERE mi.usuario_id = :usuario_id
+        AND mi.tipo_movimiento = 'salida'
+        AND mi.estado = 'activo'
+        AND mi.destino_id IS NOT NULL
+        AND DATE(mi.fecha) = CURDATE()
+
+        GROUP BY l.unidad_medida
+    ";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':usuario_id', $usuario_id);
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function plantulasRecolectadasAnio($year)
     {
         $stmt = $this->conn->prepare("
         SELECT
-            p.nombre_cientifico,
+            p.nombre_comun,
             SUM(mi.cantidad) AS total
 
         FROM movimientos_inventario mi
@@ -638,13 +651,13 @@ class MovimientoInventarioModel
             ON p.id = l.planta_id
 
         WHERE mi.tipo_movimiento = 'entrada'
-          AND mi.motivo = 'Registro inicial'
+          AND mi.motivo LIKE 'Registro inicial%'
           AND mi.etapa_id = 4
           AND l.tipo_material = 'plantula'
 
           AND YEAR(mi.fecha) = :year
 
-        GROUP BY p.id, p.nombre_cientifico
+        GROUP BY p.id, p.nombre_comun
 
         ORDER BY total DESC
     ");
@@ -659,7 +672,7 @@ class MovimientoInventarioModel
     {
         $stmt = $this->conn->prepare("
         SELECT
-            p.nombre_cientifico,
+            p.nombre_comun,
             SUM(mi.cantidad) AS total
 
         FROM movimientos_inventario mi
@@ -671,13 +684,13 @@ class MovimientoInventarioModel
             ON p.id = l.planta_id
 
         WHERE mi.tipo_movimiento = 'entrada'
-          AND mi.motivo = 'Registro inicial'
+          AND mi.motivo LIKE 'Registro inicial%'
           AND mi.etapa_id = 4
           AND l.tipo_material = 'plantula'
           AND YEAR(mi.fecha) = :year
           AND MONTH(mi.fecha) = :mes
 
-        GROUP BY p.id, p.nombre_cientifico
+        GROUP BY p.id, p.nombre_comun
 
         ORDER BY total DESC
     ");
@@ -693,7 +706,7 @@ class MovimientoInventarioModel
     {
         $stmt = $this->conn->prepare("
         SELECT
-            p.nombre_cientifico,
+            p.nombre_comun,
             SUM(mi.cantidad) AS total
 
         FROM movimientos_inventario mi
@@ -705,14 +718,14 @@ class MovimientoInventarioModel
             ON p.id = l.planta_id
 
         WHERE mi.tipo_movimiento = 'entrada'
-          AND mi.motivo = 'Registro inicial'
+          AND mi.motivo LIKE 'Registro inicial%'
           AND mi.etapa_id = 4
           AND l.tipo_material = 'plantula'
 
           AND YEAR(mi.fecha) = :year
           AND MONTH(mi.fecha) BETWEEN :mesInicio AND :mesFin
 
-        GROUP BY p.id, p.nombre_cientifico
+        GROUP BY p.id, p.nombre_comun
 
         ORDER BY total DESC
     ");

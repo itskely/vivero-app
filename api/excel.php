@@ -42,7 +42,7 @@ $writer->addRow($cabecera);
 
 foreach ($allMovimientosInventario as $movimientoInventario) {
     $fila = Row::fromValues([
-        $movimientoInventario['lote_id'],
+        "Lote #" . $movimientoInventario['lote_id'] . " - " . $movimientoInventario['nombre_comun'],
         $movimientoInventario['tipo_movimiento'],
         $movimientoInventario['tipo_material'] ?: 'No registrado',
         $movimientoInventario['cantidad'] . ' ' . $movimientoInventario['unidad_medida'],

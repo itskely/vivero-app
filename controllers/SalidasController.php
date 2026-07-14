@@ -51,3 +51,16 @@ if ($method === "POST") {
 $allDestinos = $destino->getAll();
 $misSalidas = $movimiento->getSalidasUsuario();
 $totalSalidas = $movimiento->getTotalSalidasHoyUsuario();
+$totalGramos = 0;
+$totalUnidades = 0;
+
+foreach ($totalSalidas as $fila) {
+
+    if ($fila['unidad_medida'] == 'gramos') {
+        $totalGramos = $fila['total'];
+    }
+
+    if ($fila['unidad_medida'] == 'unidades') {
+        $totalUnidades = $fila['total'];
+    }
+}

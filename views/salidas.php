@@ -195,10 +195,16 @@ include __DIR__ . "/../controllers/SalidasController.php";
         Mis últimas salidas
     </h3>
     <div class="w-fit mb-4 p-4 rounded-base border bg-accent">
-        <strong>Total hoy:</strong>
-        <?= $totalSalidas['total'] ?>
-    </div>
+        <strong>Total hoy:</strong><br>
 
+        <?php if ($totalUnidades > 0): ?>
+            <?= number_format($totalUnidades, 0) ?> unidades<br>
+        <?php endif; ?>
+
+        <?php if ($totalGramos > 0): ?>
+            <?= number_format($totalGramos, 2) ?> gramos
+        <?php endif; ?>
+    </div>
     <div class="relative overflow-x-auto shadow-xs rounded-base border">
         <table class="w-full text-sm text-left rtl:text-right text-body">
             <thead class="text-sm bg-accent border-b rounded-base border-default">

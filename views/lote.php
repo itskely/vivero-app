@@ -53,7 +53,9 @@ include __DIR__ . "/../controllers/LotesController.php";
                     <option value="" selected disabled>
                         Seleccionar tipo de material
                     </option>
-
+                    <option value="semilla">
+                        Semilla
+                    </option>
 
 
                     <option value="plantula">
@@ -63,7 +65,7 @@ include __DIR__ . "/../controllers/LotesController.php";
                     <option value="esqueje">
                         Esqueje
                     </option>
-                    <option value="planta">
+                    <option value="planta desarrollada">
                         Planta desarrollada
                     </option>
 
@@ -157,11 +159,13 @@ include __DIR__ . "/../controllers/LotesController.php";
                     if (etapa.value == "2") {
 
                         contenedor.style.display = "none";
+                        tipoMaterial.required = false;
                         tipoMaterial.value = "semilla";
 
                     } else {
 
                         contenedor.style.display = "block";
+                        tipoMaterial.required = true;
                         tipoMaterial.value = "";
 
                     }

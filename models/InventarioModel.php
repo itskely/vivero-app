@@ -409,6 +409,7 @@ class InventarioModel
             INNER JOIN plantas p ON p.id = l.planta_id
             WHERE i.ubicacion_id = :ubicacion
               AND i.etapa_id = 6
+              AND i.cantidad_actual > 0
             GROUP BY p.id, p.nombre_comun";
 
         $stmt = $this->conn->prepare($sql);
