@@ -155,7 +155,8 @@ class InventarioModel
                 e.nombre AS etapa,
                 p.nombre_comun,
                 p.nombre_cientifico,
-                u.nombre AS ubicacion
+                u.nombre AS ubicacion,
+                e.puede_alterar_unidad
             FROM inventario i
             INNER JOIN lotes l ON i.lote_id = l.id 
             INNER JOIN plantas p ON l.planta_id = p.id

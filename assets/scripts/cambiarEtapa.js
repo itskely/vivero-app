@@ -73,6 +73,13 @@ function getLotes(busqueda = '') {
                 // y mostramos la informacion del lote seleccionado en el boton lote_button
                 $nuevoItem.click(function () {
                     selectedInventario = inventario;
+
+                    if (selectedInventario.puede_alterar_unidad) {
+                        $('#unidad_medida_container').removeClass('hidden');
+                    } else {
+                        $('#unidad_medida_container').addClass('hidden');
+                    }
+
                     inputHidden.val($(this).attr('data-value'));
                     // Añadir a todos los demas la clase opacity-o y al que esta en 100
                     lotesContainer.find('[data-selected]').removeClass('opacity-100').addClass('opacity-0');

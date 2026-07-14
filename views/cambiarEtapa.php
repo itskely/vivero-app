@@ -138,7 +138,7 @@ include __DIR__ . "/../controllers/CambioEtapasController.php";
                         </template>
                     </div>
                 </div>
-                <div class="space-y-2 border-l pl-4 ">
+                <div id="unidad_medida_container" class="space-y-2 border-l pl-4 hidden">
                     <button type="button" class="btn btn-ghost btn-size-default whitespace-normal" x-on:click="open = ! open"
                         x-text="open ? 'Ocultar' : 'Agregar unidad de medida para la nueva etapa'">
                     </button>
@@ -147,8 +147,6 @@ include __DIR__ . "/../controllers/CambioEtapasController.php";
                         <label for="unidad_medida">Unidad de medida</label>
                         <select name="unidad_medida" id="unidad_medida" class="input-component">
                             <option value="" selected disabled>Seleccione una unidad de medida</option>
-                            <option value="kilogramos">Kilogramos</option>
-                            <option value="gramos">Gramos</option>
                             <option value="unidades">Unidades</option>
                         </select>
                     </div>
