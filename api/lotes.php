@@ -42,5 +42,6 @@ echo json_encode(
             "per_page" => $limit,
             "total_pages" => $totalPaginas
         ]
-    ]
+    ],
+    JSON_NUMERIC_CHECK
 );
