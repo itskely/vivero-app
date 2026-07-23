@@ -95,7 +95,7 @@ Pantalla de autenticación para el acceso seguro al sistema.
 
 Vista inicial de la aplicación con acceso rápido a los principales módulos del sistema y catálogo de especies registradas.
 
-![Inicio](inicio.png)
+![Inicio](inicio .png)
 
 ---
 
@@ -103,7 +103,7 @@ Vista inicial de la aplicación con acceso rápido a los principales módulos de
 
 Módulo para consultar y controlar el inventario del vivero mediante filtros por especie, etapa, ubicación y unidad de medida.
 
-![Inventario](inventario.png)
+![Inventario](inventario .png)
 
 ---
 
@@ -111,7 +111,7 @@ Módulo para consultar y controlar el inventario del vivero mediante filtros por
 
 Panel con indicadores y gráficos que permiten analizar el comportamiento del inventario y los movimientos registrados.
 
-![Estadísticas](estadisticas.png)
+![Estadísticas](estadisticas .png)
 
 ---
 
