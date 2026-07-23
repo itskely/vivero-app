@@ -103,7 +103,7 @@ Vista inicial de la aplicación con acceso rápido a los principales módulos de
 
 Módulo para consultar y controlar el inventario del vivero mediante filtros por especie, etapa, ubicación y unidad de medida.
 
-![Inventario](inventario .png)
+![Inventario](inventario.png)
 
 ---
 
