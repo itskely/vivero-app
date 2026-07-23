@@ -83,15 +83,35 @@ Durante mi práctica profesional participé en el desarrollo del proyecto realiz
 
 #  Capturas del sistema
 
-Próximamente se agregarán imágenes de las principales funcionalidades de la aplicación:
+##  Inicio de sesión
 
-- Inicio de sesión.
-- Panel principal (Dashboard).
-- Gestión de plantas.
-- Inventario.
-- Movimientos.
-- Reportes.
-- Estadísticas.
+Pantalla de autenticación para el acceso seguro al sistema.
+
+![Inicio de sesión](login.png)
+
+---
+
+## 🏠 Página principal
+
+Vista inicial de la aplicación con acceso rápido a los principales módulos del sistema y catálogo de especies registradas.
+
+![Inicio](inicio.png)
+
+---
+
+## 📦 Gestión de inventario
+
+Módulo para consultar y controlar el inventario del vivero mediante filtros por especie, etapa, ubicación y unidad de medida.
+
+![Inventario](inventario.png)
+
+---
+
+## 📊 Dashboard de estadísticas
+
+Panel con indicadores y gráficos que permiten analizar el comportamiento del inventario y los movimientos registrados.
+
+![Estadísticas](estadisticas.png)
 
 ---
 
