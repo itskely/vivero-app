@@ -9,12 +9,10 @@ Sistema web desarrollado para optimizar la gestión del inventario de un vivero,
 Este proyecto fue desarrollado durante mi práctica profesional en el Parque Jaime Duque como parte de mi formación en Ingeniería de Sistemas en la Corporación Unificada Nacional de Educación Superior (CUN).
 
 ##  Descripción del proyecto
+ViveroApp fue desarrollado durante mi práctica profesional en el Parque Jaime Duque como una solución para digitalizar la gestión del inventario del vivero institucional.
 
-ViveroApp fue desarrollado durante mi práctica profesional en el **Parque Jaime Duque** como una solución para digitalizar el proceso de administración del vivero, reemplazando registros manuales por una aplicación web que centraliza la información y facilita el control del inventario.
+A diferencia de un vivero comercial, este vivero está orientado a la producción y conservación de material vegetal destinado principalmente a programas de restauración ambiental, enriquecimiento ecológico y donación de plantas. Por ello, el sistema se enfoca en el control del inventario, el seguimiento de las etapas de crecimiento y el registro de los movimientos del material vegetal, facilitando la administración de la información y reduciendo los procesos manuales.
 
-El sistema permite administrar plantas, lotes, inventario, movimientos y estadísticas, proporcionando una herramienta organizada y fácil de utilizar para el personal encargado del vivero.
-
----
 
 ##  Objetivos
 
