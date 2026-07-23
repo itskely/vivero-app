@@ -4,9 +4,7 @@ Sistema web desarrollado para optimizar la gestión del inventario de un vivero,
 
 ![Inicio](inicio.png)
 ---
-## 🎓 Proyecto académico y de práctica profesional
 
-Este proyecto fue desarrollado durante mi práctica profesional en el Parque Jaime Duque como parte de mi formación en Ingeniería de Sistemas en la Corporación Unificada Nacional de Educación Superior (CUN).
 
 ##  Descripción del proyecto
 ViveroApp fue desarrollado durante mi práctica profesional en el Parque Jaime Duque como una solución para digitalizar la gestión del inventario del vivero institucional.
