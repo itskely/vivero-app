@@ -1,6 +1,7 @@
 # ViveroApp
 
 Sistema web desarrollado para optimizar la gestión del inventario de un vivero, permitiendo el control del material vegetal desde su registro hasta el seguimiento de los movimientos de inventario, con el fin de mejorar la organización de la información y apoyar la toma de decisiones.
+
 ![Inicio](inicio.png)
 ---
 ## 🎓 Proyecto académico y de práctica profesional
