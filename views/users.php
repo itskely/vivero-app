@@ -55,35 +55,40 @@ include __DIR__ . "/../controllers/UsersController.php";
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <div>
+                        <label for="is_active" class="block mb-2.5 text-sm font-medium text-heading">Estado</label>
+                        <select id="is_active" name="is_active" class="input-component">
+                            <option value="1" <?= $oneUser && $oneUser['is_active'] == 1 ? 'selected' : '' ?>>Activo</option>
+                            <option value="0" <?= $oneUser && $oneUser['is_active'] == 0 ? 'selected' : '' ?>>Inactivo</option>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-default btn-size-default">Crear</button>
                     <?php
                     if ($oneUser):
-                        ?>
+                    ?>
                         <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>"
                             class="text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">Cancelar</a>
-                        <?php
+                    <?php
                     endif;
                     ?>
                     <?php
-                    if (isset($_SESSION["success"]))
-                    {
-                        ?>
+                    if (isset($_SESSION["success"])) {
+                    ?>
                         <div class="p-4 mb-4 text-sm text-fg-success-strong rounded-base bg-success-soft" role="alert">
                             <?= $_SESSION["success"] ?>
                         </div>
-                        <?php
+                    <?php
                         unset($_SESSION["success"]);
                     }
                     ?>
 
                     <?php
-                    if (isset($_SESSION["error"]))
-                    {
-                        ?>
+                    if (isset($_SESSION["error"])) {
+                    ?>
                         <div class="p-4 mb-4 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
                             <?= $_SESSION["error"] ?>
                         </div>
-                        <?php
+                    <?php
                         unset($_SESSION["error"]);
                     }
                     ?>
@@ -110,6 +115,9 @@ include __DIR__ . "/../controllers/UsersController.php";
                         Rol
                     </th>
                     <th scope="col" class="px-6 py-3 font-medium">
+                        Estado
+                    </th>
+                    <th scope="col" class="px-6 py-3 font-medium">
                         Fecha de creación
                     </th>
                     <th scope="col" class="px-6 py-3 font-medium">
@@ -119,9 +127,8 @@ include __DIR__ . "/../controllers/UsersController.php";
             </thead>
             <tbody>
                 <?php
-                foreach ($allUsers as $user)
-                {
-                    ?>
+                foreach ($allUsers as $user) {
+                ?>
                     <tr class="rounded-xl bg-card border">
                         <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                             <?= $user['id'] ?>
@@ -134,6 +141,9 @@ include __DIR__ . "/../controllers/UsersController.php";
                         </td>
                         <td class="px-6 py-4">
                             <?= $user['rol_nombre'] ?>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="badge"><?= $user['is_active'] == 1 ? "Activo" : "Inactivo" ?></span>
                         </td>
                         <td class="px-6 py-4">
                             <?= $user['fecha_registro'] ?>
@@ -153,7 +163,7 @@ include __DIR__ . "/../controllers/UsersController.php";
                             </button>
                         </td>
                     </tr>
-                    <?php
+                <?php
                 }
                 ?>
             </tbody>

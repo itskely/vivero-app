@@ -13,6 +13,7 @@ $nombre_completo = $_POST['nombre_completo'] ?? null;
 $cedula = $_POST['cedula'] ?? null;
 $password = $_POST['password'] ?? null;
 $id_rol = $_POST['id_rol'] ?? null;
+$is_active = $_POST['is_active'] ?? null;
 
 if ($method === "POST") {
     if ($nombre_completo && $cedula && $id_rol) {
@@ -21,6 +22,7 @@ if ($method === "POST") {
         $user->setCedula($cedula);
         $user->setPassword($password);
         $user->setRol($id_rol);
+        $user->setIsActive($is_active);
 
         if (empty($id)) {
             if (empty($password)) {

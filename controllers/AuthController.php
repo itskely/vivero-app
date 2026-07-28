@@ -17,6 +17,15 @@ if ($method === "POST") {
         $user->setPassword($password);
         $usuario = $user->getDocumento();
         if ($usuario) {
+            if ($usuario['is_active'] == 0) {
+                // Devolvemos JSON DE error para leer en JS
+                $messages = [
+                    "error" => "Usuario inactivo"
+                ];
+                header('Content-Type: application/json');
+                echo json_encode($messages);
+                exit;
+            }
             if (password_verify($password, $usuario['password'])) {
                 $_SESSION['usuario'] = $usuario;
                 $pageToAccess = $page->getIsHomePage();
