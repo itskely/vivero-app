@@ -56,43 +56,41 @@ include __DIR__ . "/../controllers/PlantaController.php";
                         </div>
                     </div>
                     <?=
-                        Form::textarea(
-                            "descripcion",
-                            "descripcion",
-                            $onePlanta ? $onePlanta['descripcion'] : "",
-                            "Descripción"
-                        );
+                    Form::textarea(
+                        "descripcion",
+                        "descripcion",
+                        $onePlanta ? $onePlanta['descripcion'] : "",
+                        "Descripción"
+                    );
                     ?>
 
                     <button type="submit" class="btn btn-default btn-size-default">Registrar</button>
                     <?php
                     if ($onePlanta):
-                        ?>
+                    ?>
                         <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>"
                             class="text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">Cancelar</a>
-                        <?php
+                    <?php
                     endif;
                     ?>
                     <?php
-                    if (isset($_SESSION["success"]))
-                    {
-                        ?>
+                    if (isset($_SESSION["success"])) {
+                    ?>
                         <div class="p-4 mb-4 text-sm text-fg-success-strong rounded-base bg-success-soft" role="alert">
                             <?= $_SESSION["success"] ?>
                         </div>
-                        <?php
+                    <?php
                         unset($_SESSION["success"]);
                     }
                     ?>
 
                     <?php
-                    if (isset($_SESSION["error"]))
-                    {
-                        ?>
+                    if (isset($_SESSION["error"])) {
+                    ?>
                         <div class="p-4 mb-4 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
                             <?= $_SESSION["error"] ?>
                         </div>
-                        <?php
+                    <?php
                         unset($_SESSION["error"]);
                     }
                     ?>
@@ -129,10 +127,9 @@ include __DIR__ . "/../controllers/PlantaController.php";
             </thead>
             <tbody>
                 <?php
-                foreach ($allPlants as $pg)
-                {
+                foreach ($allPlants as $pg) {
 
-                    ?>
+                ?>
                     <tr class="rounded-xl bg-card border">
                         <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                             <?= $pg['id'] ?>
@@ -146,17 +143,17 @@ include __DIR__ . "/../controllers/PlantaController.php";
                         <td class="px-6 py-4">
                             <?php
                             if ($pg['imagen']):
-                                ?>
+                            ?>
                                 <div
                                     class="relative mx-auto my-2 overflow-hidden items-center justify-center rounded-full size-20 border-green-500 border-2">
                                     <img src="/assets/uploads/<?= $pg['imagen'] ?>" alt="<?= $pg['nombre_comun'] ?>"
                                         class="object-center object-cover w-full h-full">
                                 </div>
-                                <?php
+                            <?php
                             else:
-                                ?>
+                            ?>
                                 <span class="italic text-xs">Sin imagen</span>
-                                <?php
+                            <?php
                             endif;
                             ?>
                         </td>
@@ -180,20 +177,52 @@ include __DIR__ . "/../controllers/PlantaController.php";
                             </button>
                         </td>
                     </tr>
-                    <?php
+                <?php
                 }
                 ?>
             </tbody>
         </table>
     </div>
 
+    <?php if ($totalPaginas > 1): ?>
+        <div class="flex justify-between items-center mt-4 px-4">
+            <span class="text-sm text-muted-foreground">
+                Mostrando <?= min($offset + 1, $totalRegistros) ?> a <?= min($offset + $limit, $totalRegistros) ?> de <?= $totalRegistros ?> resultados
+            </span>
+
+            <div class="flex gap-1">
+
+                <?php if ($page > 1): ?>
+                    <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page - 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>"
+                        class="btn btn-outline btn-size-default">
+                        Anterior
+                    </a>
+                <?php endif; ?>
+
+                <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                    <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $i ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>"
+                        class="btn btn-size-default <?= $i == $page ? 'btn-default' : 'btn-outline' ?>">
+                        <?= $i ?>
+                    </a>
+                <?php endfor; ?>
+
+                <?php if ($page < $totalPaginas): ?>
+                    <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page + 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>"
+                        class="btn btn-outline btn-size-default">
+                        Siguiente
+                    </a>
+                <?php endif; ?>
+
+            </div>
+        </div>
+    <?php endif; ?>
 </div>
 
 <script>
     const inputFile = document.getElementById('file_input')
     const imageDiv = document.getElementById('image-div')
     const imagePreview = document.getElementById('image-preview')
-    inputFile.addEventListener('change', function (e) {
+    inputFile.addEventListener('change', function(e) {
         const files = e.target.files
         const imagen = files[0]
         const buffer = URL.createObjectURL(imagen)

@@ -109,7 +109,7 @@ class PlantaModel
         $busqueda = $this->getBusqueda();
         $limit = $this->getLimit();
         $offset = $this->getOffset();
-        $stmt = $this->conn->prepare("SELECT * FROM plantas WHERE nombre_comun LIKE :busqueda OR descripcion LIKE :busqueda LIMIT :lim OFFSET :offs");
+        $stmt = $this->conn->prepare("SELECT * FROM plantas WHERE nombre_comun LIKE :busqueda OR descripcion LIKE :busqueda ORDER BY nombre_comun ASC LIMIT :lim OFFSET :offs");
         $param = "%$busqueda%";
         $stmt->bindParam(":busqueda", $param);
         $stmt->bindParam(":lim", $limit, PDO::PARAM_INT);
@@ -132,8 +132,7 @@ class PlantaModel
     {
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
         $stmt = $this->conn->prepare("SELECT * FROM plantas WHERE id IN ($placeholders)");
-        foreach ($ids as $index => $id)
-        {
+        foreach ($ids as $index => $id) {
             $stmt->bindValue($index + 1, $id, PDO::PARAM_INT);
         }
         $stmt->execute();
@@ -180,8 +179,7 @@ class PlantaModel
         $id = $this->getId();
         $stmt->bindParam(":id", $id);
         $stmt->execute();
-        if ($stmt->rowCount() > 0)
-        {
+        if ($stmt->rowCount() > 0) {
             return true;
         }
         return false;
