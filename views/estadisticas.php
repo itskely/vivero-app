@@ -29,7 +29,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
 <main class="py-6">
     <!-- Charts Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="card p-5 col-span-2">
+        <div class="card p-5 col-span-1 lg:col-span-2">
 
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
 
