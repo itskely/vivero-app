@@ -762,7 +762,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             }],
 
             xaxis: {
-
+                categories: especies.map(e => e.nombre_comun),
             },
 
             dataLabels: {
