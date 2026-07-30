@@ -98,6 +98,39 @@ include __DIR__ . "/../controllers/PlantaController.php";
             </div>
         </div>
     </div>
+    <div>
+        <form action="/home.php" method="get" class="p-4 max-w-sm">
+            <input type="hidden" name="page_id" value="<?= $pageAccessed['id'] ?>">
+
+            <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only">
+                Buscar
+            </label>
+
+            <div class="relative">
+                <div class="absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-body" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
+                            d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                    </svg>
+                </div>
+
+                <input
+                    type="search"
+                    id="search"
+                    name="busqueda"
+                    value="<?= $_GET['busqueda'] ?? '' ?>"
+                    placeholder="Buscar especie..."
+                    class="block w-full p-6 ps-9 input-component" />
+
+                <button
+                    type="submit"
+                    class="absolute inset-e-1.5 bottom-1.5 text-primary-foreground bg-primary hover:bg-green-700 border border-transparent focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded text-xs px-3 py-1.5 focus:outline-none">
+                    Buscar
+                </button>
+            </div>
+        </form>
+    </div>
 
 
     <div class="relative overflow-x-auto shadow-xs rounded-base border">

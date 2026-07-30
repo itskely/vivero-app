@@ -35,6 +35,24 @@ function formatoNumero(numero) {
     return numero;
 }
 
+async function unificarLote(inventario) {
+    let $form = new FormData();
+    $form.append('planta_id', inventario.planta_id);
+    $form.append('etapa_id', inventario.etapa_id);
+    $form.append('ubicacion_origen_id', inventario.ubicacion_id);
+    $form.append('ubicacion_destino_id', inventario.ubicacion_id);
+    $form.append('motivo', `Unificación de ${inventario.lote_id}`);
+
+    let $response = await fetch('/api/unificar-lote.php', {
+        method: 'POST',
+        body: $form,
+    });
+
+    let data = await $response.json();
+    console.log(data);
+    return data;
+}
+
 function getLotes(busqueda = '') {
     $.ajax({
         url: '/api/lotes.php?busqueda=' + busqueda,
@@ -51,6 +69,30 @@ function getLotes(busqueda = '') {
             lotesContainer.html('');
             data.forEach(function (inventario) {
                 var $nuevoItem = $(template).clone();
+                if (inventario.etapa_id === 6) {
+                    $nuevoItem.find('button').removeClass('hidden').addClass('flex');
+                    $nuevoItem.find('button').click(async function (e) {
+                        e.stopPropagation();
+                        const spinnerEl = lotesSpinner.clone();
+                        let icon = $(this).find('svg');
+                        icon.addClass('hidden');
+
+                        $nuevoItem.find('button').append(spinnerEl);
+                        spinnerEl.removeClass('hidden absolute');
+                        $nuevoItem.find('button').prop('disabled', true);
+
+                        let data = await unificarLote(inventario);
+
+                        toast({
+                            message: data.message,
+                            position: 'top-right',
+                        });
+
+                        icon.removeClass('hidden');
+                        $nuevoItem.find('button').prop('disabled', false);
+                        spinnerEl.remove();
+                    });
+                }
                 $nuevoItem.attr('data-value', inventario.lote_id);
                 $nuevoItem.find('[data-title]').text(`${inventario.etapa} - ${inventario.ubicacion}`);
                 $nuevoItem

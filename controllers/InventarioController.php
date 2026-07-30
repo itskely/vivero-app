@@ -11,14 +11,12 @@ $busqueda = $_GET['busqueda'] ?? null;
 $etapa = $_GET['etapa'] ?? '';
 $ubicacion = $_GET['ubicacion'] ?? '';
 $unidad = $_GET['unidad'] ?? '';
-$disponibles = $_GET['disponibles'] ?? '';
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
 $inventario->setBusqueda($busqueda);
 $inventario->setEtapa($etapa);
 $inventario->setUbicacion($ubicacion);
 $inventario->setUnidad($unidad);
-$inventario->setDisponibles($disponibles);
 $totalRegistros = $inventario->getCountCompleto()['total'];
 $totales = $inventario->getTotales();
 $limit = 20;

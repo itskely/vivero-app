@@ -29,6 +29,43 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
 <main class="py-6">
     <!-- Charts Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="card p-5 col-span-2">
+
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+
+                <div>
+                    <h3 class="text-lg font-semibold">
+                        Inventario actual en Rustificación
+                    </h3>
+                    <p class="text-sm text-muted-foreground">
+                        Cantidad actual por especie
+                    </p>
+                </div>
+
+                <div class="flex gap-2">
+
+
+                    <select id="filterUbicacionRustificacion"
+                        class="input-component text-sm"
+                        onchange="updateInventarioRustificacion()">
+
+                        <option value="2">Tingua</option>
+                        <option value="3">Arrieros</option>
+
+                    </select>
+                </div>
+
+            </div>
+
+            <div id="chartInventarioRustificacion"
+                class="chart-container">
+            </div>
+            <div class="mt-4 text-right">
+                <span class="font-semibold">Total: </span>
+                <span id="totalInventarioRustificacion">0</span>
+            </div>
+
+        </div>
         <!-- Chart 5: Semillas recolectadas por mes  -->
         <div class="card p-5">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
@@ -242,43 +279,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             <div id="chartOrigenLotes" class="chart-container"></div>
         </div>
 
-        <div class="card p-5">
 
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-
-                <div>
-                    <h3 class="text-lg font-semibold">
-                        Inventario actual en Rustificación
-                    </h3>
-                    <p class="text-sm text-muted-foreground">
-                        Cantidad actual por especie
-                    </p>
-                </div>
-
-                <div class="flex gap-2">
-
-
-                    <select id="filterUbicacionRustificacion"
-                        class="input-component text-sm"
-                        onchange="updateInventarioRustificacion()">
-
-                        <option value="2">Tingua</option>
-                        <option value="3">Arrieros</option>
-
-                    </select>
-                </div>
-
-            </div>
-
-            <div id="chartInventarioRustificacion"
-                class="chart-container">
-            </div>
-            <div class="mt-4 text-right">
-                <span class="font-semibold">Total: </span>
-                <span id="totalInventarioRustificacion">0</span>
-            </div>
-
-        </div>
 
 
 
@@ -761,7 +762,7 @@ include __DIR__ . "/../controllers/EstadisticasController.php";
             }],
 
             xaxis: {
-                categories: especies.map(e => e.nombre_comun)
+
             },
 
             dataLabels: {

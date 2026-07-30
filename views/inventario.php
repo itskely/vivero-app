@@ -98,20 +98,7 @@ include __DIR__ . "/../controllers/InventarioController.php";
 
                         </div>
 
-                        <div class="flex items-end">
 
-                            <label class="flex items-center gap-2">
-
-                                <input type="checkbox"
-                                    name="disponibles"
-                                    value="1"
-                                    <?= isset($_GET['disponibles']) ? 'checked' : '' ?>>
-
-                                Ocultar registros con cantidad 0
-
-                            </label>
-
-                        </div>
 
                     </div>
                     <div class="flex gap-3">
@@ -244,8 +231,7 @@ include __DIR__ . "/../controllers/InventarioController.php";
                     <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page - 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>
                         <?= $etapa ? '&etapa=' . urlencode($etapa) : '' ?>
                         <?= $ubicacion ? '&ubicacion=' . urlencode($ubicacion) : '' ?>
-                        <?= $unidad ? '&unidad=' . urlencode($unidad) : '' ?>
-                        <?= $disponibles ? '&disponibles=' . urlencode($disponibles) : '' ?>"
+                        <?= $unidad ? '&unidad=' . urlencode($unidad) : '' ?>"
                         class="btn btn-outline btn-size-default">Anterior</a>
                 <?php endif; ?>
 
@@ -253,8 +239,7 @@ include __DIR__ . "/../controllers/InventarioController.php";
                     <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $i ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>
                         <?= $etapa ? '&etapa=' . urlencode($etapa) : '' ?>
                         <?= $ubicacion ? '&ubicacion=' . urlencode($ubicacion) : '' ?>
-                        <?= $unidad ? '&unidad=' . urlencode($unidad) : '' ?>
-                        <?= $disponibles ? '&disponibles=' . urlencode($disponibles) : '' ?>"
+                        <?= $unidad ? '&unidad=' . urlencode($unidad) : '' ?>"
                         class="btn btn-size-default <?= $i === $page ? 'btn-default' : 'btn-outline' ?>">
                         <?= $i ?>
                     </a>
@@ -264,8 +249,7 @@ include __DIR__ . "/../controllers/InventarioController.php";
                     <a href="/home.php?page_id=<?= $pageAccessed['id'] ?>&page=<?= $page + 1 ?><?= $busqueda ? '&busqueda=' . urlencode($busqueda) : '' ?>
                         <?= $etapa ? '&etapa=' . urlencode($etapa) : '' ?>
                         <?= $ubicacion ? '&ubicacion=' . urlencode($ubicacion) : '' ?>
-                        <?= $unidad ? '&unidad=' . urlencode($unidad) : '' ?>
-                        <?= $disponibles ? '&disponibles=' . urlencode($disponibles) : '' ?>"
+                        <?= $unidad ? '&unidad=' . urlencode($unidad) : '' ?>"
                         class="btn btn-outline btn-size-default">Siguiente</a>
                 <?php endif; ?>
             </div>

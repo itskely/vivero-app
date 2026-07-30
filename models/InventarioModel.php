@@ -12,7 +12,6 @@ class InventarioModel
     private $etapa;
     private $ubicacion;
     private $unidad;
-    private $disponibles;
 
 
     // Variables de busqueda y paginación
@@ -85,10 +84,6 @@ class InventarioModel
     {
         $this->unidad = $unidad;
     }
-    public function setDisponibles($disponibles)
-    {
-        $this->disponibles = $disponibles;
-    }
 
     // Getters
     public function getId()
@@ -128,11 +123,6 @@ class InventarioModel
     public function getUnidad()
     {
         return $this->unidad;
-    }
-
-    public function getDisponibles()
-    {
-        return $this->disponibles;
     }
 
     public function __construct()
@@ -235,7 +225,7 @@ class InventarioModel
         $etapa = $this->getEtapa();
         $ubicacion = $this->getUbicacion();
         $unidad = $this->getUnidad();
-        $disponibles = $this->getDisponibles();
+
 
         $stmt = $this->conn->prepare("
         SELECT COUNT(*) AS total
@@ -257,7 +247,7 @@ class InventarioModel
                 AND (:etapa = '' OR e.id = :etapa)
                 AND (:ubicacion = '' OR u.id = :ubicacion)
                 AND (:unidad = '' OR l.unidad_medida = :unidad)
-                AND (:disponibles = '' OR i.cantidad_actual > 0)
+                AND i.cantidad_actual > 0
             GROUP BY
                 e.id,
                 p.id,
@@ -272,7 +262,7 @@ class InventarioModel
         $stmt->bindParam(":etapa", $etapa);
         $stmt->bindParam(":ubicacion", $ubicacion);
         $stmt->bindParam(":unidad", $unidad);
-        $stmt->bindParam(":disponibles", $disponibles);
+
 
         $stmt->execute();
 
@@ -284,7 +274,7 @@ class InventarioModel
         $etapa = $this->getEtapa();
         $ubicacion = $this->getUbicacion();
         $unidad = $this->getUnidad();
-        $disponibles = $this->getDisponibles();
+
 
         $stmt = $this->conn->prepare("
         SELECT
@@ -306,7 +296,7 @@ class InventarioModel
             AND (:etapa = '' OR e.id = :etapa)
             AND (:ubicacion = '' OR u.id = :ubicacion)
             AND (:unidad = '' OR l.unidad_medida = :unidad)
-            AND (:disponibles = '' OR i.cantidad_actual > 0)
+            AND i.cantidad_actual > 0
         GROUP BY l.unidad_medida
     ");
 
@@ -316,7 +306,6 @@ class InventarioModel
         $stmt->bindParam(":etapa", $etapa);
         $stmt->bindParam(":ubicacion", $ubicacion);
         $stmt->bindParam(":unidad", $unidad);
-        $stmt->bindParam(":disponibles", $disponibles);
 
         $stmt->execute();
 
@@ -348,7 +337,6 @@ class InventarioModel
         $etapa = $this->getEtapa();
         $ubicacion = $this->getUbicacion();
         $unidad = $this->getUnidad();
-        $disponibles = $this->getDisponibles();
         $stmt = $this->conn->prepare("
             SELECT 
                 e.nombre AS etapa,
@@ -372,7 +360,7 @@ class InventarioModel
                 AND (:etapa = '' OR e.id = :etapa)
                 AND (:ubicacion = '' OR u.id = :ubicacion)
                 AND (:unidad = '' OR l.unidad_medida = :unidad)
-                AND (:disponibles = '' OR i.cantidad_actual > 0)
+               AND i.cantidad_actual > 0
             GROUP BY
                 e.id,
                 p.id,
@@ -394,7 +382,6 @@ class InventarioModel
         $stmt->bindParam(":etapa", $etapa);
         $stmt->bindParam(":ubicacion", $ubicacion);
         $stmt->bindParam(":unidad", $unidad);
-        $stmt->bindParam(":disponibles", $disponibles);
         $stmt->bindParam(":lim", $limit, PDO::PARAM_INT);
         $stmt->bindParam(":offs", $offset, PDO::PARAM_INT);
         $stmt->execute();

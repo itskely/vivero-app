@@ -107,13 +107,14 @@ include __DIR__ . "/../controllers/SalidasController.php";
                                             </span>
                                             <span class="text-sm font-medium tabular-nums" data-cantidad>430</span>
                                         </div> -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="lucide lucide-check ml-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100"
-                                        aria-hidden="true">
-                                        <path d="M20 6 9 17l-5-5"></path>
-                                    </svg>
+                                    <button type="button" class="hidden cursor-pointer text-muted-foreground p-2 aspect-square shrink-0 border rounded-md shadow-md" onclick="event.stopPropagation()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+                                            <path d="M8 3 4 7l4 4" />
+                                            <path d="M4 7h16" />
+                                            <path d="m16 21 4-4-4-4" />
+                                            <path d="M20 17H4" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </template>
                         </div>
