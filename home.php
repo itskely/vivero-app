@@ -31,6 +31,7 @@ include "./helpers/Forms.php";
     <script src="//unpkg.com/alpinejs" defer></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/not-a-toast@1.1.5/dist/style.css">
     <script src="./assets/lib/jquery-4.0.0.min.js"></script>
+    <script src="./assets/scripts/dark-mode.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
@@ -142,24 +143,6 @@ include "./helpers/Forms.php";
         </div>
     </div>
 
-    <script>
-        const modeButton = document.getElementById("mode-button")
-        document.addEventListener("DOMContentLoaded", () => {
-            const darkModeStored = localStorage.getItem("mode") || "light"
-            document.documentElement.classList.add(darkModeStored)
-        })
-        modeButton.addEventListener("click", (e) => {
-            const darkModeStored = localStorage.getItem("mode") || "light"
-
-            if (darkModeStored === "dark") {
-                document.documentElement.classList.remove("dark")
-                localStorage.setItem("mode", "light")
-            } else {
-                document.documentElement.classList.add("dark")
-                localStorage.setItem("mode", "dark")
-            }
-        })
-    </script>
 
 </body>
 

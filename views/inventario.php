@@ -8,7 +8,7 @@ include __DIR__ . "/../controllers/InventarioController.php";
 
         <div class="mt-4">
 
-            <div class="bg-white rounded-lg shadow p-5">
+            <div class="bg-card rounded-lg shadow p-5">
 
                 <form id="formBusqueda" method="GET" action="/home.php" class="space-y-4">
 

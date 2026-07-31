@@ -13,7 +13,6 @@ $inventario->setBusqueda($_GET['busqueda'] ?? '');
 $inventario->setEtapa($_GET['etapa'] ?? '');
 $inventario->setUbicacion($_GET['ubicacion'] ?? '');
 $inventario->setUnidad($_GET['unidad'] ?? '');
-$inventario->setDisponibles($_GET['disponibles'] ?? '');
 
 $inventario->setLimit(1000000);
 $inventario->setOffset(0);

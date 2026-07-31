@@ -16,23 +16,33 @@ if (isset($_SESSION['usuario'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="./assets/output.css" />
+    <script src="./assets/scripts/dark-mode.js" defer></script>
 </head>
 
 
 <body>
-    <header class="p-8 bg-green-700 text-white bg-[url(/assets/img/planta.jpg)] bg-cover bg-center">
-        <div class="max-w-4xl mx-auto flex items-center justify-between">
-
-        </div>
+    <header class="p-4 bg-green-700 bg-[url(/assets/img/planta.jpg)] bg-cover bg-center">
+        <button id="mode-button" class="btn btn-outline btn-size-icon">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6">
+                <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+            </svg>
+        </button>
     </header>
 
     <main class="flex flex-col items-center justify-center min-h-screen">
         <img src="https://portaljaimeduque.net/img/LOGO_FPJD.png" alt="" class="size-30 shrink-0">
-        <h1 class="text-2xl font-bold text-black text-center mb-8">VIVERO APP</h1>
-        <h2 class="text-2xl  text-green-800 text-center mb-6">Iniciar sesión</h2>
+        <h1 class="text-2xl font-bold text-center mb-8">VIVERO APP</h1>
+        <h2 class="text-2xl  text-green-800 dark:text-green-600 text-center mb-6">Iniciar sesión</h2>
         <form id="login-form" method="POST" class="mx-auto w-80 space-y-4">
             <div>
-                <label class=" block text-sm font-medium text-gray-900" for="cedula">Cedula</label>
+                <label class=" block text-sm font-medium" for="cedula">Cedula</label>
 
                 <input name="cedula"
                     class="mt-4 w-full p-2 rounded-lg border-gray-300 focus:border-green-600 focus:outline-none"
@@ -40,7 +50,7 @@ if (isset($_SESSION['usuario'])) {
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-900" for="password">Contraseña</label>
+                <label class="block text-sm font-medium" for="password">Contraseña</label>
 
                 <input name="password"
                     class="mt-4 w-full p-2 rounded-lg border-gray-300 focus:border-green-600 focus:outline-none"
